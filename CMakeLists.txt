@@ -33,6 +33,7 @@ target_compile_definitions(openstrikers PRIVATE
     dIDESINGLE
     dNODEBUG=ON
     dTHREADING_INTF_DISABLED
+    dODE_SMStricker_Patch
     HAVE_MALLOC_H=1
     MUSY_VERSION_MAJOR=2
     MUSY_VERSION_MINOR=0
