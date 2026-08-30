@@ -8,6 +8,7 @@ add_subdirectory(aurora EXCLUDE_FROM_ALL)
 
 add_executable(openstrikers
     ./decomp/src/Game/AI/Fielder.cpp
+    ./compat_shims.cpp
 )
 
 target_include_directories(openstrikers PRIVATE
