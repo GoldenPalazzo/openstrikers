@@ -1,0 +1,40 @@
+diff --git a/include/NL/nlVector.h b/include/NL/nlVector.h
+index 16797d86..4186926c 100644
+--- a/include/NL/nlVector.h
++++ b/include/NL/nlVector.h
+@@ -53,7 +53,7 @@ public:
+         }
+ 
+         mSize++;
+-        mData = Allocator::New<T>(mSize + 1, 0);
++        mData = Allocator::template New<T>(mSize + 1, 0);
+         mCapacity = mSize;
+ 
+         for (int i = 0; i < mSize; i++)
+@@ -63,7 +63,7 @@ public:
+     }
+     Vector(const Vector& other, const char* name = NULL)
+     {
+-        mData = Allocator::New<T>(other.mSize, name);
++        mData = Allocator:: template New<T>(other.mSize, name);
+         mSize = other.mSize;
+         mCapacity = other.mSize;
+         for (int i = 0; i < mSize; i++)
+@@ -73,7 +73,7 @@ public:
+     }
+     Vector(int count, const char* name)
+     {
+-        mData = Allocator::New<T>(count, name);
++        mData = Allocator:: template New<T>(count, name);
+         mSize = count;
+         mCapacity = count;
+         for (int i = 0; i < count; i++)
+@@ -165,7 +165,7 @@ public:
+ template <typename T, typename Allocator>
+ inline Vector<T, Allocator>::~Vector()
+ {
+-    Allocator::Delete<T>(mData);
++    Allocator:: template Delete<T>(mData);
+ }
+ 
+ template <typename T, typename Allocator>
