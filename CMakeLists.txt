@@ -6,8 +6,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(aurora EXCLUDE_FROM_ALL)
 
+file(GLOB_RECURSE NL_SOURCES CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/decomp/src/NL/*.cpp
+)
+
+file(GLOB_RECURSE ODE_SOURCES CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/decomp/src/ode/*.cpp
+)
+
 add_executable(openstrikers
-    ./decomp/src/Game/AI/Fielder.cpp
+    ${NL_SOURCES}
+    # ${ODE_SOURCES}
+    # ./decomp/src/Game/AI/Fielder.cpp
+    ./temp_main.cpp
     ./compat_shims.cpp
 )
 
