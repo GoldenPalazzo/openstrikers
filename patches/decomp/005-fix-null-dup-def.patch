@@ -1,0 +1,20 @@
+diff --git a/include/types.h b/include/types.h
+index 3dbddd90..e29385e0 100644
+--- a/include/types.h
++++ b/include/types.h
+@@ -71,6 +71,7 @@ typedef u16 wchar_t;
+ #undef FALSE
+ #define FALSE (0)
+ 
++#ifndef NULL
+ #if !defined(__cplusplus)
+ #undef NULL
+ #define NULL ((void*)0)
+@@ -84,6 +85,7 @@ typedef u16 wchar_t;
+ #undef nullptr
+ #define nullptr 0
+ #endif
++#endif
+ 
+ // Random and useful macros
+ #define PATH_MAX (256) // Max path length
