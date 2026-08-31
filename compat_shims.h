@@ -18,6 +18,7 @@ inline double __frsqrte(double x) {
 }
 
 #include <cstring>
+#define __memcpy memcpy
 
 // aurora fixes
 #include <dolphin/gx/GXTexture.h>
