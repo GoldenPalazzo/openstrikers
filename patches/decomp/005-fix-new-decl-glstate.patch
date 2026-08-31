@@ -1,0 +1,22 @@
+diff --git a/src/NL/gl/glState.cpp b/src/NL/gl/glState.cpp
+index d4f42440..7623fd6d 100644
+--- a/src/NL/gl/glState.cpp
++++ b/src/NL/gl/glState.cpp
+@@ -443,7 +443,7 @@ static inline unsigned long getRasterState()
+ /**
+  * Offset/Address/Size: 0x604 | 0x801DC248 | size: 0xB4
+  */
+-unsigned long glSetRasterState(eGLState state, unsigned long value)
++u32 glSetRasterState(eGLState state, unsigned long value)
+ {
+     gl_StateBitfield* p = &packed_raster[state];
+     s32 numBits = p->numBits;
+@@ -571,7 +571,7 @@ static inline unsigned long GetCurrentTextureImpl(eGLTextureType type)
+ /**
+  * Offset/Address/Size: 0x858 | 0x801DC49C | size: 0x50
+  */
+-unsigned long glSetCurrentTexture(unsigned long texture, eGLTextureType type)
++u32 glSetCurrentTexture(unsigned long texture, eGLTextureType type)
+ {
+     unsigned long prev = GetCurrentTextureImpl(type);
+     unsigned long mask = 1u << type;
