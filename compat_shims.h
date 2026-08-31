@@ -8,7 +8,14 @@
 #define __fabs fabs
 typedef __builtin_va_list __va_list;
 extern "C" int __float_max[];
+extern "C" int __float_nan[];
+extern "C" int __float_huge[];
 typedef FILE _FILE;
+
+#include <cmath>
+inline double __frsqrte(double x) {
+    return 1.0 / sqrt(x);
+}
 
 #include <cstring>
 
