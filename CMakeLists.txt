@@ -9,6 +9,7 @@ add_subdirectory(aurora EXCLUDE_FROM_ALL)
 file(GLOB_RECURSE NL_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/decomp/src/NL/*.cpp
 )
+list(FILTER NL_SOURCES EXCLUDE REGEX ".*/NL/plat/.*")
 
 file(GLOB_RECURSE ODE_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/decomp/src/ode/*.cpp
