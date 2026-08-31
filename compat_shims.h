@@ -1,9 +1,11 @@
 #pragma once
+#include <cstdio>
 #include <limits>
 #define __fabsf fabsf
 #define __fabs fabs
 typedef __builtin_va_list __va_list;
 extern "C" int __float_max[];
+typedef FILE _FILE;
 
 #include <cstring>
 
