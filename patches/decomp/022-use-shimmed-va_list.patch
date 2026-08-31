@@ -6,7 +6,7 @@ index 3f60cfe7..7b6ffa10 100644
  #ifndef _STDARG_H_
  #define _STDARG_H_
 -
-+#ifndef __VA_LSIT_COMPAT_DEFINED
++#ifndef __VA_LIST_COMPAT_DEFINED
  typedef struct __va_list_struct
  {
      char gpr;
