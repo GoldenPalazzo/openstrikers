@@ -1,0 +1,13 @@
+diff --git a/src/Game/Camera/animcam.cpp b/src/Game/Camera/animcam.cpp
+index 4247f2dc..0cadc949 100644
+--- a/src/Game/Camera/animcam.cpp
++++ b/src/Game/Camera/animcam.cpp
+@@ -283,7 +283,7 @@ bool cAnimCamera::LoadCameraAnimation(nlChunk* begin, nlChunk* end, const char*
+ bool cAnimCamera::LoadCameraAnimation(const char* szFilename, const char* szCameraName, bool ownsKeyData)
+ {
+     bool result;
+-    unsigned long uSize = 0;
++    u32 uSize = 0;
+     nlChunk* end;
+     nlChunk* begin;
+     cCameraData* pCamData;
