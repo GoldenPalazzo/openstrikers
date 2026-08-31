@@ -1,0 +1,13 @@
+diff --git a/src/Game/Audio/AudioEventHandler.cpp b/src/Game/Audio/AudioEventHandler.cpp
+index 576845fa..c423aedc 100644
+--- a/src/Game/Audio/AudioEventHandler.cpp
++++ b/src/Game/Audio/AudioEventHandler.cpp
+@@ -28,7 +28,7 @@
+ #include "NL/nlString.h"
+ #include "NL/nlTask.h"
+ 
+-extern "C" int nlPrintf(const char*, ...);
++// extern "C" int nlPrintf(const char*, ...);
+ 
+ namespace PlatAudio
+ {
