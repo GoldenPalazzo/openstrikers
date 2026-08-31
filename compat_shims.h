@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdio>
 #include <limits>
+#include <alloca.h>
+#define __alloca alloca
 #define __fabsf fabsf
 #define __fabs fabs
 typedef __builtin_va_list __va_list;
