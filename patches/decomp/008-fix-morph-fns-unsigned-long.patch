@@ -1,0 +1,42 @@
+diff --git a/include/Game/GL/ShaderSkinMesh.h b/include/Game/GL/ShaderSkinMesh.h
+index 8f39d582..fe797f40 100644
+--- a/include/Game/GL/ShaderSkinMesh.h
++++ b/include/Game/GL/ShaderSkinMesh.h
+@@ -71,13 +71,13 @@ public:
+     virtual void SetPoseMatrices(int num, GLSkinMeshMatrix* pMatrices);
+ 
+     void CreateMorphBuffer();
+-    void SetMorphIDs(const unsigned long* ids);
++    void SetMorphIDs(const u32* ids);
+     void SetBoneMatrix(unsigned long boneID, const nlMatrix4* matrix);
+     void AppendSkinPairList(int numPairs, const SkinPair* pairs);
+     void SetSoftwareVertices(int num, const SkinVertex* skinVertices);
+     void AppendStitchingInfo(int packetIndex, int _numPackets, int num, const unsigned char* pIndices);
+     void* MakeUserData(nlAVLTree<unsigned long, unsigned long, DefaultKeyCompare<unsigned long> >* boneMap);
+-    void SetMorphNumDeltas(const unsigned long* numDeltas);
++    void SetMorphNumDeltas(const u32* numDeltas);
+     void SetMorphDeltas(int numDeltas, const MorphDelta* p);
+ 
+     void StitchModel();
+diff --git a/src/Game/GL/ShaderSkinMesh.cpp b/src/Game/GL/ShaderSkinMesh.cpp
+index 2287ad8a..49b65aaa 100644
+--- a/src/Game/GL/ShaderSkinMesh.cpp
++++ b/src/Game/GL/ShaderSkinMesh.cpp
+@@ -73,7 +73,7 @@ ShaderSkinMesh::~ShaderSkinMesh()
+ /**
+  * Offset/Address/Size: 0xB74 | 0x801E11B8 | size: 0x70
+  */
+-void ShaderSkinMesh::SetMorphIDs(const unsigned long* ids)
++void ShaderSkinMesh::SetMorphIDs(const u32* ids)
+ {
+     if (morphIDs != nullptr)
+     {
+@@ -428,7 +428,7 @@ void ShaderSkinMesh::Pose(cPoseAccumulator* pPoseAccumulator)
+ /**
+  * Offset/Address/Size: 0x98 | 0x801E06DC | size: 0x70
+  */
+-void ShaderSkinMesh::SetMorphNumDeltas(const unsigned long* numDeltas)
++void ShaderSkinMesh::SetMorphNumDeltas(const u32* numDeltas)
+ {
+     if (morphNumDeltas != nullptr)
+     {
