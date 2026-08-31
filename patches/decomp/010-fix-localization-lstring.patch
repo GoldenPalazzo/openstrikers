@@ -1,0 +1,42 @@
+diff --git a/src/NL/nlLocalization.cpp b/src/NL/nlLocalization.cpp
+index 308b9196..0e4cddfb 100644
+--- a/src/NL/nlLocalization.cpp
++++ b/src/NL/nlLocalization.cpp
+@@ -3,8 +3,13 @@
+ #include "NL/nlFile.h"
+ #include "NL/nlPrint.h"
+ 
+-extern const unsigned short LocalizationTableNotFound[] = L"Localization Table Not Found";
+-extern const unsigned short MissingLocString[] = L"missing loc string";
++extern const unsigned short LocalizationTableNotFound[] = {
++    'L','o','c','a','l','i','z','a','t','i','o','n',' ','T','a','b','l','e',' ',
++    'N','o','t',' ','F','o','u','n','d', 0
++};
++extern const unsigned short MissingLocString[] = {
++    'm','i','s','s','i','n','g',' ','l','o','c',' ','s','t','r','i','n','g', 0
++};
+ 
+ const unsigned long nlLocalization::LanguageId[] = {
+     0x7A947B29,
+@@ -18,7 +23,7 @@ const unsigned long nlLocalization::LanguageId[] = {
+     0x00012332,
+ };
+ 
+-char* nlLocalization::LanguageName[] = {
++const char* nlLocalization::LanguageName[] = {
+     "English",
+     "French",
+     "German",
+diff --git a/include/NL/nlLocalization.h b/include/NL/nlLocalization.h
+index 5710673e..5dedb6cb 100644
+--- a/include/NL/nlLocalization.h
++++ b/include/NL/nlLocalization.h
+@@ -44,7 +44,7 @@ public:
+     unsigned short* m_FirstString;
+     nlLanguage m_CurrentLanguage;
+ 
+-    static char* LanguageName[];
++    static const char* LanguageName[];
+     static const unsigned long LanguageId[];
+     static const char Thumbprint[4];
+ };
