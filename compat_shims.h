@@ -6,6 +6,7 @@
 #define __alloca alloca
 #define __fabsf fabsf
 #define __fabs fabs
+#define __VA_LIST_COMPAT_DEFINED
 typedef __builtin_va_list __va_list;
 extern "C" int __float_max[];
 extern "C" int __float_nan[];

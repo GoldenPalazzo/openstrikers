@@ -1,0 +1,21 @@
+diff --git a/include/PowerPC_EABI_Support/MSL_C/MSL_Common/stdarg.h b/include/PowerPC_EABI_Support/MSL_C/MSL_Common/stdarg.h
+index 3f60cfe7..7b6ffa10 100644
+--- a/include/PowerPC_EABI_Support/MSL_C/MSL_Common/stdarg.h
++++ b/include/PowerPC_EABI_Support/MSL_C/MSL_Common/stdarg.h
+@@ -1,6 +1,6 @@
+ #ifndef _STDARG_H_
+ #define _STDARG_H_
+-
++#ifndef __VA_LSIT_COMPAT_DEFINED
+ typedef struct __va_list_struct
+ {
+     char gpr;
+@@ -10,7 +10,7 @@ typedef struct __va_list_struct
+     char* reg_save_area;
+ } __va_list[1];
+ typedef __va_list va_list;
+-
++#endif
+ extern void __builtin_va_info(void*);
+ 
+ void* __va_arg(va_list v_list, unsigned char type);
