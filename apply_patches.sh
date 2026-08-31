@@ -41,9 +41,11 @@ for p in "$ROOT"/patches/musyx/*.patch; do
 done
 
 echo "== applying aurora patches =="
-if [ -f "$ROOT"/patches/aurora-cstdint-fix.patch ]; then
-  git -C aurora apply --check "$ROOT/patches/aurora-cstdint-fix.patch" || { echo "FAILED: aurora patch"; exit 1; }
-  git -C aurora apply "$ROOT/patches/aurora-cstdint-fix.patch"
-fi
+for p in "$ROOT"/patches/aurora/*.patch; do
+  [ -e "$p" ] || continue
+  echo "-> $p"
+  git -C aurora apply --check "$p" || { echo "FAILED: $p"; exit 1; }
+  git -C aurora apply "$p"
+done
 
 echo "all patches applied successfully"

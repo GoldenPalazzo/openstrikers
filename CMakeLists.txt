@@ -33,10 +33,14 @@ target_include_directories(openstrikers PRIVATE
 
 target_link_libraries(openstrikers PRIVATE
     aurora::core
+    aurora::os
     aurora::gx
     aurora::main
+    aurora::mtx
+    aurora::pad
     aurora::vi
     aurora::card
+    aurora::dvd
 )
 
 target_compile_definitions(openstrikers PRIVATE
