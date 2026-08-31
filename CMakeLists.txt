@@ -14,10 +14,20 @@ list(FILTER NL_SOURCES EXCLUDE REGEX ".*/NL/plat/.*")
 file(GLOB_RECURSE ODE_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/decomp/src/ode/*.cpp
 )
+# An header called "Opcode.h" is in a legal grey area in the original decomp.
+# Since the only file that uses it is decomp/src/ode/collision_trimesh_internal.h
+# I'm disabling it until I'm in trouble
+# For more info, check decomp/THIRD_PARTY_NOTICES.md and
+# decomp/docs/ode-provenance.md
+list(FILTER ODE_SOURCES EXCLUDE REGEX ".*trimesh.*")
+# decomp/src/ode/scrapbook.cpp is obsoleted and shouldn't be compiled
+list(FILTER ODE_SOURCES EXCLUDE REGEX ".*scrapbook.*")
+# same thing for decomp/src/ode/stack.cpp
+list(FILTER ODE_SOURCES EXCLUDE REGEX ".*/ode/stack\\.cpp$")
 
 add_executable(openstrikers
     ${NL_SOURCES}
-    # ${ODE_SOURCES}
+    ${ODE_SOURCES}
     # ./decomp/src/Game/AI/Fielder.cpp
     ./temp_main.cpp
     ./compat_shims.cpp
