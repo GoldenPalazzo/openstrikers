@@ -25,11 +25,15 @@ list(FILTER ODE_SOURCES EXCLUDE REGEX ".*scrapbook.*")
 # same thing for decomp/src/ode/stack.cpp
 list(FILTER ODE_SOURCES EXCLUDE REGEX ".*/ode/stack\\.cpp$")
 
+file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/decomp/src/Game/*.cpp
+)
+list(FILTER GAME_SOURCES EXCLUDE REGEX ".*/AI/Scripts/TestCases\\.cpp$")
+
 add_executable(openstrikers
     ${NL_SOURCES}
     ${ODE_SOURCES}
-    # ./decomp/src/Game/AI/Fielder.cpp
-    ./temp_main.cpp
+    ${GAME_SOURCES}
     ./compat_shims.cpp
 )
 
