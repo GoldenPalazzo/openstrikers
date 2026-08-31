@@ -1,0 +1,9 @@
+diff --git a/src/NL/nlBind.cpp b/src/NL/nlBind.cpp
+index 64f3fb90..869a4a78 100644
+--- a/src/NL/nlBind.cpp
++++ b/src/NL/nlBind.cpp
+@@ -1,3 +1,3 @@
+ #include "NL/nlBind.h"
+ 
+-__declspec(section ".sdata2") Placeholder<0> placeholder0 = { };
++__attribute__((section(".sdata2"))) Placeholder<0> placeholder0 = { };
