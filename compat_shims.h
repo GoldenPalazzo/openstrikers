@@ -29,3 +29,8 @@ typedef GXProjectionType _GXProjectionType;
 typedef GXTexFmt _GXTexFmt;
 typedef GXPrimitive _GXPrimitive;
 typedef GXTlut _GXTlut;
+inline void GXClearGPMetric() {}
+inline void GXSetGPMetric(int, int) {}
+inline void GXReadGPMetric(u32* val0, u32* val1) { *val0 = 0; *val1 = 0; }
+inline void GXInitFogAdjTable(void* table, u16 width, float projParam[4][4]) { /* stub */ }
+inline GXRenderModeObj GXEurgb60Hz480IntDf = {}; // stub
