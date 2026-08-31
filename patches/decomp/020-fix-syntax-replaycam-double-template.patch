@@ -1,0 +1,12 @@
+diff --git a/src/Game/Camera/ReplayCamera.cpp b/src/Game/Camera/ReplayCamera.cpp
+index 2b510129..50c57aae 100644
+--- a/src/Game/Camera/ReplayCamera.cpp
++++ b/src/Game/Camera/ReplayCamera.cpp
+@@ -25,6 +25,7 @@
+  * as one is found. See smstrikers-notes docs/0047.
+  */
+ template <>
++template <>
+ BasicString<char, Detail::TempStringAllocator>& BasicString<char, Detail::TempStringAllocator>::AppendInPlace<Detail::TempStringAllocator>(const BasicString<char, Detail::TempStringAllocator>& rhs)
+ {
+     (*this)[0];
