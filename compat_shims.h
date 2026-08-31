@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <limits>
 #include <alloca.h>
+#include <new> // needed in nlFile.cpp
 #define __alloca alloca
 #define __fabsf fabsf
 #define __fabs fabs
