@@ -1,0 +1,26 @@
+diff --git a/include/Game/Effects/EmissionController.h b/include/Game/Effects/EmissionController.h
+index 5232f898..8eef87a3 100644
+--- a/include/Game/Effects/EmissionController.h
++++ b/include/Game/Effects/EmissionController.h
+@@ -13,7 +13,7 @@ class cPoseAccumulator;
+ class EmissionController;
+ typedef void FnEmissionController(EmissionController&);
+ 
+-void* fxLoadEntireFileHigh(const char* filename, unsigned long* fileSize);
++void* fxLoadEntireFileHigh(const char* filename, u32* fileSize);
+ 
+ class EmissionController : public efNode
+ {
+diff --git a/src/Game/Effects/EmissionController.cpp b/src/Game/Effects/EmissionController.cpp
+index 18568142..4cdbf98c 100644
+--- a/src/Game/Effects/EmissionController.cpp
++++ b/src/Game/Effects/EmissionController.cpp
+@@ -503,7 +503,7 @@ bool EmissionController::Update(float dt)
+ /**
+  * Offset/Address/Size: 0x288 | 0x801F7B78 | size: 0xA4
+  */
+-void* fxLoadEntireFileHigh(const char* filename, unsigned long* fileSize)
++void* fxLoadEntireFileHigh(const char* filename, u32* fileSize)
+ {
+     void* buffer = nullptr;
+     u32 datasize = 0;
