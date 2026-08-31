@@ -1,0 +1,37 @@
+diff --git a/src/Game/Audio/CrowdMood.cpp b/src/Game/Audio/CrowdMood.cpp
+index de2bd4fe..71b0ee8e 100644
+--- a/src/Game/Audio/CrowdMood.cpp
++++ b/src/Game/Audio/CrowdMood.cpp
+@@ -14,7 +14,7 @@
+ extern GCAudioStreaming::AudioBufferMgr g_BufferMgr;
+ static void ___blank(const char*, ...);
+ static void UpdateTiming(float);
+-extern "C" void sndStreamMixParameterEx(unsigned long stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
++extern "C" void sndStreamMixParameterEx(SND_STREAMID stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
+ 
+ class SoundStrToIDNode;
+ class AudioLoader
+diff --git a/src/Game/Audio/StreamTrack.cpp b/src/Game/Audio/StreamTrack.cpp
+index 9acd4d04..e979060b 100644
+--- a/src/Game/Audio/StreamTrack.cpp
++++ b/src/Game/Audio/StreamTrack.cpp
+@@ -169,7 +169,7 @@ void AudioStreamTrack::TrackManagerBase::FadeManager::AddFade(
+     fadeCtrl->Callback = callback;
+ }
+ 
+-extern "C" void sndStreamMixParameterEx(unsigned long stid, unsigned char vol, unsigned char pan,
++extern "C" void sndStreamMixParameterEx(SND_STREAMID stid, unsigned char vol, unsigned char pan,
+     unsigned char span, unsigned char auxa, unsigned char auxb);
+ 
+ void AudioStreamTrack::TrackManagerBase::FadeManager::CompleteFade(
+@@ -443,8 +443,8 @@ void AudioStreamTrack::StreamTrack::QueueStream(
+     }
+ }
+ 
+-extern "C" bool sndStreamActivate(unsigned long stid);
+-extern "C" void sndStreamDeactivate(unsigned long stid);
++extern "C" bool sndStreamActivate(SND_STREAMID stid);
++extern "C" void sndStreamDeactivate(SND_STREAMID stid);
+ 
+ /**
+  * Offset/Address/Size: 0xE20 | 0x80155B78 | size: 0x29C
