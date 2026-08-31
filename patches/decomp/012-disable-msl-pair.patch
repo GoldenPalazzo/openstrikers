@@ -1,0 +1,20 @@
+diff --git a/include/PowerPC_EABI_Support/MSL_C++/MSL_Common/utility.h b/include/PowerPC_EABI_Support/MSL_C++/MSL_Common/utility.h
+index 7aeac5d0..0e2d2c35 100644
+--- a/include/PowerPC_EABI_Support/MSL_C++/MSL_Common/utility.h
++++ b/include/PowerPC_EABI_Support/MSL_C++/MSL_Common/utility.h
+@@ -1,6 +1,7 @@
+ #ifndef MSL_UTILITY_H_
+ #define MSL_UTILITY_H_
+ 
++#ifndef _STL_PAIR_H
+ namespace std
+ {
+ template <class T1, class T2>
+@@ -21,6 +22,7 @@ struct pair
+     }
+ };
+ } // namespace std
++#endif
+ 
+ namespace Metrowerks
+ {
