@@ -1,0 +1,38 @@
+diff --git a/src/Game/AI/Scripts/Plays/DefaultDefensive.cpp b/src/Game/AI/Scripts/Plays/DefaultDefensive.cpp
+index 156a2721..716a4e2f 100644
+--- a/src/Game/AI/Scripts/Plays/DefaultDefensive.cpp
++++ b/src/Game/AI/Scripts/Plays/DefaultDefensive.cpp
+@@ -863,7 +863,7 @@ FuzzyVariant Fuzzy::AttackBallOwner(float fConfidence, cDecisionEntity* pEntity)
+ 
+         if (fTrueConfidence2 <= fNotFacingSideline)
+         {
+-            asm { b _abo_keep2 }
++            goto _abo_keep2;
+         }
+         else
+         {
+@@ -900,7 +900,7 @@ FuzzyVariant Fuzzy::AttackBallOwner(float fConfidence, cDecisionEntity* pEntity)
+ 
+         if (fTrueConfidence3 <= fNotSeparating)
+         {
+-            asm { b _abo_keep3 }
++            goto _abo_keep3;
+         }
+         else
+         {
+diff --git a/src/Game/GameInfo.cpp b/src/Game/GameInfo.cpp
+index d62c81d7..ca85d831 100644
+--- a/src/Game/GameInfo.cpp
++++ b/src/Game/GameInfo.cpp
+@@ -3082,9 +3082,9 @@ void GameInfoManager::DetermineNextCupScreen()
+         else
+         {
+             // Match target's shared false-path branch instead of duplicating the assignment.
+-            asm { b notSuperCup }
++            goto notSuperCup;
+         }
+-        asm { b superCupDone }
++        goto superCupDone;
+     }
+     else
+     {
