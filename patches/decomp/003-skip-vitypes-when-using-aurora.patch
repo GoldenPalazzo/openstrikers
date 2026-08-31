@@ -1,0 +1,16 @@
+diff --git a/include/dolphin/vi/vitypes.h b/include/dolphin/vi/vitypes.h
+index 983a89b7..fb6239ba 100644
+--- a/include/dolphin/vi/vitypes.h
++++ b/include/dolphin/vi/vitypes.h
+@@ -1,3 +1,4 @@
++#ifndef DOLPHIN_GXSTRUCT_H // aurora guard
+ #ifndef _DOLPHIN_VITYPES_H_
+ #define _DOLPHIN_VITYPES_H_
+ 
+@@ -39,3 +40,6 @@ typedef enum {
+ typedef void (*VIRetraceCallback)(u32 retraceCount);
+ 
+ #endif
++#else
++#include <dolphin/vi.h>
++#endif
