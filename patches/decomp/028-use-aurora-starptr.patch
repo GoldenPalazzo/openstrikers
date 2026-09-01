@@ -1,0 +1,16 @@
+diff --git a/include/dolphin/charPipeline/texPalette.h b/include/dolphin/charPipeline/texPalette.h
+index 8e13468d..65936383 100644
+--- a/include/dolphin/charPipeline/texPalette.h
++++ b/include/dolphin/charPipeline/texPalette.h
+@@ -6,9 +6,9 @@
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+-
++#ifndef DOLPHIN_TYPES_H
+ typedef void* Ptr;
+-
++#endif
+ typedef struct {
+     u16 numEntries;
+     u8 unpacked;
