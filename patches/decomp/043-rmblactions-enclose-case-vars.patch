@@ -1,0 +1,21 @@
+diff --git a/src/Game/RumbleActions.cpp b/src/Game/RumbleActions.cpp
+index 471e2c27..0697c665 100644
+--- a/src/Game/RumbleActions.cpp
++++ b/src/Game/RumbleActions.cpp
+@@ -79,6 +79,7 @@ void UpdateRumbleActions(float dt)
+                 break;
+ 
+             case 1: // Delay
++            {
+                 pad->StopRumble();
+                 int nextOp = state->current;
+                 u32 delayValue = state->ops[nextOp].value;
+@@ -92,7 +93,7 @@ void UpdateRumbleActions(float dt)
+                     state->current++;
+                 }
+                 break;
+-
++            }
+             case 2: // Stop rumble
+                 pad->StopRumble();
+                 state->active = 0;
