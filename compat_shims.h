@@ -20,6 +20,17 @@ inline double __frsqrte(double x) {
 
 #include <cstring>
 #define __memcpy memcpy
+#if defined(_WIN32) || defined(_MSVC_VER)
+    #include <string.h>
+    #ifndef strcmpi
+    #define strcmpi _stricmp
+    #endif
+#else
+    #include <strings.h>
+    #ifndef strcmpi
+    #define strcmpi strcasecmp
+    #endif
+#endif
 
 // aurora fixes
 #include <dolphin/gx/GXTexture.h>
