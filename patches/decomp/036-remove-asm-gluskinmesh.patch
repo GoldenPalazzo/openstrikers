@@ -1,0 +1,109 @@
+diff --git a/src/Game/GL/gluSkinMesh.cpp b/src/Game/GL/gluSkinMesh.cpp
+index 6828e5a3..7dd32a81 100644
+--- a/src/Game/GL/gluSkinMesh.cpp
++++ b/src/Game/GL/gluSkinMesh.cpp
+@@ -11,7 +11,6 @@
+ #include "dolphin/PPCArch.h"
+ #include "dolphin/os/OSCache.h"
+ 
+-#define qr0 0
+ 
+ class TempMatrixCopier
+ {
+@@ -94,21 +93,10 @@ void ShaderSkinMesh::AttachSkinData(unsigned long program, const nlMatrix4* pRef
+         {
+             while (true)
+             {
+-                // clang-format off
++                const nlMatrix4* pMatrix = nullptr;
+                 if (curr->num != 0) {
+-                    register const nlMatrix4* pMatrix = &tempMatrices[matrixOffset];
+-                    asm {
+-                        psq_l f2, 0x0(pMatrix), 0, qr0
+-                        psq_l f3, 0x8(pMatrix), 0, qr0
+-                        psq_l f4, 0x10(pMatrix), 0, qr0
+-                        psq_l f5, 0x18(pMatrix), 0, qr0
+-                        psq_l f6, 0x20(pMatrix), 0, qr0
+-                        psq_l f7, 0x28(pMatrix), 0, qr0
+-                        psq_l f8, 0x30(pMatrix), 0, qr0
+-                        psq_l f9, 0x38(pMatrix), 0, qr0
+-                    }
++                    pMatrix = &tempMatrices[matrixOffset];
+                 }
+-                // clang-format on
+ 
+                 for (int i = 0; i < (int)curr->num; i++)
+                 {
+@@ -116,7 +104,7 @@ void ShaderSkinMesh::AttachSkinData(unsigned long program, const nlMatrix4* pRef
+                     vertexWeight = (float)pair.vertexWeight / 65535.0f;
+                     int index = SkinIndexOf(pair);
+ 
+-                    register const nlVector3& inVertex = (morphBuffer != NULL) ? morphBuffer[index] : softwareVertices[index].position;
++                    const nlVector3& inVertex = (morphBuffer != NULL) ? morphBuffer[index] : softwareVertices[index].position;
+ 
+                     const signed char* packed = softwareVertices[index].packed_normal;
+                     float invNormalScale = 0.015625f;
+@@ -125,45 +113,24 @@ void ShaderSkinMesh::AttachSkinData(unsigned long program, const nlMatrix4* pRef
+                     inNormal.y = (float)packed[1] * invNormalScale;
+                     inNormal.z = (float)packed[2] * invNormalScale;
+ 
+-                    register const nlVector3* pInN = &inNormal;
+-                    register nlVector3& outVertex = outVertices[index];
+-                    register nlVector3& outNormal = outNormals[index];
+-
+-                    // clang-format off
+-                    asm {
+-                        psq_l f17, 0x0(inVertex), 0, qr0
+-                        psq_l f18, 0x8(inVertex), 1, qr0
+-                        ps_muls0 f15, f2, f17
+-                        ps_muls0 f16, f3, f17
+-                        ps_madds1 f15, f4, f17, f15
+-                        ps_madds1 f16, f5, f17, f16
+-                        ps_madds0 f15, f6, f18, f15
+-                        ps_madds0 f16, f7, f18, f16
+-                        ps_add f15, f8, f15
+-                        ps_add f16, f9, f16
+-                        psq_l f0, 0x0(pInN), 0, qr0
+-                        psq_l f1, 0x8(pInN), 1, qr0
+-                        ps_muls0 f10, f2, f0
+-                        ps_muls0 f11, f3, f0
+-                        ps_madds1 f10, f4, f0, f10
+-                        ps_madds1 f11, f5, f0, f11
+-                        ps_madds0 f10, f6, f1, f10
+-                        ps_madds0 f11, f7, f1, f11
+-                        lfs f12, vertexWeight
+-                        psq_l f19, 0x0(outVertex), 0, qr0
+-                        psq_l f20, 0x8(outVertex), 1, qr0
+-                        psq_l f13, 0x0(outNormal), 0, qr0
+-                        psq_l f14, 0x8(outNormal), 1, qr0
+-                        ps_madds0 f15, f15, f12, f19
+-                        ps_madds0 f16, f16, f12, f20
+-                        ps_madds0 f10, f10, f12, f13
+-                        ps_madds0 f11, f11, f12, f14
+-                        psq_st f10, 0x0(outNormal), 0, qr0
+-                        psq_st f11, 0x8(outNormal), 1, qr0
+-                        psq_st f15, 0x0(outVertex), 0, qr0
+-                        psq_st f16, 0x8(outVertex), 1, qr0
+-                    }
+-                    // clang-format on
++                    const nlVector3* pInN = &inNormal;
++                    nlVector3& outVertex = outVertices[index];
++                    nlVector3& outNormal = outNormals[index];
++
++                    const float* pm = pMatrix->e;
++                    outVertex.x += vertexWeight *
++                        (pm[0] * inVertex.x + pm[4] * inVertex.y + pm[8]  * inVertex.z + pm[12]);
++                    outVertex.y += vertexWeight *
++                        (pm[1] * inVertex.x + pm[5] * inVertex.y + pm[9]  * inVertex.z + pm[13]);
++                    outVertex.z += vertexWeight *
++                        (pm[2] * inVertex.x + pm[6] * inVertex.y + pm[10] * inVertex.z + pm[14]);
++
++                    outNormal.x += vertexWeight *
++                        (pm[0] * inNormal.x + pm[4] * inNormal.y + pm[8]  * inNormal.z);
++                    outNormal.y += vertexWeight *
++                        (pm[1] * inNormal.x + pm[5] * inNormal.y + pm[9]  * inNormal.z);
++                    outNormal.z += vertexWeight *
++                        (pm[2] * inNormal.x + pm[6] * inNormal.y + pm[10] * inNormal.z);
+                 }
+ 
+                 if (nlRingIsEnd<SkinPairList>(skinPairs, curr))
