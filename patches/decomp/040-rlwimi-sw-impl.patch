@@ -1,0 +1,19 @@
+diff --git a/src/Game/Physics/PhysicsCharacter.cpp b/src/Game/Physics/PhysicsCharacter.cpp
+index 656a1867..1881628b 100644
+--- a/src/Game/Physics/PhysicsCharacter.cpp
++++ b/src/Game/Physics/PhysicsCharacter.cpp
+@@ -20,8 +20,12 @@ extern cBall* g_pBall;
+ static bool sbDoDKBallStuckHack = true;
+ static float sfBallStuckHackShoveMagnitude = 10.0f;
+ 
+-#define SET_BIT(dest, src, shift, bit) \
+-    asm { rlwimi dest, src, shift, bit, bit }
++static inline u32 SET_BIT_IMPL(u32 dest, u32 src, u32 shift, u32 bit) {
++    u32 rotated = (src << shift) | (src >> (32 - shift));
++    u32 mask = 1u << bit;
++    return (dest & ~mask) | ((rotated >> (31 - bit)) & 1) << bit;
++}
++#define SET_BIT(dest, src, shift, bit) (dest = SET_BIT_IMPL(dest, src, shift, bit))
+ /**
+  * Offset/Address/Size: 0x10D0 | 0x801372E8 | size: 0xFC
+  */
