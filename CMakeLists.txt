@@ -29,6 +29,13 @@ file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/decomp/src/Game/*.cpp
 )
 list(FILTER GAME_SOURCES EXCLUDE REGEX ".*/AI/Scripts/TestCases\\.cpp$")
+# was done automatically by decomp/configure.py calling
+# decomp/generate_nlfunction_headers.py
+file(COPY_FILE
+    "${CMAKE_SOURCE_DIR}/decomp/include/NL/detail/nlFunctionPreProcTemplate.h"
+    "${CMAKE_SOURCE_DIR}/decomp/include/NL/detail/nlFunction1PreProcTemplate.h"
+    ONLY_IF_DIFFERENT
+)
 
 add_executable(openstrikers
     ${NL_SOURCES}
