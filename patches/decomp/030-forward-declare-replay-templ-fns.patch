@@ -1,0 +1,16 @@
+diff --git a/include/Game/Replay.h b/include/Game/Replay.h
+index cd505a4f..bd5a1411 100644
+--- a/include/Game/Replay.h
++++ b/include/Game/Replay.h
+@@ -16,6 +16,11 @@ class DrawableNetMesh;
+ class RenderSnapshot;
+ class cPoseNode;
+ class LoadFrame;
++class SaveFrame;
++template <int N>
++void Replayable(LoadFrame& frame, char typeId, cPoseNode*& poseNode);
++template <int N>
++void Replayable(SaveFrame& frame, char typeId, cPoseNode*& poseNode);
+ 
+ template <typename T>
+ struct ReplayFrameTraits
