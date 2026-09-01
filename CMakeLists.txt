@@ -10,6 +10,13 @@ file(GLOB_RECURSE NL_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/decomp/src/NL/*.cpp
 )
 list(FILTER NL_SOURCES EXCLUDE REGEX ".*/NL/plat/.*")
+# was done automatically by decomp/configure.py calling
+# decomp/generate_nlfunction_headers.py
+file(COPY_FILE
+    "${CMAKE_SOURCE_DIR}/decomp/include/NL/detail/nlFunctionPreProcTemplate.h"
+    "${CMAKE_SOURCE_DIR}/decomp/include/NL/detail/nlFunction1PreProcTemplate.h"
+    ONLY_IF_DIFFERENT
+)
 
 file(GLOB_RECURSE ODE_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/decomp/src/ode/*.cpp
@@ -29,13 +36,8 @@ file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/decomp/src/Game/*.cpp
 )
 list(FILTER GAME_SOURCES EXCLUDE REGEX ".*/AI/Scripts/TestCases\\.cpp$")
-# was done automatically by decomp/configure.py calling
-# decomp/generate_nlfunction_headers.py
-file(COPY_FILE
-    "${CMAKE_SOURCE_DIR}/decomp/include/NL/detail/nlFunctionPreProcTemplate.h"
-    "${CMAKE_SOURCE_DIR}/decomp/include/NL/detail/nlFunction1PreProcTemplate.h"
-    ONLY_IF_DIFFERENT
-)
+# these aren't TUs, their fate is to be included in their base .cpp files
+list(FILTER GAME_SOURCES EXCLUDE REGEX ".*_interp\\.cpp$")
 
 add_executable(openstrikers
     ${NL_SOURCES}
