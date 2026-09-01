@@ -1,0 +1,15 @@
+diff --git a/src/Game/Transitions/ModelTransition.cpp b/src/Game/Transitions/ModelTransition.cpp
+index a9a0b524..34c4116d 100644
+--- a/src/Game/Transitions/ModelTransition.cpp
++++ b/src/Game/Transitions/ModelTransition.cpp
+@@ -635,7 +635,9 @@ void ModeledScreenTransition::Load(const char* szName)
+         glSetIgnoreDuplicateModels(true);
+ 
+         nlSNPrintf(buf, 128, "transitions/%s.glg", szName);
+-        m_pModels = glLoadModel(buf, &m_nModels);
++        unsigned long tempModels;
++        m_pModels = glLoadModel(buf, &tempModels);
++        m_nModels = (u32)tempModels;
+ 
+         glSetIgnoreDuplicateModels(false);
+ 
