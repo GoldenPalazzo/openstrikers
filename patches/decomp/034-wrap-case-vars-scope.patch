@@ -1,0 +1,36 @@
+diff --git a/include/Game/FE/feCaptainComponent.h b/include/Game/FE/feCaptainComponent.h
+index 417244aa..eb1d4d20 100644
+--- a/include/Game/FE/feCaptainComponent.h
++++ b/include/Game/FE/feCaptainComponent.h
+@@ -225,6 +225,7 @@ inline void IChooseCaptain::ComponentState::GotoNextPhase()
+         break;
+ 
+     case PHASE_CHOOSING_SIDEKICK:
++    {
+         ISidekickGridComponent* sidekickgrid2 = mParent->mSidekickGridComponents[mHomeAway];
+ 
+         sidekickgrid2->mParentComponent->SetActiveSlide("OUT");
+@@ -273,6 +274,7 @@ inline void IChooseCaptain::ComponentState::GotoNextPhase()
+             FECharacterSound::PlaySidekickName((eSidekickID)mParent->mHomeAwaySidekicks[mHomeAway]);
+         }
+         break;
++    }
+ 
+     case PHASE_READY:
+         if (mParent->mCaptainGridComponents[mHomeAway]->GetSelectedItem() != TEAM_MYSTERY)
+@@ -465,6 +467,7 @@ inline void IChooseCaptain::ComponentState::SetCurrentPhase(Phase phase)
+         break;
+ 
+     case PHASE_CHOOSING_CAPTAIN:
++    {
+         captaingrid = mParent->mCaptainGridComponents[mHomeAway];
+         captaingrid->mParentComponent->SetActiveSlide("IN");
+         captaingrid->mParentComponent->Update(0.0f);
+@@ -515,6 +518,7 @@ inline void IChooseCaptain::ComponentState::SetCurrentPhase(Phase phase)
+ 
+         mParent->mSidekickMiniHeadComponents[mHomeAway]->m_bVisible = false;
+         break;
++    }
+ 
+     case PHASE_CHOOSING_SIDEKICK:
+         mParent->mCaptainGridComponents[mHomeAway]->mParentComponent->m_bVisible = false;
