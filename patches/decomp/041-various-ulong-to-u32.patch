@@ -1,0 +1,39 @@
+diff --git a/include/Game/SH/SHCredits.h b/include/Game/SH/SHCredits.h
+index db28ae6f..bf269e33 100644
+--- a/include/Game/SH/SHCredits.h
++++ b/include/Game/SH/SHCredits.h
+@@ -30,7 +30,7 @@ public:
+                 mFileData = NULL;
+             }
+         }
+-        /* 0x00 */ unsigned long mFileSize; // size 0x4
++        /* 0x00 */ u32 mFileSize; // size 0x4
+         /* 0x04 */ char* mFileData;         // size 0x4
+         /* 0x08 */ SimpleParser mParser;    // size 0x514
+     }; // total size: 0x51C
+diff --git a/src/Game/Render/Presentation.cpp b/src/Game/Render/Presentation.cpp
+index afa858cc..5f15b418 100644
+--- a/src/Game/Render/Presentation.cpp
++++ b/src/Game/Render/Presentation.cpp
+@@ -110,7 +110,7 @@ Presentation::Presentation()
+     mUseInterruptWipe = NULL;
+     mQueuedFunction = NULL;
+     mGoalQuality = HIGHLIGHT_QUALITY_EMPTY;
+-    unsigned long fileSize = 0;
++    u32 fileSize = 0;
+     void* byteCode = nlLoadEntireFile("art/presentation/presentation.byte_code", &fileSize, 0x20, AllocateStart);
+     LoadByteCode(byteCode);
+     nlStrNCpy<char>(mCurrentFunction, idleFun, 64);
+diff --git a/src/Game/ReplayChoreo.cpp b/src/Game/ReplayChoreo.cpp
+index 32590918..4967d13b 100644
+--- a/src/Game/ReplayChoreo.cpp
++++ b/src/Game/ReplayChoreo.cpp
+@@ -73,7 +73,7 @@ void ReplayChoreo::LoadScript()
+         nlFree(mByteCode);
+     }
+ 
+-    unsigned long fileSize = 0;
++    u32 fileSize = 0;
+     mByteCode = nlLoadEntireFile("art/presentation/replay_choreo.byte_code", &fileSize, 0x20, (eAllocType)0);
+     LoadByteCode(mByteCode);
+ 
