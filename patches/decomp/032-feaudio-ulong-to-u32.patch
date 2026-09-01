@@ -1,0 +1,13 @@
+diff --git a/src/Game/FE/FEAudio.cpp b/src/Game/FE/FEAudio.cpp
+index 6af5294c..a5b46472 100644
+--- a/src/Game/FE/FEAudio.cpp
++++ b/src/Game/FE/FEAudio.cpp
+@@ -31,7 +31,7 @@ typedef nlListSlotPoolHigh<AnimAudioEventLookup> FELookupPool;
+  */
+ void FEAudio::BuildAnimAudioEventLookup()
+ {
+-    unsigned long fileSize;
++    u32 fileSize;
+     ListEntry<AnimAudioEventLookup>* pEntry;
+     char* pFileData = (char*)nlLoadEntireFile("audio/FEAnimAudio.txt", &fileSize, 0x20, (eAllocType)1);
+ 
