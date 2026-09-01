@@ -7,6 +7,9 @@ gen:
 build:
     @cmake --build build -j$(nproc)
 
+show-err:
+    @just build | grep --color=auto -i -B 2 -A 5 "error:"
+
 clean:
     @rm -rf build/
 
