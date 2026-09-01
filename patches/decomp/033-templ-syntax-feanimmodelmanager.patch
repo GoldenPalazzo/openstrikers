@@ -1,0 +1,12 @@
+diff --git a/src/Game/FE/feAnimModelManager.cpp b/src/Game/FE/feAnimModelManager.cpp
+index 62c0e5d6..322d1a24 100644
+--- a/src/Game/FE/feAnimModelManager.cpp
++++ b/src/Game/FE/feAnimModelManager.cpp
+@@ -40,6 +40,7 @@ public:
+     /* 0x48 */ unsigned long mSwapTextureID;
+ }; // total size: 0x4C
+ 
++template<>
+ FEAnimModelManager* nlSingleton<FEAnimModelManager>::s_pInstance = NULL;
+ 
+ /**
