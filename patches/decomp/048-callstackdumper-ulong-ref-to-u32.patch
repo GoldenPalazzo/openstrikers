@@ -1,0 +1,13 @@
+diff --git a/src/Game/Sys/CallStackDumper.cpp b/src/Game/Sys/CallStackDumper.cpp
+index c00f5359..fa259643 100644
+--- a/src/Game/Sys/CallStackDumper.cpp
++++ b/src/Game/Sys/CallStackDumper.cpp
+@@ -3398,7 +3398,7 @@ char CallstackDumpFont[0x5E][0x24] = {
+     0x00,
+ };
+ 
+-static inline void DimBackgroundColor(unsigned long& color, unsigned char b)
++static inline void DimBackgroundColor(u32& color, unsigned char b)
+ {
+     unsigned long r;
+     unsigned long g;
