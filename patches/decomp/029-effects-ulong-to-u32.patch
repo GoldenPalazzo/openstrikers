@@ -1,0 +1,26 @@
+diff --git a/src/Game/Effects/EffectsGroup.cpp b/src/Game/Effects/EffectsGroup.cpp
+index 7bc410f6..15aa5a77 100644
+--- a/src/Game/Effects/EffectsGroup.cpp
++++ b/src/Game/Effects/EffectsGroup.cpp
+@@ -660,7 +660,7 @@ static void AddGroupNoCollisions(EffectsGroup* group)
+  */
+ bool fxLoadGroupBundle(const char* filename)
+ {
+-    unsigned long fileSize;
++    u32 fileSize;
+     void* data = fxLoadEntireFileHigh(filename, &fileSize);
+     return fxLoadGroupBundle(data, fileSize);
+ }
+diff --git a/src/Game/Effects/EffectsTemplate.cpp b/src/Game/Effects/EffectsTemplate.cpp
+index 715df00a..a9cdffde 100644
+--- a/src/Game/Effects/EffectsTemplate.cpp
++++ b/src/Game/Effects/EffectsTemplate.cpp
+@@ -523,7 +523,7 @@ static inline void AddTemplateNoCollisions(EffectsTemplate* p)
+  */
+ bool fxLoadTemplateBundle(const char* filename)
+ {
+-    unsigned long fileSize;
++    u32 fileSize;
+     void* data = fxLoadEntireFileHigh(filename, &fileSize);
+     return fxLoadTemplateBundle(data, fileSize);
+ }
