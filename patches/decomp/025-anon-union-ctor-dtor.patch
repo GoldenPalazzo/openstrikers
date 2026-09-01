@@ -1,0 +1,22 @@
+diff --git a/include/Game/DB/CustomTournament.h b/include/Game/DB/CustomTournament.h
+index 6da5f24b..cecf8add 100644
+--- a/include/Game/DB/CustomTournament.h
++++ b/include/Game/DB/CustomTournament.h
+@@ -24,7 +24,7 @@ public:
+     void SerializeData(void* buffer) const;
+     void DeserializeData(void* buffer);
+ 
+-    union
++    union CupFormat
+     {
+         Cup<3, 3> cup31;                         // size 0x144
+         Cup<4, 3> cup41;                         // size 0x1E4
+@@ -40,6 +40,8 @@ public:
+         Cup<8, 14> cup82;                        // size 0x930
+         Knockout<4> knockout4;                   // size 0x184
+         Knockout<8> knockout8;                   // size 0x304
++        CupFormat() {}
++        ~CupFormat() {}
+     } m_dataSpace;                               // offset 0x0, size 0x930
+     /* 0x930 */ unsigned long m_fenceBoundary;   // offset 0x930, size 0x4
+     /* 0x934 */ BaseCup* m_cup;                  // offset 0x934, size 0x4
