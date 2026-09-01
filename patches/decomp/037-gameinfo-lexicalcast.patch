@@ -1,0 +1,40 @@
+diff --git a/src/Game/GameInfo.cpp b/src/Game/GameInfo.cpp
+index d62c81d7..2235eaad 100644
+--- a/src/Game/GameInfo.cpp
++++ b/src/Game/GameInfo.cpp
+@@ -1,15 +1,4 @@
+-#include "Game/GameInfo.h"
+-#include "dolphin/types.h"
+-#include "NL/nlMemory.h"
+-
+-#include "Game/GameSceneManager.h"
+-#include "Game/SH/SHMilestoneTrophy.h"
+-#include "Game/SH/SHCupHub.h"
+-#include "Game/Audio/WorldAudio.h"
+-#include "Game/FE/feHelpFuncs.h"
+-#include "Game/World/WorldLoader.h"
+-#include "Game/main.h"
+-
++#include "NL/nlLexicalCast.h"
+ template <>
+ bool LexicalCast<bool, bool>(const bool& value);
+ template <>
+@@ -39,6 +28,18 @@ template <>
+ BasicString<char, Detail::TempStringAllocator>
+ LexicalCast<BasicString<char, Detail::TempStringAllocator>, const char*>(const char* const& value);
+ 
++#include "Game/GameInfo.h"
++#include "dolphin/types.h"
++#include "NL/nlMemory.h"
++
++#include "Game/GameSceneManager.h"
++#include "Game/SH/SHMilestoneTrophy.h"
++#include "Game/SH/SHCupHub.h"
++#include "Game/Audio/WorldAudio.h"
++#include "Game/FE/feHelpFuncs.h"
++#include "Game/World/WorldLoader.h"
++#include "Game/main.h"
++
+ static bool isKongaUnlocked = false;
+ static bool isYoshiUnlocked = false;
+ static bool isForbiddenUnlocked = false;
