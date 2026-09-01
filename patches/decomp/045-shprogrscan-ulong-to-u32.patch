@@ -1,0 +1,13 @@
+diff --git a/src/Game/SH/SHProgressiveScan.cpp b/src/Game/SH/SHProgressiveScan.cpp
+index aa7fbac5..8f3979c3 100644
+--- a/src/Game/SH/SHProgressiveScan.cpp
++++ b/src/Game/SH/SHProgressiveScan.cpp
+@@ -55,7 +55,7 @@ ProgressiveScanScene::~ProgressiveScanScene()
+     delete mConfirmationImage;
+ }
+ 
+-extern unsigned long nlStringLowerHash(const char*);
++extern u32 nlStringLowerHash(const char*);
+ extern int nlSNPrintf(char*, unsigned long, const char*, ...);
+ 
+ /**

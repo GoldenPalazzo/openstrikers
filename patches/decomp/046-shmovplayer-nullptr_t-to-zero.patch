@@ -1,0 +1,13 @@
+diff --git a/src/Game/SH/SHMoviePlayer.cpp b/src/Game/SH/SHMoviePlayer.cpp
+index fb455db1..02298a76 100644
+--- a/src/Game/SH/SHMoviePlayer.cpp
++++ b/src/Game/SH/SHMoviePlayer.cpp
+@@ -36,7 +36,7 @@ MoviePlayerScene::MoviePlayerScene()
+     mWithSound = false;
+     mLoopMovie = false;
+     mPushWithPop = true;
+-    mMovieFilename[0] = nullptr;
++    mMovieFilename[0] = '\0';
+     if (nlSingleton<GameSceneManager>::s_pInstance)
+     {
+         mGameSceneManager = nlSingleton<GameSceneManager>::s_pInstance;

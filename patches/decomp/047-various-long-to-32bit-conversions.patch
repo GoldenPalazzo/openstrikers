@@ -1,0 +1,187 @@
+diff --git a/include/Game/Sys/gcmemcard.h b/include/Game/Sys/gcmemcard.h
+index ddecb339..2128a63a 100644
+--- a/include/Game/Sys/gcmemcard.h
++++ b/include/Game/Sys/gcmemcard.h
+@@ -41,10 +41,10 @@ enum CARD_STATE
+ 
+ struct CARD_INFO
+ {
+-    /* 0x0 */ long CardSize;
+-    /* 0x4 */ long SectorSize;
+-    /* 0x8 */ long FreeBytes;
+-    /* 0xC */ long FreeFiles;
++    /* 0x0 */ s32 CardSize;
++    /* 0x4 */ s32 SectorSize;
++    /* 0x8 */ s32 FreeBytes;
++    /* 0xC */ s32 FreeFiles;
+ }; // total size: 0x10
+ 
+ class MemCardFunctor
+@@ -185,17 +185,17 @@ public:
+ 
+     MemCard(unsigned long slot);
+ 
+-    long BeginCardAccess(const MemCardFunctor& Callback);
+-    long CreateFile(const char* FileName, unsigned long FileSize, MemCard::ICON_CONFIG* pIconConfig, MemCard::MC_FILE*& pFile, const MemCardFunctor& Callback);
+-    long OpenFile(const char* FileName, MemCard::MC_FILE*& pFile, unsigned long* pFileLength);
+-    long FormatCard(const MemCardFunctor& Callback);
+-    long DeleteFile(const char* FileName, const MemCardFunctor& Callback);
+-    long InternalReadFile(MemCard::MC_FILE* pFile, void* Buffer, unsigned long Length, unsigned long StartAt, const MemCardFunctor& Callback);
+-    long InternalWriteFile(MemCard::MC_FILE* pFile, void* Buffer, unsigned long Length, unsigned long StartAt, const MemCardFunctor& Callback, bool ResetTransfer);
+-    long CloseFile(MemCard::MC_FILE* pFile);
+-    long FileExists(const char* fileName);
+-    long WriteFileIconData(MemCard::MC_FILE* pFile, void* pData, const MemCardFunctor& functor);
+-    unsigned long AlignBytesToSectorSize(unsigned long bytes);
++    s32 BeginCardAccess(const MemCardFunctor& Callback);
++    s32 CreateFile(const char* FileName, unsigned long FileSize, MemCard::ICON_CONFIG* pIconConfig, MemCard::MC_FILE*& pFile, const MemCardFunctor& Callback);
++    s32 OpenFile(const char* FileName, MemCard::MC_FILE*& pFile, unsigned long* pFileLength);
++    s32 FormatCard(const MemCardFunctor& Callback);
++    s32 DeleteFile(const char* FileName, const MemCardFunctor& Callback);
++    s32 InternalReadFile(MemCard::MC_FILE* pFile, void* Buffer, unsigned long Length, unsigned long StartAt, const MemCardFunctor& Callback);
++    s32 InternalWriteFile(MemCard::MC_FILE* pFile, void* Buffer, unsigned long Length, unsigned long StartAt, const MemCardFunctor& Callback, bool ResetTransfer);
++    s32 CloseFile(MemCard::MC_FILE* pFile);
++    s32 FileExists(const char* fileName);
++    s32 WriteFileIconData(MemCard::MC_FILE* pFile, void* pData, const MemCardFunctor& functor);
++    u32 AlignBytesToSectorSize(unsigned long bytes);
+ 
+ private:
+     void CardRemoved(long result);
+diff --git a/src/Game/Sys/CallStackDumper.cpp b/src/Game/Sys/CallStackDumper.cpp
+index c00f5359..ea2dab97 100644
+--- a/src/Game/Sys/CallStackDumper.cpp
++++ b/src/Game/Sys/CallStackDumper.cpp
+@@ -3426,7 +3426,7 @@ static void ProcessBackground()
+     {
+         for (j = 0; j < 0x280; j++)
+         {
+-            unsigned long color;
++            u32 color;
+             unsigned char b;
+ 
+             GXPeekARGB((unsigned short)j, (unsigned short)i, &color);
+diff --git a/src/Game/Sys/GCStream.cpp b/src/Game/Sys/GCStream.cpp
+index 45bbbd0a..936c954b 100644
+--- a/src/Game/Sys/GCStream.cpp
++++ b/src/Game/Sys/GCStream.cpp
+@@ -34,13 +34,13 @@ struct SND_ADPCMSTREAM_INFO;
+ 
+ extern "C"
+ {
+-    void sndStreamMixParameterEx(unsigned long stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
+-    void sndStreamDeactivate(unsigned long stid);
+-    void sndStreamFree(unsigned long stid);
+-    void sndStreamARAMUpdate(unsigned long stid, unsigned long off1, unsigned long len1, unsigned long off2, unsigned long len2);
+-    void sndStreamFrq(unsigned long stid, unsigned long frq);
+-    void sndStreamADPCMParameter(unsigned long stid, SND_ADPCMSTREAM_INFO* adpcmInfo);
+-    unsigned long sndStreamAllocEx(unsigned char prio, void* buffer, unsigned long samples, unsigned long frq, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb, unsigned char studio, unsigned long flags, unsigned long (*updateFunction)(void*, unsigned long, void*, unsigned long, unsigned long), unsigned long user, SND_ADPCMSTREAM_INFO* adpcmInfo);
++    void sndStreamMixParameterEx(SND_STREAMID stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
++    void sndStreamDeactivate(SND_STREAMID stid);
++    void sndStreamFree(SND_STREAMID stid);
++    void sndStreamARAMUpdate(SND_STREAMID stid, u32 off1, u32 len1, u32 off2, u32 len2);
++    void sndStreamFrq(SND_STREAMID stid, u32 frq);
++    void sndStreamADPCMParameter(SND_STREAMID stid, SND_ADPCMSTREAM_INFO* adpcmInfo);
++    SND_STREAMID sndStreamAllocEx(unsigned char prio, void* buffer, u32 samples, u32 frq, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb, unsigned char studio, u32 flags, u32 (*updateFunction)(void*, u32, void*, u32, u32), u32 user, SND_ADPCMSTREAM_INFO* adpcmInfo);
+ }
+ 
+ namespace GCAudioStreaming
+diff --git a/src/Game/Sys/PlatStream.cpp b/src/Game/Sys/PlatStream.cpp
+index 7dc421fb..e234e857 100644
+--- a/src/Game/Sys/PlatStream.cpp
++++ b/src/Game/Sys/PlatStream.cpp
+@@ -5,8 +5,8 @@
+ 
+ extern "C"
+ {
+-    void sndStreamMixParameterEx(unsigned long stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
+-    void sndStreamDeactivate(unsigned long stid);
++    void sndStreamMixParameterEx(SND_STREAMID stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
++    void sndStreamDeactivate(SND_STREAMID stid);
+ }
+ 
+ GCAudioStreaming::AudioBufferMgr g_BufferMgr;
+diff --git a/src/Game/Sys/geventdst.cpp b/src/Game/Sys/geventdst.cpp
+index a708fa13..9e408da4 100644
+--- a/src/Game/Sys/geventdst.cpp
++++ b/src/Game/Sys/geventdst.cpp
+@@ -7,10 +7,10 @@ void EventManager::SetupDestArray()
+ {
+     AllocateDestArray(0x6A, (unsigned long)-1);
+ 
+-    unsigned long* d = m_dest;
+-    unsigned long one = 1;    // r4
+-    unsigned long v23 = 0x17; // r3
+-    unsigned long v22 = 0x16; // r0
++    u32* d = m_dest;
++    u32 one = 1;    // r4
++    u32 v23 = 0x17; // r3
++    u32 v22 = 0x16; // r0
+ 
+     // Offsets / indices are written in the exact order from the asm.
+     d[39] = one; // +0x9C
+diff --git a/src/Game/Sys/gcmemcard.cpp b/src/Game/Sys/gcmemcard.cpp
+index fc955fe6..87548c55 100644
+--- a/src/Game/Sys/gcmemcard.cpp
++++ b/src/Game/Sys/gcmemcard.cpp
+@@ -70,7 +70,7 @@ s32 MemCard::BeginCardAccess(const MemCardFunctor& Callback)
+ /**
+  * Offset/Address/Size: 0xF28 | 0x801CA698 | size: 0x3B4
+  */
+-long MemCard::CreateFile(const char* FileName, unsigned long FileSize, MemCard::ICON_CONFIG* pIconConfig, MemCard::MC_FILE*& pFile, const MemCardFunctor& Callback)
++s32 MemCard::CreateFile(const char* FileName, unsigned long FileSize, MemCard::ICON_CONFIG* pIconConfig, MemCard::MC_FILE*& pFile, const MemCardFunctor& Callback)
+ {
+     if (m_State != IS_MOUNTED)
+     {
+@@ -164,7 +164,7 @@ long MemCard::CreateFile(const char* FileName, unsigned long FileSize, MemCard::
+ /**
+  * Offset/Address/Size: 0xBE8 | 0x801CA358 | size: 0x340
+  */
+-long MemCard::OpenFile(const char* FileName, MemCard::MC_FILE*& pFile, unsigned long* pFileLength)
++s32 MemCard::OpenFile(const char* FileName, MemCard::MC_FILE*& pFile, unsigned long* pFileLength)
+ {
+     long result;
+ 
+@@ -280,7 +280,7 @@ s32 MemCard::FormatCard(const MemCardFunctor& Callback)
+ /**
+  * Offset/Address/Size: 0x930 | 0x801CA0A0 | size: 0x1F8
+  */
+-long MemCard::DeleteFile(const char* FileName, const MemCardFunctor& Callback)
++s32 MemCard::DeleteFile(const char* FileName, const MemCardFunctor& Callback)
+ {
+     if (m_State != IS_MOUNTED)
+     {
+@@ -334,7 +334,7 @@ long MemCard::DeleteFile(const char* FileName, const MemCardFunctor& Callback)
+ /**
+  * Offset/Address/Size: 0x860 | 0x801C9FD0 | size: 0xD0
+  */
+-long MemCard::InternalReadFile(MC_FILE* pFile, void* Buffer, unsigned long Length, unsigned long StartAt, const MemCardFunctor& Callback)
++s32 MemCard::InternalReadFile(MC_FILE* pFile, void* Buffer, unsigned long Length, unsigned long StartAt, const MemCardFunctor& Callback)
+ {
+     if (m_State != IS_MOUNTED)
+     {
+@@ -362,7 +362,7 @@ long MemCard::InternalReadFile(MC_FILE* pFile, void* Buffer, unsigned long Lengt
+ /**
+  * Offset/Address/Size: 0x740 | 0x801C9EB0 | size: 0x120
+  */
+-long MemCard::InternalWriteFile(MC_FILE* pFile, void* Buffer, unsigned long Length, unsigned long StartAt, const MemCardFunctor& Callback, bool ResetTransfer)
++s32 MemCard::InternalWriteFile(MC_FILE* pFile, void* Buffer, unsigned long Length, unsigned long StartAt, const MemCardFunctor& Callback, bool ResetTransfer)
+ {
+     unsigned long LengthMisalign;
+     long Result;
+@@ -431,7 +431,7 @@ s32 MemCard::FileExists(const char* fileName)
+ /**
+  * Offset/Address/Size: 0x204 | 0x801C9974 | size: 0x3D8
+  */
+-long MemCard::WriteFileIconData(MemCard::MC_FILE* pFile, void* pData, const MemCardFunctor& functor)
++s32 MemCard::WriteFileIconData(MemCard::MC_FILE* pFile, void* pData, const MemCardFunctor& functor)
+ {
+     CARDStat stat;
+     ICON_DATA_INFO DataInfo;
+@@ -720,7 +720,7 @@ void MemCard::CardRemoved(long result)
+ /**
+  * Offset/Address/Size: 0x10 | 0x801C9780 | size: 0x14
+  */
+-unsigned long MemCard::AlignBytesToSectorSize(unsigned long bytes)
++u32 MemCard::AlignBytesToSectorSize(unsigned long bytes)
+ {
+     unsigned long sectorSize = m_CardInfo.SectorSize;
+     unsigned long mask = sectorSize - 1;
