@@ -59,5 +59,7 @@ inline void GXSetGPMetric(int, int) {}
 inline void GXReadGPMetric(u32* val0, u32* val1) { *val0 = 0; *val1 = 0; }
 inline void GXInitFogAdjTable(void* table, u16 width, float projParam[4][4]) { /* stub */ }
 inline GXRenderModeObj GXEurgb60Hz480IntDf = {}; // stub
-inline void GXWaitDrawDone() {}
+extern "C" inline void GXWaitDrawDone() {}
 typedef const float (*CMtxP)[4];
+inline void SISetSamplingRate(int) {}
+inline void PADSetSamplingCallback(void (*)(void)) {}  // PADSamplingCallback = void (*)(void)
