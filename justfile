@@ -10,6 +10,9 @@ build:
 show-err:
     @just build | grep --color=auto -i -B 2 -A 5 "error:"
 
+show-link:
+    @just build 2>&1 | grep "undefined reference to" | head -n 50
+
 clean:
     @rm -rf build/
 
@@ -28,3 +31,5 @@ unpatch:
 
 patch:
     @bash ./apply_patches.sh
+    @cp decomp/include/NL/detail/nlFunctionPreProcTemplate.h decomp/include/NL/detail/nlFunction1PreProcTemplate.h
+    @echo "Generated decomp/include/NL/detail/nlFunction1PreProcTemplate.h"
