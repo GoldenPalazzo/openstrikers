@@ -1,0 +1,208 @@
+diff --git a/include/Game/Sys/GCStream.h b/include/Game/Sys/GCStream.h
+index 2e39c790..5eae84f5 100644
+--- a/include/Game/Sys/GCStream.h
++++ b/include/Game/Sys/GCStream.h
+@@ -5,13 +5,17 @@
+ #include "NL/nlWare.h"
+ #include "NL/nlFile.h"
+ #include "NL/nlFileGC.h"
++#ifndef TARGET_PC
+ #include "musyx/musyx.h"
++#endif
+ #include "dolphin/os.h"
+ 
+ // Declarations needed by the inline (weak) AudioStream methods defined below,
+ // so this header compiles standalone in every includer.
+ void nlServiceFileSystem();
++#ifndef TARGET_PC
+ extern "C" void sndStreamLPFParameter(unsigned long, bool, unsigned long);
++#endif
+ 
+ struct sDSPADPCM
+ {
+@@ -64,7 +68,9 @@ public:
+     {
+         if (on != m_bLPFOn)
+         {
++#ifndef TARGET_PC
+             sndStreamLPFParameter(m_StreamId, on, m_LPFFreq);
++#endif
+             m_bLPFOn = on;
+         }
+     }
+@@ -72,7 +78,9 @@ public:
+     {
+         if (m_bLPFOn)
+         {
++#ifndef TARGET_PC
+             sndStreamLPFParameter(m_StreamId, m_bLPFOn, frequency);
++#endif
+         }
+         m_LPFFreq = frequency;
+     }
+@@ -257,7 +265,9 @@ public:
+             while (buffer != NULL)
+             {
+                 buffer->m_Volume = (u8)clampedVolume;
++#ifndef TARGET_PC
+                 sndStreamMixParameterEx(buffer->m_StreamId, buffer->m_Volume, buffer->m_Pan, buffer->m_SurroundPan, 0, 0);
++#endif
+                 ((unsigned long&)bufferIndex)++;
+                 buffer = GetBuffer((unsigned long)bufferIndex);
+             }
+@@ -323,7 +333,9 @@ public:
+ 
+             while (buffer != NULL)
+             {
++#ifndef TARGET_PC
+                 sndStreamActivate(buffer->m_StreamId);
++#endif
+                 ((unsigned long&)bufferIndex)++;
+                 buffer = GetBuffer((unsigned long)bufferIndex);
+             }
+@@ -358,6 +370,7 @@ public:
+             while (pBuffer != NULL)
+             {
+                 pBuffer->m_Volume = 0;
++#ifndef TARGET_PC
+                 sndStreamMixParameterEx(
+                     pBuffer->m_StreamId,
+                     pBuffer->m_Volume,
+@@ -366,6 +379,7 @@ public:
+                     0,
+                     0);
+                 sndStreamDeactivate(pBuffer->m_StreamId);
++#endif
+                 m_State = SS_Warm;
+ 
+                 cursor.Advance();
+@@ -394,7 +408,9 @@ public:
+ 
+         while (buffer != NULL)
+         {
++#ifndef TARGET_PC
+             sndStreamActivate(buffer->m_StreamId);
++#endif
+             cursor.Advance();
+             buffer = cursor.GetBuffer();
+         }
+@@ -443,6 +459,7 @@ public:
+             while (pBuffer != NULL)
+             {
+                 pBuffer->m_Volume = 0;
++#ifndef TARGET_PC
+                 sndStreamMixParameterEx(
+                     pBuffer->m_StreamId,
+                     pBuffer->m_Volume,
+@@ -451,6 +468,7 @@ public:
+                     0,
+                     0);
+                 sndStreamDeactivate(pBuffer->m_StreamId);
++#endif
+                 m_State = SS_Warm;
+ 
+                 ((unsigned long&)bufferIndex)++;
+diff --git a/include/NL/plat/plataudio.h b/include/NL/plat/plataudio.h
+index 8e0fc23a..7a02ffca 100644
+--- a/include/NL/plat/plataudio.h
++++ b/include/NL/plat/plataudio.h
+@@ -3,7 +3,9 @@
+ 
+ #include "types.h"
+ #include "NL/nlMath.h"
++#ifndef TARGET_PC
+ #include "musyx/musyx.h"
++#endif
+ 
+ // Forward declarations
+ class PhysicsObject;
+diff --git a/src/Game/Audio/audio.cpp b/src/Game/Audio/audio.cpp
+index 58b435df..ad50fd88 100644
+--- a/src/Game/Audio/audio.cpp
++++ b/src/Game/Audio/audio.cpp
+@@ -2222,7 +2224,9 @@ void Audio::Update(float fDeltaT)
+     g_fAudioTimer += fDeltaT;
+     if (uSFXVolume != uCurrentSFXVolume)
+     {
++#ifndef TARGET_PC
+         sndVolume((u8)uSFXVolume, 0x1F4, 0xFE);
++#endif
+         uCurrentSFXVolume = uSFXVolume;
+     }
+ 
+diff --git a/src/NL/plat/plataudio.cpp b/src/NL/plat/plataudio.cpp
+index 6fe99b56..665031c5 100644
+--- a/src/NL/plat/plataudio.cpp
++++ b/src/NL/plat/plataudio.cpp
+@@ -10,6 +10,66 @@
+ #include "types.h"
+ #include <dolphin/ar.h>
+ 
++#ifdef TARGET_PC
++void PrintSoundStackInfo() {}
++void musyXFree(void* addr) { free(addr); }
++void* musyXAlloc(u32 size) { return malloc(size); }
++namespace PlatAudio
++{
++
++extern bool gUsingDolbyProLogic2;
++
++// Retail mangles these as `__9PlatAudio`, which MWCC produces identically for a namespace and for
++// a class, so a namespace reproduces the symbols exactly. Note that means `static` here would give
++// internal linkage rather than the static-member linkage the original had - InitEmitter is called
++// from audio.cpp and AudioEventHandler.cpp and must stay externally visible.
++u32 GetSndIDError() {return 0;}
++bool IsSFXPlaying(unsigned long uVoiceID) {return 0;}
++void InitEmitter(unsigned long index) {}
++bool RemoveEmitter(SFXEmitter* pSFXEmitter) {return 1;}
++bool RemoveEmitter(unsigned long index) {return 1;}
++SFXEmitter* GetSFXEmitter(unsigned long index) {return 0;}
++SFXEmitter* GetFreeEmitter(unsigned long& index) {return 0;}
++SND_VOICEID GetEmitterVoiceID(SFXEmitter* pSFXEmitter) {return 0;}
++bool IsEmitterActive(SFXEmitter* pSFXEmitter) {return 0;}
++void Update3DSFXEmitter(SFXEmitter* pSFXEmitter, const nlVector3& position, const nlVector3& direction, float maxVol) {}
++unsigned long Add3DSFXEmitter(const EmitterStartInfo& info) {return 0;}
++void Remove3DSFXListener(SND_LISTENER* pListener) {}
++void Update3DSFXListener(SND_LISTENER* pListener, const nlVector3& position, const nlVector3& direction, const nlVector3& heading, const nlVector3& up, float overallEmitterVol) {}
++void Add3DSFXListener(SND_LISTENER* pListener, const nlVector3& position, const nlVector3& direction, const nlVector3& heading, const nlVector3& up, float frontAudibleDist, float backAudibleDist, float overallEmitterVol, float volPosOffset,
++    bool bUseDoppler, float fSpeedOfSound) {}
++bool SetPitchBendOnSFX(SND_VOICEID uVoiceID, u16 pitch) {return 0;}
++bool SetFilterFreqOnSFX(SND_VOICEID uVoiceID, u16 value) {return 0;}
++bool SetMIDIControllerVal14Bit(SND_VOICEID uVoiceID, u8 ctrl, u16 value) {return 0;}
++void SetVolGroupVolume(u8 volGroup, float fVol, u16 fadeTime) {}
++bool SetSFXVolumeGroup(u32 uSFXID, u8 volGroup) {return 0;}
++bool SetSFXReverbVol(unsigned long uVoiceID, float fVol) {return 0;}
++void SetSFXVolume(unsigned long uVoiceID, float fVolume) {}
++bool StopSFX(unsigned long uVoiceID) {return 0;}
++unsigned long PlaySFX(const SFXStartInfo& info) {return 1;}
++bool UnloadAllSoundGroupsOnStack(AudioFileData& fileData, unsigned long stackEnum) {return 1;}
++bool UnloadAllSoundGroups(AudioFileData& fileData) {return 1;}
++bool UnloadSoundGroup(AudioFileData& fileData, unsigned long groupEnum) {return 1;}
++bool LoadSoundGroup(AudioFileData& fileData, unsigned long groupEnum, unsigned long stackEnum, bool bUseARAMStreamCallback) {return 1;}
++void SetupSoundBuffers(AudioFileData& fileData, bool bStream) {}
++void StopAllSound() {}
++void Shutdown() {}
++bool Initialize(bool bUseDPL2) {return 1;}
++void PurgeSampleFileBuffer() {}
++bool IsEntireSampleFileInMem() {return 1;}
++unsigned char ReadEntireSampleFileIntoMemSync(const char* sampleFile) {return 1;}
++unsigned char ReadEntireSampleFileIntoMem(const char* sampleFile) {return 1;}
++bool UpdateAuxEffectA(MusyXEffectType type, void* auxEffectSettings) {return 1;}
++bool AddAuxEffectA(MusyXEffectType type, void* auxEffectSettings, unsigned char studio) {return 1;}
++bool ShutdownAuxEffectA() {return 1;}
++bool DeactivateDPL2() {return 1;}
++bool ActivateDPL2() {return 1;}
++void SetOutputMode(MusyXOutputType output) {}
++} // namespace PlatAudio
++
++
++
++#else
+ extern "C" u32 sndStackGetAvailableSampleMemory(unsigned long id);
+ extern "C" u32 sndStackSetCurrent(u32 id);
+ extern "C" u32 sndStackGetSize(void);
+@@ -1886,3 +1946,4 @@ ARAMTransferHelperLoadEntireFile* ARAMTransferHelperLoadEntireFile::m_pARAMHelpe
+ const char* ARAMTransferHelperLoadEntireFile::m_szFileName;
+ u32 ARAMTransferHelperLoadEntireFile::m_uFileSize;
+ nlFile* ARAMTransferHelperLoadEntireFile::s_pFile;
++#endif

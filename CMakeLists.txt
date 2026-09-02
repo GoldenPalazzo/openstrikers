@@ -51,7 +51,6 @@ target_include_directories(openstrikers PRIVATE
     ./aurora/include
     ./decomp/src/ode
     ./decomp/include
-    ./decomp/extern/musyx/include
     ./decomp/src
 )
 
