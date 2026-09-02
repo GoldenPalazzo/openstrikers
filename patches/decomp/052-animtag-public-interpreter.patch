@@ -1,0 +1,13 @@
+diff --git a/include/Game/Triggers/AnimTagScript.h b/include/Game/Triggers/AnimTagScript.h
+index 001d0729..ac0bba05 100644
+--- a/include/Game/Triggers/AnimTagScript.h
++++ b/include/Game/Triggers/AnimTagScript.h
+@@ -20,7 +20,7 @@ struct AnimTagCBInfo
+     /* 0x4 */ AnimTagInfo ScriptInfo;
+ }; // total size: 0xC
+ 
+-class AnimTagScriptInterpreter : private InterpreterCore
++class AnimTagScriptInterpreter : public InterpreterCore
+ {
+ public:
+     AnimTagScriptInterpreter(unsigned int stackSize)
