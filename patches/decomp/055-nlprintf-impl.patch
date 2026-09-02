@@ -1,0 +1,30 @@
+diff --git a/src/Game/Sys/debug.cpp b/src/Game/Sys/debug.cpp
+index daa8e017..469ea794 100644
+--- a/src/Game/Sys/debug.cpp
++++ b/src/Game/Sys/debug.cpp
+@@ -6,7 +6,7 @@
+ #include "NL/nlFileGC.h"
+ // #include "NL/nlPrint.h"
+ 
+-extern void nlPrintf(const char*, ...);
++extern int nlPrintf(const char*, ...);
+ 
+ namespace tDebugPrintManager
+ {
+diff --git a/src/NL/nlPrint.cpp b/src/NL/nlPrint.cpp
+index 3023f1c7..e8197b65 100644
+--- a/src/NL/nlPrint.cpp
++++ b/src/NL/nlPrint.cpp
+@@ -22,3 +22,12 @@ int nlSNPrintf(char* buffer, unsigned long size, const char* format, ...)
+     buffer[size - 1] = '\0';
+     return result;
+ }
++
++int nlPrintf(const char* format, ...)
++{
++    va_list args;
++    va_start(args, format);
++    int result = vprintf(format, args);
++    va_end(args);
++    return result;
++}
