@@ -1,8 +1,8 @@
 diff --git a/include/Game/Effects/EmissionController.h b/include/Game/Effects/EmissionController.h
-index 5232f898..fd1733ce 100644
+index 5232f898..2885c561 100644
 --- a/include/Game/Effects/EmissionController.h
 +++ b/include/Game/Effects/EmissionController.h
-@@ -8,12 +8,25 @@
+@@ -8,6 +8,19 @@
  #include "Game/Effects/EffectsGroup.h"
  #include "Game/Effects/efList.h"
  
@@ -22,9 +22,3 @@ index 5232f898..fd1733ce 100644
  class cPN_SAnimController;
  class cPoseAccumulator;
  class EmissionController;
- typedef void FnEmissionController(EmissionController&);
- 
-void* fxLoadEntireFileHigh(const char* filename, u32* fileSize);
- 
- class EmissionController : public efNode
- {

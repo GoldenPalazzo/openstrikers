@@ -2,21 +2,6 @@ diff --git a/include/Game/Sys/gcmemcard.h b/include/Game/Sys/gcmemcard.h
 index ddecb339..2128a63a 100644
 --- a/include/Game/Sys/gcmemcard.h
 +++ b/include/Game/Sys/gcmemcard.h
-@@ -41,10 +41,10 @@ enum CARD_STATE
- 
- struct CARD_INFO
- {
--    /* 0x0 */ long CardSize;
--    /* 0x4 */ long SectorSize;
--    /* 0x8 */ long FreeBytes;
--    /* 0xC */ long FreeFiles;
-+    /* 0x0 */ s32 CardSize;
-+    /* 0x4 */ s32 SectorSize;
-+    /* 0x8 */ s32 FreeBytes;
-+    /* 0xC */ s32 FreeFiles;
- }; // total size: 0x10
- 
- class MemCardFunctor
 @@ -185,17 +185,17 @@ public:
  
      MemCard(unsigned long slot);
