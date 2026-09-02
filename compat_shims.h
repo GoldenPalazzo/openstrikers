@@ -9,6 +9,7 @@
 #define __VA_LIST_COMPAT_DEFINED
 typedef __builtin_va_list __va_list;
 extern "C" int __float_max[];
+extern "C" float __float_min[];
 extern "C" int __float_nan[];
 extern "C" int __float_huge[];
 typedef FILE _FILE;
