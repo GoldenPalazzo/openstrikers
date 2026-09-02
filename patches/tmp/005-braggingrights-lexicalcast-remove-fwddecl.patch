@@ -1,0 +1,53 @@
+diff --git a/include/NL/nlLexicalCast.h b/include/NL/nlLexicalCast.h
+index 85f5fe28..626bd395 100644
+--- a/include/NL/nlLexicalCast.h
++++ b/include/NL/nlLexicalCast.h
+@@ -283,4 +283,27 @@ inline WideBasicString LexicalCast<WideBasicString, const unsigned short*>(
+     return Detail::LexicalCastImpl<WideBasicString, const unsigned short*>::Do(from);
+ }
+ 
++namespace Detail
++{
++
++template <typename To, unsigned long N>
++struct LexicalCastImpl<To, char[N]> {
++    static To Do(const char* s) { return LexicalCastImpl<To, const char*>::Do(s); }
++};
++template <typename To, unsigned long N>
++struct LexicalCastImpl<To, const char[N]> {
++    static To Do(const char* s) { return LexicalCastImpl<To, const char*>::Do(s); }
++};
++
++// Supporto per qualsiasi array di unsigned short (Wide String)
++template <typename To, unsigned long N>
++struct LexicalCastImpl<To, unsigned short[N]> {
++    static To Do(const unsigned short* s) { return LexicalCastImpl<To, const unsigned short*>::Do(s); }
++};
++template <typename To, unsigned long N>
++struct LexicalCastImpl<To, const unsigned short[N]> {
++    static To Do(const unsigned short* s) { return LexicalCastImpl<To, const unsigned short*>::Do(s); }
++};
++}
++
+ #endif // _NLLEXICALCAST_H_
+diff --git a/src/Game/FE/BraggingRights.cpp b/src/Game/FE/BraggingRights.cpp
+index 9779f453..339d3d78 100644
+--- a/src/Game/FE/BraggingRights.cpp
++++ b/src/Game/FE/BraggingRights.cpp
+@@ -21,11 +21,11 @@
+ #include "NL/nlLocalization.h"
+ #include "NL/nlString.h"
+ 
+-template <>
+-NLString LexicalCast<NLString, int>(const int& value);
+-template <>
+-WideBasicString LexicalCast<WideBasicString, const unsigned short*>(
+-    const unsigned short* const& value);
++// template <>
++// NLString LexicalCast<NLString, int>(const int& value);
++// template <>
++// WideBasicString LexicalCast<WideBasicString, const unsigned short*>(
++//     const unsigned short* const& value);
+ 
+ static char* TEXT_NAMES[] = { "PLAYER", "PLAYER2", "PLAYER3", "PLAYER4", "PLAYER5" };
+ 

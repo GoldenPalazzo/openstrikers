@@ -1,0 +1,16 @@
+diff --git a/include/NL/nlFormatFwd.h b/include/NL/nlFormatFwd.h
+index 784eff2b..fe11fda5 100644
+--- a/include/NL/nlFormatFwd.h
++++ b/include/NL/nlFormatFwd.h
+@@ -1,7 +1,9 @@
+ #ifndef _NLFORMATFWD_H_
+ #define _NLFORMATFWD_H_
+ 
+-template <typename StringType, typename T0>
+-StringType Format(const StringType& string, const T0& t0);
++#include "NL/nlFormat.h"
++
++// template <typename StringType, typename T0>
++// StringType Format(const StringType& string, const T0& t0);
+ 
+ #endif // _NLFORMATFWD_H_

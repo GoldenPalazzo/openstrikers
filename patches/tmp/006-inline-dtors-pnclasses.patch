@@ -1,0 +1,64 @@
+diff --git a/include/Game/SAnim/pnBlender.h b/include/Game/SAnim/pnBlender.h
+index eac0e2b2..60e71a30 100644
+--- a/include/Game/SAnim/pnBlender.h
++++ b/include/Game/SAnim/pnBlender.h
+@@ -30,7 +30,10 @@ public:
+         Replayable<0>(frame, FloatCompressor<0, 1, 7>(m_fBlendTime));
+     }
+ 
+-    inline void operator delete(void* ptr);
++    inline void operator delete(void* ptr)
++    {
++        m_BlenderSlotPool.Free(static_cast<cPN_Blender*>(ptr));
++    }
+ 
+     /* 0x14 */ float m_fBlendTime;
+     /* 0x18 */ float m_fBlendDuration;
+diff --git a/include/Game/SAnim/pnFeather.h b/include/Game/SAnim/pnFeather.h
+index 5e2286f6..6dbd9221 100644
+--- a/include/Game/SAnim/pnFeather.h
++++ b/include/Game/SAnim/pnFeather.h
+@@ -48,7 +48,10 @@ public:
+     void BeginBlendIn(float duration);
+     void BeginBlendOut(float duration);
+ 
+-    inline void operator delete(void* ptr);
++    inline void operator delete(void* ptr)
++    {
++        m_FeatherSlotPool.Free(static_cast<cPN_Feather*>(ptr));
++    }
+ 
+     /* 0x14 */ float* m_pFeatherWeights;
+     /* 0x18 */ float m_fBlendTime;
+diff --git a/src/Game/SAnim/pnBlender.cpp b/src/Game/SAnim/pnBlender.cpp
+index 657befe5..b6a40c79 100644
+--- a/src/Game/SAnim/pnBlender.cpp
++++ b/src/Game/SAnim/pnBlender.cpp
+@@ -6,11 +6,6 @@ static f32 CANT_COLLIDE = *(f32*)__float_max;
+ 
+ SlotPool<cPN_Blender> cPN_Blender::m_BlenderSlotPool(0x10, 0x10);
+ 
+-void cPN_Blender::operator delete(void* ptr)
+-{
+-    m_BlenderSlotPool.Free((cPN_Blender*)ptr);
+-}
+-
+ /**
+  * Offset/Address/Size: 0x440 | 0x801EEB60 | size: 0x98
+  */
+diff --git a/src/Game/SAnim/pnFeather.cpp b/src/Game/SAnim/pnFeather.cpp
+index 0e4a18cd..150822a4 100644
+--- a/src/Game/SAnim/pnFeather.cpp
++++ b/src/Game/SAnim/pnFeather.cpp
+@@ -8,11 +8,6 @@ static f32 CANT_COLLIDE = *(f32*)__float_max;
+ 
+ SlotPool<cPN_Feather> cPN_Feather::m_FeatherSlotPool(0x10, 0x10);
+ 
+-void cPN_Feather::operator delete(void* ptr)
+-{
+-    m_FeatherSlotPool.Free((cPN_Feather*)ptr);
+-}
+-
+ /**
+  * Offset/Address/Size: 0x890 | 0x801EFDC4 | size: 0xEC
+  */

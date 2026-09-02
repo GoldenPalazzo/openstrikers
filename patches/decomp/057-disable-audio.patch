@@ -131,7 +131,7 @@ index 6fe99b56..665031c5 100644
 +namespace PlatAudio
 +{
 +
-+extern bool gUsingDolbyProLogic2;
++bool gUsingDolbyProLogic2 = false;
 +
 +// Retail mangles these as `__9PlatAudio`, which MWCC produces identically for a namespace and for
 +// a class, so a namespace reproduces the symbols exactly. Note that means `static` here would give

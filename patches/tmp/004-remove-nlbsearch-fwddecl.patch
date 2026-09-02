@@ -1,0 +1,15 @@
+diff --git a/src/Game/FE/Overlay/OverlayHandlerGoal.cpp b/src/Game/FE/Overlay/OverlayHandlerGoal.cpp
+index 22040d30..53a0c66e 100644
+--- a/src/Game/FE/Overlay/OverlayHandlerGoal.cpp
++++ b/src/Game/FE/Overlay/OverlayHandlerGoal.cpp
+@@ -11,8 +11,8 @@
+ #include "NL/nlFormat.h"
+ #include "NL/nlLocalization.h"
+ 
+-template <>
+-nlLocalization::StringLookup* nlBSearch<nlLocalization::StringLookup, unsigned long>(const unsigned long&, nlLocalization::StringLookup*, int);
++// template <>
++// nlLocalization::StringLookup* nlBSearch<nlLocalization::StringLookup, unsigned long>(const unsigned long&, nlLocalization::StringLookup*, int);
+ 
+ extern cTeam* g_pTeams[];
+ 
