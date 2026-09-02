@@ -1,17 +1,3 @@
-diff --git a/include/Game/Camera/CameraMan.h b/include/Game/Camera/CameraMan.h
-index f9cd6ba6..e0f25400 100644
---- a/include/Game/Camera/CameraMan.h
-+++ b/include/Game/Camera/CameraMan.h
-@@ -7,6 +7,9 @@
- 
- #include "Game/Camera/BaseCamera.h"
- 
-+template <>
-+cBaseCamera* nlDLRingGetStart<cBaseCamera>(cBaseCamera*);
-+
- enum eCameraTransition
- {
-     eCT_NONE = 0,
 diff --git a/src/Game/Debug/TimeRegions.cpp b/src/Game/Debug/TimeRegions.cpp
 index 442f2463..c7f2258a 100644
 --- a/src/Game/Debug/TimeRegions.cpp
