@@ -9,7 +9,9 @@ add_subdirectory(aurora EXCLUDE_FROM_ALL)
 file(GLOB_RECURSE NL_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/decomp/src/NL/*.cpp
 )
-list(FILTER NL_SOURCES EXCLUDE REGEX ".*/NL/plat/.*")
+list(FILTER NL_SOURCES EXCLUDE REGEX ".*/NL/plat/globalpad\\.cpp")
+list(FILTER NL_SOURCES EXCLUDE REGEX ".*/NL/plat/plataudio\\.cpp")
+list(FILTER NL_SOURCES EXCLUDE REGEX ".*/NL/plat/platpad\\.cpp")
 # was done automatically by decomp/configure.py calling
 # decomp/generate_nlfunction_headers.py
 file(COPY_FILE

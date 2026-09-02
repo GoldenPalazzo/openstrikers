@@ -1,0 +1,149 @@
+diff --git a/src/NL/plat/platvmath.cpp b/src/NL/plat/platvmath.cpp
+index 9ed84f3f..9dc3b0c4 100644
+--- a/src/NL/plat/platvmath.cpp
++++ b/src/NL/plat/platvmath.cpp
+@@ -11,7 +11,7 @@
+  */
+ void nlMatrix4::SetIdentity()
+ {
+-    PSMTX44Identity(e2);
++    MTX44Identity(e2);
+ }
+ 
+ /**
+@@ -23,11 +23,11 @@ void nlMultMatrices(nlMatrix4& out, const nlMatrix4& a, const nlMatrix4& b)
+ 
+     if ((out.e2 == a.e2) || (out.e2 == b.e2))
+     {
+-        PSMTX44Concat(a.e2, b.e2, temp.e2);
++        MTX44Concat(a.e2, b.e2, temp.e2);
+         out = temp;
+         return;
+     }
+-    PSMTX44Concat(a.e2, b.e2, out.e2);
++    MTX44Concat(a.e2, b.e2, out.e2);
+ }
+ 
+ /**
+@@ -38,11 +38,11 @@ void nlTransposeMatrix(nlMatrix4& out, const nlMatrix4& in)
+     if (out.e2 == in.e2)
+     {
+         nlMatrix4 temp;
+-        PSMTX44Transpose(in.e2, temp.e2);
++        MTX44Transpose(in.e2, temp.e2);
+         out = temp;
+         return;
+     }
+-    PSMTX44Transpose(in.e2, out.e2);
++    MTX44Transpose(in.e2, out.e2);
+ }
+ 
+ /**
+@@ -72,30 +72,13 @@ void nlMultVectorMatrix(nlVector2& v_out, const nlVector2& v_in, const nlMatrix3
+ #pragma scheduling off
+ void nlMultPosVectorMatrix(register nlVector3& result, register const nlVector3& pos, register const nlMatrix4& transformMatrix)
+ {
+-    // clang-format off
+-    asm {
+-        psq_l f2, 0x0(transformMatrix), 0, qr0
+-        psq_l f0, 0x0(pos), 0, qr0
+-        psq_l f3, 0x8(transformMatrix), 0, qr0
+-        ps_muls0 f10, f2, f0
+-        psq_l f4, 0x10(transformMatrix), 0, qr0
+-        ps_muls0 f11, f3, f0
+-        psq_l f5, 0x18(transformMatrix), 0, qr0
+-        psq_l f6, 0x20(transformMatrix), 0, qr0
+-        ps_madds1 f10, f4, f0, f10
+-        psq_l f1, 0x8(pos), 1, qr0
+-        ps_madds1 f11, f5, f0, f11
+-        psq_l f7, 0x28(transformMatrix), 0, qr0
+-        ps_madds0 f10, f6, f1, f10
+-        psq_l f8, 0x30(transformMatrix), 0, qr0
+-        ps_madds0 f11, f7, f1, f11
+-        psq_l f9, 0x38(transformMatrix), 0, qr0
+-        ps_add f10, f8, f10
+-        ps_add f11, f9, f11
+-        psq_st f10, 0x0(result), 0, qr0
+-        psq_st f11, 0x8(result), 1, qr0
+-    }
+-    // clang-format on
++    float x = pos.x * transformMatrix.e2[0][0] + pos.y * transformMatrix.e2[1][0] + pos.z * transformMatrix.e2[2][0] + transformMatrix.e2[3][0];
++    float y = pos.x * transformMatrix.e2[0][1] + pos.y * transformMatrix.e2[1][1] + pos.z * transformMatrix.e2[2][1] + transformMatrix.e2[3][1];
++    float z = pos.x * transformMatrix.e2[0][2] + pos.y * transformMatrix.e2[1][2] + pos.z * transformMatrix.e2[2][2] + transformMatrix.e2[3][2];
++
++    result.x = x;
++    result.y = y;
++    result.z = z;
+ }
+ #pragma scheduling reset
+ 
+@@ -118,26 +101,13 @@ void nlMultVectorMatrix(nlVector4& out, const nlVector4& in, const nlMatrix4& m)
+ #pragma scheduling off
+ void nlMultDirVectorMatrix(register nlVector3& result, register const nlVector3& direction, register const nlMatrix4& transformMatrix)
+ {
+-    // clang-format off
+-     asm {
+-         psq_l f2, 0x0(transformMatrix), 0, qr0
+-         psq_l f0, 0x0(direction), 0, qr0
+-         psq_l f3, 0x8(transformMatrix), 0, qr0
+-         ps_muls0 f10, f2, f0
+-         psq_l f4, 0x10(transformMatrix), 0, qr0
+-         ps_muls0 f11, f3, f0
+-         psq_l f5, 0x18(transformMatrix), 0, qr0
+-         psq_l f6, 0x20(transformMatrix), 0, qr0
+-         ps_madds1 f10, f4, f0, f10
+-         psq_l f1, 0x8(direction), 1, qr0
+-         ps_madds1 f11, f5, f0, f11
+-         psq_l f7, 0x28(transformMatrix), 0, qr0
+-         ps_madds0 f10, f6, f1, f10
+-         ps_madds0 f11, f7, f1, f11
+-         psq_st f10, 0x0(result), 0, qr0
+-         psq_st f11, 0x8(result), 1, qr0
+-     }
+-    // clang-format on
++    float x = direction.x * transformMatrix.e2[0][0] + direction.y * transformMatrix.e2[1][0] + direction.z * transformMatrix.e2[2][0];
++    float y = direction.x * transformMatrix.e2[0][1] + direction.y * transformMatrix.e2[1][1] + direction.z * transformMatrix.e2[2][1];
++    float z = direction.x * transformMatrix.e2[0][2] + direction.y * transformMatrix.e2[1][2] + direction.z * transformMatrix.e2[2][2];
++
++    result.x = x;
++    result.y = y;
++    result.z = z;
+ }
+ #pragma scheduling reset
+ 
+@@ -150,7 +120,7 @@ void nlMakeRotationMatrixX(nlMatrix4& out, float theta)
+     f32 cs;
+ 
+     nlSinCos(&sn, &cs, (short)(RAD_TO_FIXED16 * theta));
+-    PSMTX44Identity(out.e2);
++    MTX44Identity(out.e2);
+     out.e2[1][1] = cs;            // cos(theta) at offset 0x14
+     out.e2[1][2] = sn;            // sin(theta) at offset 0x18
+     out.e2[2][1] = -out.e2[1][2]; // -sin(theta) at offset 0x24
+@@ -166,7 +136,7 @@ void nlMakeRotationMatrixY(nlMatrix4& out, float theta)
+     f32 cs;
+ 
+     nlSinCos(&sn, &cs, (short)(RAD_TO_FIXED16 * theta));
+-    PSMTX44Identity(out.e2);
++    MTX44Identity(out.e2);
+     out.e2[0][0] = cs;            // cos(theta) at offset 0x00
+     out.e2[0][2] = -sn;           // sin(theta) at offset 0x08
+     out.e2[2][0] = -out.e2[0][2]; // -sin(theta) at offset 0x18
+@@ -181,7 +151,7 @@ void nlMakeRotationMatrixZ(nlMatrix4& out, float theta)
+     f32 cs;
+ 
+     nlSinCos(&sn, &cs, (short)(RAD_TO_FIXED16 * theta));
+-    PSMTX44Identity(out.e2);
++    MTX44Identity(out.e2);
+ 
+     out.e2[0][0] = cs;            // cos(theta) at offset 0x00
+     out.e2[0][1] = sn;            // sin(theta) at offset 0x04
+@@ -248,7 +218,7 @@ void nlMakeRotationMatrixEulerAngles(nlMatrix4& m, float pitch, float yaw, float
+  */
+ void nlMakeScaleMatrix(nlMatrix4& m, float sx, float sy, float sz)
+ {
+-    PSMTX44Scale(m.e2, sx, sy, sz);
++    MTX44Scale(m.e2, sx, sy, sz);
+ }
+ 
+ /**
