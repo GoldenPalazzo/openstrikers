@@ -1,0 +1,52 @@
+diff --git a/src/Game/Audio/CrowdMood.cpp b/src/Game/Audio/CrowdMood.cpp
+index de2bd4fe..1d697366 100644
+--- a/src/Game/Audio/CrowdMood.cpp
++++ b/src/Game/Audio/CrowdMood.cpp
+@@ -14,7 +14,9 @@
+ extern GCAudioStreaming::AudioBufferMgr g_BufferMgr;
+ static void ___blank(const char*, ...);
+ static void UpdateTiming(float);
+-extern "C" void sndStreamMixParameterEx(unsigned long stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
++#ifndef TARGET_PC
++extern "C" void sndStreamMixParameterEx(SND_STREAMID stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
++#endif
+ 
+ class SoundStrToIDNode;
+ class AudioLoader
+@@ -160,7 +162,9 @@ void ChangeCrowdVolume(float NewVolume)
+                 while (buf != NULL)
+                 {
+                     buf->m_Volume = 0;
++#ifndef TARGET_PC
+                     sndStreamMixParameterEx(buf->m_StreamId, buf->m_Volume, buf->m_Pan, buf->m_SurroundPan, 0, 0);
++#endif
+ 
+                     unsigned long ci = i + 1;
+                     i = ci;
+@@ -194,7 +198,9 @@ void ChangeCrowdVolume(float NewVolume)
+                 while (buf != NULL)
+                 {
+                     buf->m_Volume = 0;
++#ifndef TARGET_PC
+                     sndStreamMixParameterEx(buf->m_StreamId, buf->m_Volume, buf->m_Pan, buf->m_SurroundPan, 0, 0);
++#endif
+ 
+                     unsigned long ci = i + 1;
+                     i = ci;
+@@ -448,12 +454,16 @@ void PlayMoodDef(MOOD_DEFINITION& MoodDef)
+             pan = (unsigned char)nlRandom(0x7F, &nlDefaultSeed);
+             pBuf = g_CrowdAudio.pHeckleStream->m_Buffers[0];
+             pBuf->m_Pan = pan;
++#ifndef TARGET_PC
+             sndStreamMixParameterEx(pBuf->m_StreamId, pBuf->m_Volume, pBuf->m_Pan, pBuf->m_SurroundPan, 0, 0);
++#endif
+ 
+             pan = (unsigned char)nlRandom(0x7F, &nlDefaultSeed);
+             pBuf = g_CrowdAudio.pHeckleStream->m_Buffers[0];
+             pBuf->m_SurroundPan = pan;
++#ifndef TARGET_PC
+             sndStreamMixParameterEx(pBuf->m_StreamId, pBuf->m_Volume, pBuf->m_Pan, pBuf->m_SurroundPan, 0, 0);
++#endif
+         }
+     }
+ }

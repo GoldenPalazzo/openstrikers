@@ -116,20 +116,6 @@ index 8e0fc23a..7a02ffca 100644
  
  // Forward declarations
  class PhysicsObject;
-diff --git a/src/Game/Audio/audio.cpp b/src/Game/Audio/audio.cpp
-index 58b435df..ad50fd88 100644
---- a/src/Game/Audio/audio.cpp
-+++ b/src/Game/Audio/audio.cpp
-@@ -2222,7 +2224,9 @@ void Audio::Update(float fDeltaT)
-     g_fAudioTimer += fDeltaT;
-     if (uSFXVolume != uCurrentSFXVolume)
-     {
-+#ifndef TARGET_PC
-         sndVolume((u8)uSFXVolume, 0x1F4, 0xFE);
-+#endif
-         uCurrentSFXVolume = uSFXVolume;
-     }
- 
 diff --git a/src/NL/plat/plataudio.cpp b/src/NL/plat/plataudio.cpp
 index 6fe99b56..665031c5 100644
 --- a/src/NL/plat/plataudio.cpp

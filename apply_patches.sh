@@ -48,4 +48,12 @@ for p in "$ROOT"/patches/aurora/*.patch; do
   git -C aurora apply "$p"
 done
 
+echo "== applying temporary decomp patches =="
+for p in "$ROOT"/patches/tmp/*.patch; do
+  [ -e "$p" ] || continue
+  echo "-> $p"
+  git -C decomp apply --check "$p" || { echo "FAILED: $p"; exit 1; }
+  git -C decomp apply "$p"
+done
+
 echo "all patches applied successfully"

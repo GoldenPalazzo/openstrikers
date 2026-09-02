@@ -1,0 +1,64 @@
+diff --git a/src/Game/Audio/audio.cpp b/src/Game/Audio/audio.cpp
+index 58b435df..9f7332db 100644
+--- a/src/Game/Audio/audio.cpp
++++ b/src/Game/Audio/audio.cpp
+@@ -20,22 +20,6 @@
+ // The namespace PlatAudio and class PlatAudio can coexist
+ #include "Game/Sys/PlatStream.h"
+ 
+-template <>
+-bool LexicalCast<bool, bool>(const bool& value);
+-template <>
+-bool LexicalCast<bool, int>(const int& value);
+-template <>
+-bool LexicalCast<bool, float>(const float& value);
+-template <>
+-bool LexicalCast<bool, const char*>(const char* const& value);
+-template <>
+-float LexicalCast<float, bool>(const bool& value);
+-template <>
+-float LexicalCast<float, int>(const int& value);
+-template <>
+-float LexicalCast<float, float>(const float& value);
+-template <>
+-float LexicalCast<float, const char*>(const char* const& value);
+ 
+ enum FadeType
+ {
+@@ -2212,7 +2196,7 @@ static inline void Update3DSFXListenerPos();
+ /**
+  * Offset/Address/Size: 0x1FD0 | 0x8013E4E4 | size: 0x354
+  */
+-void Audio::Update(float fDeltaT)
++void Update(float fDeltaT)
+ {
+     if (::g_bAudioInitialized == false)
+     {
+@@ -2222,7 +2206,9 @@ void Audio::Update(float fDeltaT)
+     g_fAudioTimer += fDeltaT;
+     if (uSFXVolume != uCurrentSFXVolume)
+     {
++#ifndef TARGET_PC
+         sndVolume((u8)uSFXVolume, 0x1F4, 0xFE);
++#endif
+         uCurrentSFXVolume = uSFXVolume;
+     }
+ 
+@@ -2876,7 +2862,7 @@ void SetVolGroupVolume(int volGroup, float fVol, int fadeTime)
+ /**
+  * Offset/Address/Size: 0x1028 | 0x8013D53C | size: 0xE0
+  */
+-void Audio::ActivateFilterOnAllCurrentSFX(bool bOn)
++void ActivateFilterOnAllCurrentSFX(bool bOn)
+ {
+     gWorldSFX.ActivateFilterOnAllTrackedSFX(bOn);
+     gPowerupSFX.ActivateFilterOnAllTrackedSFX(bOn);
+@@ -2935,7 +2921,7 @@ static void SetFilterFreqOnAllCurrentSFX(unsigned short freq)
+ /**
+  * Offset/Address/Size: 0xF6C | 0x8013D480 | size: 0xBC
+  */
+-void Audio::SetPitchBendOnAllDialogueSFX(unsigned short pitch)
++void SetPitchBendOnAllDialogueSFX(unsigned short pitch)
+ {
+     if (pitch > 0x3FFF)
+     {
