@@ -1,0 +1,28 @@
+diff --git a/src/Game/main.cpp b/src/Game/main.cpp
+index 99c4d8a1..ab60e982 100644
+--- a/src/Game/main.cpp
++++ b/src/Game/main.cpp
+@@ -240,7 +240,7 @@ static void Initialize()
+     AIPadManager::Startup();
+     FEInput::Initialize();
+     FlickDetection::Initialize();
+-    CARDInit();
++    CARDInit("G4QE", "01");
+     MemCard::s_InitDone = true;
+ 
+     g_pTheLoadingManagerTask = new (nlMalloc(sizeof(LoadingManager), 8, false)) LoadingManager(0x14);
+@@ -475,12 +475,12 @@ int main()
+ 
+     if (GetConfigBool(Config::Global(), "enableFloatingPointExceptions", false))
+     {
+-        InstallFloatingPointExceptionHandler();
++        // InstallFloatingPointExceptionHandler();
+     }
+ 
+     if (GetConfigBool(Config::Global(), "callStackDumper", false))
+     {
+-        InstallCallStackDumper();
++        // InstallCallStackDumper();
+     }
+ 
+     for (;;)
