@@ -32,6 +32,24 @@ inline double __frsqrte(double x) {
     #endif
 #endif
 
+#ifndef __cntlzw
+#if defined(__GNUC__) || defined(__clang__)
+#define __cntlzw(x) ((x) ? __builtin_clz(x) : 32)
+#else
+// Generic fallback
+static inline int __cntlzw(unsigned int val) {
+    if (val == 0) return 32;
+    int reg = 0;
+    if (!(val & 0xFFFF0000)) { reg += 16; val <<= 16; }
+    if (!(val & 0xFF000000)) { reg += 8;  val <<= 8;  }
+    if (!(val & 0xF0000000)) { reg += 4;  val <<= 4;  }
+    if (!(val & 0xC0000000)) { reg += 2;  val <<= 2;  }
+    if (!(val & 0x80000000)) { reg += 1; }
+    return reg;
+}
+#endif
+#endif
+
 // aurora fixes
 #include <dolphin/gx/GXTexture.h>
 #include <dolphin/gx/GXManage.h>

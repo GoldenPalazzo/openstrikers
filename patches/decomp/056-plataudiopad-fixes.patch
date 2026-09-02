@@ -1,0 +1,39 @@
+diff --git a/src/NL/plat/plataudio.cpp b/src/NL/plat/plataudio.cpp
+index 6fe99b56..34fcfb2b 100644
+--- a/src/NL/plat/plataudio.cpp
++++ b/src/NL/plat/plataudio.cpp
+@@ -101,7 +101,7 @@ bool IsSFXPlaying(unsigned long uVoiceID)
+ /**
+  * Offset/Address/Size: 0x38 | 0x801C4834 | size: 0xC0
+  */
+-void PlatAudio::InitEmitter(unsigned long index)
++void InitEmitter(unsigned long index)
+ {
+     gEmitters[index].bKeepTrack = true;
+     gEmitters[index].soundType = (unsigned long)-1;
+@@ -1096,9 +1096,9 @@ bool LoadSoundGroup(AudioFileData& fileData, unsigned long groupEnum, unsigned l
+  */
+ void SetupSoundBuffers(AudioFileData& fileData, bool bStream)
+ {
+-    unsigned long uPoolReadLength;
+-    unsigned long uProjReadLength;
+-    unsigned long uSdirReadLength;
++    u32 uPoolReadLength;
++    u32 uProjReadLength;
++    u32 uSdirReadLength;
+     char* szFileName;
+     unsigned char* pBuffer;
+ 
+diff --git a/src/NL/plat/platpad.cpp b/src/NL/plat/platpad.cpp
+index 4528b23b..fed13bcb 100644
+--- a/src/NL/plat/platpad.cpp
++++ b/src/NL/plat/platpad.cpp
+@@ -79,7 +79,7 @@ void VBlankPadUpdate()
+             {
+                 if (fabsf(normalizedX) >= 0.6f)
+                 {
+-                    asm { b doneNormalizedX }
++                    goto doneNormalizedX;
+                 }
+                 else
+                 {
