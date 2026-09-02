@@ -38,6 +38,8 @@ file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS
 list(FILTER GAME_SOURCES EXCLUDE REGEX ".*/AI/Scripts/TestCases\\.cpp$")
 # these aren't TUs, their fate is to be included in their base .cpp files
 list(FILTER GAME_SOURCES EXCLUDE REGEX ".*_interp\\.cpp$")
+list(FILTER GAME_SOURCES EXCLUDE REGEX ".*FloatingPointExceptions\\.cpp$")
+list(FILTER GAME_SOURCES EXCLUDE REGEX ".*CallStackDumper\\.cpp$")
 
 add_executable(openstrikers
     ${NL_SOURCES}
