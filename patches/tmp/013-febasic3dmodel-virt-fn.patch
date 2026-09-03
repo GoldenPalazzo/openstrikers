@@ -1,0 +1,13 @@
+diff --git a/include/Game/FE/feBasic3dModel.h b/include/Game/FE/feBasic3dModel.h
+index d81efa95..80d5106b 100644
+--- a/include/Game/FE/feBasic3dModel.h
++++ b/include/Game/FE/feBasic3dModel.h
+@@ -8,7 +8,7 @@
+ class FEBasic3dModel
+ {
+ public:
+-    virtual ~FEBasic3dModel();
++    virtual ~FEBasic3dModel() {};
+ 
+     /* 0x04 */ FEBasic3dModel* next;
+     /* 0x08 */ FEBasic3dModel* prev;

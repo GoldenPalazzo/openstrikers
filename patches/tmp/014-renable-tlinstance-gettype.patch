@@ -1,0 +1,16 @@
+diff --git a/src/Game/FE/tlInstance.cpp b/src/Game/FE/tlInstance.cpp
+index ea3216cd..062b335d 100644
+--- a/src/Game/FE/tlInstance.cpp
++++ b/src/Game/FE/tlInstance.cpp
+@@ -164,7 +164,7 @@ feVector3& TLInstance::GetAssetPosition() const
+     return const_cast<feVector3&>(m_overloadedAttributes.v3Position);
+ }
+ 
+-// eTimeLineAssetType TLInstance::GetType() const
+-// {
+-//     return m_type;
+-// }
++eTimeLineAssetType TLInstance::GetType() const
++{
++    return m_type;
++}

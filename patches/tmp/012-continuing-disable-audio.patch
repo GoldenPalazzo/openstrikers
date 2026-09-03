@@ -1,0 +1,153 @@
+diff --git a/src/Game/Sys/GCStream.cpp b/src/Game/Sys/GCStream.cpp
+index 45bbbd0a..1941e61b 100644
+--- a/src/Game/Sys/GCStream.cpp
++++ b/src/Game/Sys/GCStream.cpp
+@@ -32,16 +32,18 @@ inline void GCAudioStreaming::StereoAudioStream::ReadFirst(
+ 
+ struct SND_ADPCMSTREAM_INFO;
+ 
++#ifndef GOLDEN_DISABLE_AUDIO
+ extern "C"
+ {
+-    void sndStreamMixParameterEx(unsigned long stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
+-    void sndStreamDeactivate(unsigned long stid);
+-    void sndStreamFree(unsigned long stid);
+-    void sndStreamARAMUpdate(unsigned long stid, unsigned long off1, unsigned long len1, unsigned long off2, unsigned long len2);
+-    void sndStreamFrq(unsigned long stid, unsigned long frq);
+-    void sndStreamADPCMParameter(unsigned long stid, SND_ADPCMSTREAM_INFO* adpcmInfo);
+-    unsigned long sndStreamAllocEx(unsigned char prio, void* buffer, unsigned long samples, unsigned long frq, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb, unsigned char studio, unsigned long flags, unsigned long (*updateFunction)(void*, unsigned long, void*, unsigned long, unsigned long), unsigned long user, SND_ADPCMSTREAM_INFO* adpcmInfo);
++    void sndStreamMixParameterEx(SND_STREAMID stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
++    void sndStreamDeactivate(SND_STREAMID stid);
++    void sndStreamFree(SND_STREAMID stid);
++    void sndStreamARAMUpdate(SND_STREAMID stid, u32 off1, u32 len1, u32 off2, u32 len2);
++    void sndStreamFrq(SND_STREAMID stid, u32 frq);
++    void sndStreamADPCMParameter(SND_STREAMID stid, SND_ADPCMSTREAM_INFO* adpcmInfo);
++    SND_STREAMID sndStreamAllocEx(unsigned char prio, void* buffer, u32 samples, u32 frq, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb, unsigned char studio, u32 flags, u32 (*updateFunction)(void*, u32, void*, u32, u32), u32 user, SND_ADPCMSTREAM_INFO* adpcmInfo);
+ }
++#endif
+ 
+ namespace GCAudioStreaming
+ {
+@@ -50,8 +52,10 @@ inline void AudioStreamBuffer::SetVolume(
+     unsigned long volume)
+ {
+     m_Volume = (unsigned char)volume;
++#ifndef GOLDEN_DISABLE_AUDIO
+     sndStreamMixParameterEx(
+         m_StreamId, m_Volume, m_Pan, m_SurroundPan, 0, 0);
++#endif
+ }
+ 
+ inline unsigned long AudioStreamBuffer::DoUpdate(unsigned long Length)
+@@ -128,8 +132,10 @@ void GCAudioStreaming::AudioStream::_HdrReadCB(nlFile* pFile, void* pData, unsig
+         pCBInfo->pStream->m_OldLength = pCBInfo->pStream->m_StreamLength;
+ 
+         pBuffer = pCBInfo->pBuffer;
++#ifndef GOLDEN_DISABLE_AUDIO
+         sndStreamFrq(pBuffer->m_StreamId, pHdr->sample_rate);
+         sndStreamADPCMParameter(pBuffer->m_StreamId, (SND_ADPCMSTREAM_INFO*)pHdr->coef);
++#endif
+ 
+         READ_CB_INFO::s_AllocPool.DeleteEntry(pCBInfo);
+     }
+@@ -172,7 +178,9 @@ void GCAudioStreaming::AudioStream::_WarmReadCB(nlFile* pFile, void* pData, unsi
+     else
+     {
+         unsigned long samples = (Length >> 3) * 0xE;
++#ifndef GOLDEN_DISABLE_AUDIO
+         sndStreamARAMUpdate(pCBInfo->pBuffer->m_StreamId, 0, samples, 0, 0);
++#endif
+         pCBInfo->pStream->WarmReadDone(pCBInfo->pBuffer);
+         READ_CB_INFO::s_AllocPool.DeleteEntry(pCBInfo);
+     }
+@@ -181,12 +189,14 @@ void GCAudioStreaming::AudioStream::_WarmReadCB(nlFile* pFile, void* pData, unsi
+ inline void GCAudioStreaming::AudioStreamBuffer::Update(
+     unsigned long Offset, unsigned long Length)
+ {
++#ifndef GOLDEN_DISABLE_AUDIO
+     sndStreamARAMUpdate(
+         m_StreamId,
+         (Offset >> 3) * 0xe,
+         (Length >> 3) * 0xe,
+         0,
+         0);
++#endif
+ }
+ 
+ /**
+@@ -470,12 +480,16 @@ void GCAudioStreaming::StereoAudioStream::Warm(bool CoolOnStop)
+     {
+         AudioStreamBuffer* pBuf0 = m_Buffers[0];
+         pBuf0->m_Pan = 0;
++#ifndef GOLDEN_DISABLE_AUDIO
+         sndStreamMixParameterEx(pBuf0->m_StreamId, pBuf0->m_Volume, pBuf0->m_Pan, pBuf0->m_SurroundPan, 0, 0);
++#endif
+     }
+     {
+         AudioStreamBuffer* pBuf1 = m_Buffers[1];
+         pBuf1->m_Pan = 0x7F;
++#ifndef GOLDEN_DISABLE_AUDIO
+         sndStreamMixParameterEx(pBuf1->m_StreamId, pBuf1->m_Volume, pBuf1->m_Pan, pBuf1->m_SurroundPan, 0, 0);
++#endif
+     }
+ 
+     AudioStreamBuffer* BufferIndex = NULL;
+@@ -757,6 +771,7 @@ void GCAudioStreaming::AudioBufferMgr::CreateBuffers(unsigned long Count)
+         m_Buffers[buffer].m_UpdateOffset = 0;
+         m_Buffers[buffer].m_pStream = 0;
+ 
++#ifndef GOLDEN_DISABLE_AUDIO
+         m_Buffers[buffer].m_StreamId = sndStreamAllocEx(
+             0xFF,
+             m_Buffers[buffer].m_MRAMBuffer,
+@@ -780,6 +795,7 @@ void GCAudioStreaming::AudioBufferMgr::CreateBuffers(unsigned long Count)
+             m_Buffers[buffer].m_SurroundPan,
+             0,
+             0);
++#endif
+     }
+ }
+ 
+@@ -792,9 +808,11 @@ void GCAudioStreaming::AudioBufferMgr::DeleteBuffers()
+     for (buffer = 0; buffer < m_BufferCount; buffer++)
+     {
+         m_Buffers[buffer].m_Volume = 0;
++#ifndef GOLDEN_DISABLE_AUDIO
+         sndStreamMixParameterEx(m_Buffers[buffer].m_StreamId, m_Buffers[buffer].m_Volume, m_Buffers[buffer].m_Pan, m_Buffers[buffer].m_SurroundPan, 0, 0);
+         sndStreamDeactivate(m_Buffers[buffer].m_StreamId);
+         sndStreamFree(m_Buffers[buffer].m_StreamId);
++#endif
+     }
+     m_BufferCount = 0;
+ }
+diff --git a/src/Game/Sys/PlatStream.cpp b/src/Game/Sys/PlatStream.cpp
+index 7dc421fb..9f036ca4 100644
+--- a/src/Game/Sys/PlatStream.cpp
++++ b/src/Game/Sys/PlatStream.cpp
+@@ -3,11 +3,13 @@
+ #include "NL/nlMemory.h"
+ #include "NL/nlSortedSlot.h"
+ 
++#ifndef GOLDEN_DISABLE_AUDIO
+ extern "C"
+ {
+-    void sndStreamMixParameterEx(unsigned long stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
+-    void sndStreamDeactivate(unsigned long stid);
++    void sndStreamMixParameterEx(SND_STREAMID stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
++    void sndStreamDeactivate(SND_STREAMID stid);
+ }
++#endif
+ 
+ GCAudioStreaming::AudioBufferMgr g_BufferMgr;
+ 
+@@ -121,8 +123,10 @@ void PlatAudio::StopAllStreams()
+             while (buffer != NULL)
+             {
+                 buffer->m_Volume = 0;
++#ifndef GOLDEN_DISABLE_AUDIO
+                 sndStreamMixParameterEx(buffer->m_StreamId, buffer->m_Volume, buffer->m_Pan, buffer->m_SurroundPan, 0, 0);
+                 sndStreamDeactivate(buffer->m_StreamId);
++#endif
+ 
+                 stream->m_State = SS_Warm;
+                 {

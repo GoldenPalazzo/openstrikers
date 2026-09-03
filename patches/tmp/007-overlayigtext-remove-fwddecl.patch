@@ -1,0 +1,44 @@
+diff --git a/src/Game/FE/Overlay/OverlayHandlerInGameText.cpp b/src/Game/FE/Overlay/OverlayHandlerInGameText.cpp
+index 55e1d5a1..1884452d 100644
+--- a/src/Game/FE/Overlay/OverlayHandlerInGameText.cpp
++++ b/src/Game/FE/Overlay/OverlayHandlerInGameText.cpp
+@@ -10,6 +10,7 @@
+ #include "NL/nlLocalization.h"
+ #include "NL/nlSingleton.h"
+ #include "NL/nlTask.h"
++#include "NL/nlFormat.h"
+ #include "Game/FE/feInput.h"
+ 
+ #include "Game/FE/Overlay/OverlayHandlerSummary.h"
+@@ -19,20 +20,20 @@
+ 
+ extern FEInput* g_pFEInput;
+ 
+-template <typename StringType, typename ValueType>
+-StringType Format(const StringType&, const ValueType&);
+-
+-template <typename StringType, typename T1, typename T2>
+-StringType Format(const StringType&, const T1&, const T2&);
+-
+-template <typename T, typename Key>
+-T* nlBSearch(const Key&, T*, int);
++// template <typename StringType, typename ValueType>
++// StringType Format(const StringType&, const ValueType&);
++//
++// template <typename StringType, typename T1, typename T2>
++// StringType Format(const StringType&, const T1&, const T2&);
++//
++// template <typename T, typename Key>
++// T* nlBSearch(const Key&, T*, int);
+ 
+ unsigned long GetLOCTeamName(eTeamID);
+ 
+-template <>
+-nlLocalization::StringLookup* nlBSearch<nlLocalization::StringLookup, unsigned long>(
+-    const unsigned long&, nlLocalization::StringLookup*, int);
++// template <>
++// nlLocalization::StringLookup* nlBSearch<nlLocalization::StringLookup, unsigned long>(
++//     const unsigned long&, nlLocalization::StringLookup*, int);
+ 
+ static inline const unsigned short* LookupLocHash(unsigned long key)
+ {

@@ -1,0 +1,17 @@
+diff --git a/src/Game/Physics.cpp b/src/Game/Physics.cpp
+index a867107c..68bc0f0e 100644
+--- a/src/Game/Physics.cpp
++++ b/src/Game/Physics.cpp
+@@ -17,9 +17,9 @@
+ 
+ typedef ListContainerBase<char*, NewAdapter<ListEntry<char*> > > PhysicsCharListBase;
+ 
+-template <>
+-void nlWalkList<ListEntry<char*>, PhysicsCharListBase>(
+-    ListEntry<char*>*, PhysicsCharListBase*, void (PhysicsCharListBase::*)(ListEntry<char*>*));
++// template <>
++// void nlWalkList<ListEntry<char*>, PhysicsCharListBase>(
++//     ListEntry<char*>*, PhysicsCharListBase*, void (PhysicsCharListBase::*)(ListEntry<char*>*));
+ 
+ static bool sbDisableCollisionDetection;
+ static bool sbNonMovingAABBsInitialized;

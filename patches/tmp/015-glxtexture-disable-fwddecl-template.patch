@@ -1,0 +1,23 @@
+diff --git a/src/NL/glx/glxTexture.cpp b/src/NL/glx/glxTexture.cpp
+index 175d70fc..8ad53526 100644
+--- a/src/NL/glx/glxTexture.cpp
++++ b/src/NL/glx/glxTexture.cpp
+@@ -9,6 +9,7 @@
+ #include "NL/nlAlgorithm.h"
+ #include "NL/nlFile.h"
+ #include "NL/nlFileGC.h"
++#include "NL/nlString.h"
+ #include "NL/gl/glTexture.h"
+ #include "NL/gl/glMemory.h"
+ #include "NL/gc/gcSwizzler.h"
+@@ -16,8 +17,8 @@
+ #include "Game/GL/GLInventory.h"
+ #include "Game/Sys/debug.h"
+ 
+-template <typename CharT>
+-CharT* nlStrNCat(CharT* dest, const CharT* a, const CharT* b, unsigned long maxsize);
++// template <typename CharT>
++// CharT* nlStrNCat(CharT* dest, const CharT* a, const CharT* b, unsigned long maxsize);
+ 
+ extern int nlPrintf(const char*, ...);
+ extern GLInventory glInventory;

@@ -1,0 +1,21 @@
+diff --git a/src/Game/Drawable/DrawableSkinModel.cpp b/src/Game/Drawable/DrawableSkinModel.cpp
+index 245a778f..a8c7f170 100644
+--- a/src/Game/Drawable/DrawableSkinModel.cpp
++++ b/src/Game/Drawable/DrawableSkinModel.cpp
+@@ -3,6 +3,7 @@
+ #include "Game/World.h"
+ #include "NL/gl/glModel.h"
+ #include "NL/gl/gl.h"
++#include "NL/gl/glMatrix.h"
+ #include "NL/gl/glState.h"
+ 
+ static bool g_bEnableDrawableSkinModel = true;
+@@ -16,7 +17,7 @@ const unsigned long BlackTexture = glGetTexture("global/black");
+ const unsigned long WhiteTexture = glGetTexture("global/white");
+ 
+ u32 glAllocMatrix();
+-void glSetMatrix(u32 matrix, const nlMatrix4& m);
++// void glSetMatrix(u32 matrix, const nlMatrix4& m);
+ 
+ static inline void ApplySkinModelTextureLighting(glModelPacket* pDup)
+ {

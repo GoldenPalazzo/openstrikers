@@ -1,0 +1,29 @@
+diff --git a/src/Game/FE/Overlay/OverlayHandlerWinner.cpp b/src/Game/FE/Overlay/OverlayHandlerWinner.cpp
+index 0d631886..0f08169e 100644
+--- a/src/Game/FE/Overlay/OverlayHandlerWinner.cpp
++++ b/src/Game/FE/Overlay/OverlayHandlerWinner.cpp
+@@ -7,6 +7,7 @@
+ #include "Game/OverlayManager.h"
+ #include "NL/nlAlgorithm.h"
+ #include "NL/nlLocalization.h"
++#include "NL/nlFormat.h"
+ 
+ static char* WINNER_TEXTURES[9][3] = {
+     { "fe/winners/daisy_action", "fe/winners/daisy_action_OUTLINE", "fe/winners/daisy_action_WHITE" },
+@@ -43,11 +44,11 @@ WinnerOverlay::~WinnerOverlay()
+     delete mWinnerActionOutline;
+ }
+ 
+-template <typename StringType, typename ValueType>
+-StringType Format(const StringType&, const ValueType&);
+-
+-template <typename StringType, typename ValueType1, typename ValueType2>
+-StringType Format(const StringType&, const ValueType1&, const ValueType2&);
++// template <typename StringType, typename ValueType>
++// StringType Format(const StringType&, const ValueType&);
++//
++// template <typename StringType, typename ValueType1, typename ValueType2>
++// StringType Format(const StringType&, const ValueType1&, const ValueType2&);
+ 
+ static inline const unsigned short* LookupWinnerLocHash(unsigned long key)
+ {

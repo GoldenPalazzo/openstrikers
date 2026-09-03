@@ -1,0 +1,68 @@
+diff --git a/include/Game/Drawable/DrawableExplosionFragment.h b/include/Game/Drawable/DrawableExplosionFragment.h
+index 16e1fcff..0bc0a492 100644
+--- a/include/Game/Drawable/DrawableExplosionFragment.h
++++ b/include/Game/Drawable/DrawableExplosionFragment.h
+@@ -29,17 +29,17 @@ void DrawableExplosionFragment::Replay(T& frame)
+     Replayable<3, T, bool>(frame, mVisible);
+     if (mVisible)
+     {
+-        Replayable<3, T, unsigned long>(frame, mFragmentModelHash);
++        Replayable<3, T, u32>(frame, mFragmentModelHash);
+         Replayable<3, T, nlVector3>(frame, mPosition);
+         Replayable<3, T, nlQuaternion>(frame, mOrientation);
+         Replayable<3, T, float>(frame, mOpacity);
+     }
+ }
+ 
+-template <>
+-void DrawableExplosionFragment::Replay<SaveFrame>(SaveFrame&);
+-
+-template <>
+-void DrawableExplosionFragment::Replay<LoadFrame>(LoadFrame&);
++// template <>
++// void DrawableExplosionFragment::Replay<SaveFrame>(SaveFrame&);
++//
++// template <>
++// void DrawableExplosionFragment::Replay<LoadFrame>(LoadFrame&);
+ 
+ #endif // _DRAWABLEEXPLOSIONFRAGMENT_H_
+diff --git a/include/Game/Drawable/DrawablePowerup.h b/include/Game/Drawable/DrawablePowerup.h
+index ec7e8491..a8d2717b 100644
+--- a/include/Game/Drawable/DrawablePowerup.h
++++ b/include/Game/Drawable/DrawablePowerup.h
+@@ -39,10 +39,10 @@ void DrawablePowerup::Replay(T& frame)
+     }
+ }
+ 
+-template <>
+-void DrawablePowerup::Replay<SaveFrame>(SaveFrame&);
+-
+-template <>
+-void DrawablePowerup::Replay<LoadFrame>(LoadFrame&);
++// template <>
++// void DrawablePowerup::Replay<SaveFrame>(SaveFrame&);
++//
++// template <>
++// void DrawablePowerup::Replay<LoadFrame>(LoadFrame&);
+ 
+ #endif // _DRAWABLEPOWERUP_H_
+diff --git a/include/Game/RenderSnapshot.h b/include/Game/RenderSnapshot.h
+index 2c1a0c94..9906c708 100644
+--- a/include/Game/RenderSnapshot.h
++++ b/include/Game/RenderSnapshot.h
+@@ -167,10 +167,10 @@ void RenderSnapshot::Replay(T& frame)
+     mValid = true;
+ }
+ 
+-template <>
+-void RenderSnapshot::Replay<SaveFrame>(SaveFrame&);
+-
+-template <>
+-void RenderSnapshot::Replay<LoadFrame>(LoadFrame&);
++// template <>
++// void RenderSnapshot::Replay<SaveFrame>(SaveFrame&);
++//
++// template <>
++// void RenderSnapshot::Replay<LoadFrame>(LoadFrame&);
+ 
+ #endif // _RENDERSNAPSHOT_H_

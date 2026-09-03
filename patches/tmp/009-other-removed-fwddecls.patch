@@ -1,0 +1,34 @@
+diff --git a/src/Game/FormationDefines.cpp b/src/Game/FormationDefines.cpp
+index 512021a2..16db1ef6 100644
+--- a/src/Game/FormationDefines.cpp
++++ b/src/Game/FormationDefines.cpp
+@@ -3,9 +3,9 @@
+ #include "NL/nlLexicalCast.h"
+ #include "NL/nlPrint.h"
+ 
+-template <>
+-BasicString<char, Detail::TempStringAllocator>
+-LexicalCast<BasicString<char, Detail::TempStringAllocator>, const char*>(const char* const& value);
++// template <>
++// BasicString<char, Detail::TempStringAllocator>
++// LexicalCast<BasicString<char, Detail::TempStringAllocator>, const char*>(const char* const& value);
+ 
+ static const nlVector3 v3Zero = { 0.0f, 0.0f, 0.0f };
+ 
+diff --git a/src/Game/SH/SHCupTrophy.cpp b/src/Game/SH/SHCupTrophy.cpp
+index 0a8c167c..18eee706 100644
+--- a/src/Game/SH/SHCupTrophy.cpp
++++ b/src/Game/SH/SHCupTrophy.cpp
+@@ -23,9 +23,9 @@
+ 
+ // Declared, never defined: retail references this specialization instead of
+ // emitting it (SHLoading.o owns the weak definition in both trees).
+-template <>
+-WideBasicString Format<WideBasicString, unsigned short[16]>(
+-    const WideBasicString& string, const unsigned short (&t0)[16]);
++// template <>
++// WideBasicString Format<WideBasicString, unsigned short[16]>(
++//     const WideBasicString& string, const unsigned short (&t0)[16]);
+ 
+ /**
+  * Offset/Address/Size: 0x27B0 | 0x800CBE64 | size: 0xD4

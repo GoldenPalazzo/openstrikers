@@ -1,0 +1,46 @@
+diff --git a/include/Game/World/worldanim.h b/include/Game/World/worldanim.h
+index f54becf3..2497bb9e 100644
+--- a/include/Game/World/worldanim.h
++++ b/include/Game/World/worldanim.h
+@@ -46,10 +46,11 @@ class TMAnimController : public WorldAnimController
+     friend class World;
+ 
+ public:
+-    TMAnimController(const char* szAnimSetAndHierarchyName, World* pWorldContext);
+-    virtual ~TMAnimController();
+-    virtual void Update(float fTimeDelta);
+-    virtual glModel* GetUpdatedModel();
++    TMAnimController(const char* szAnimSetAndHierarchyName, World* pWorldContext)
++        : WorldAnimController(szAnimSetAndHierarchyName, pWorldContext) {}
++    virtual ~TMAnimController() {}
++    virtual void Update(float fTimeDelta) { };
++    virtual glModel* GetUpdatedModel(unsigned long program, void* pLightData) { return 0; };
+ 
+     void ForceFrameRebuild();
+     unsigned char BindGeomToAnimNode(const char* szGeomName, const char* szBoneName);
+@@ -64,18 +65,19 @@ protected:
+ class SkinnedAnimController : public WorldAnimController
+ {
+ public:
+-    SkinnedAnimController(const char* szAnimSetAndHierarchyName, World* pWorldContext);
+-    virtual ~SkinnedAnimController();
+-    virtual void Update(float fTimeDelta);
++    SkinnedAnimController(const char* szAnimSetAndHierarchyName, World* pWorldContext)
++        : WorldAnimController(szAnimSetAndHierarchyName, pWorldContext) {}
++    virtual ~SkinnedAnimController() { };
++    virtual void Update(float fTimeDelta) { };
+     virtual glModel* GetUpdatedModel(unsigned long program, void* pLightData)
+     {
+         UpdateSkinnedMesh(program, pLightData);
+         return m_pCachedSkinnedModel;
+     }
+ 
+-    void UpdateSkinnedMesh(unsigned long program, void* pLightData);
+-    void UpdateAnimation(float fTimeDelta, const nlMatrix4& worldMatrix);
+-    void CreateGLSkinMesh(glModel* pModel);
++    void UpdateSkinnedMesh(unsigned long program, void* pLightData) {};
++    void UpdateAnimation(float fTimeDelta, const nlMatrix4& worldMatrix) {};
++    void CreateGLSkinMesh(glModel* pModel) {};
+ 
+ public:
+     /* 0x18 */ GLSkinMesh* m_pSkinMesh;

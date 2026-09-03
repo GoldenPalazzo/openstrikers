@@ -86,6 +86,7 @@ target_compile_definitions(openstrikers PRIVATE
     MUSY_VERSION_PATCH=3
     NDEBUG=1
     __IEEE_LITTLE_ENDIAN
+    GOLDEN_DISABLE_AUDIO
 )
 
 target_compile_options(openstrikers PRIVATE
