@@ -6,7 +6,7 @@ index 2e39c790..5eae84f5 100644
  #include "NL/nlWare.h"
  #include "NL/nlFile.h"
  #include "NL/nlFileGC.h"
-+#ifndef TARGET_PC
++#ifndef GOLDEN_DISABLE_AUDIO
  #include "musyx/musyx.h"
 +#endif
  #include "dolphin/os.h"
@@ -14,7 +14,7 @@ index 2e39c790..5eae84f5 100644
  // Declarations needed by the inline (weak) AudioStream methods defined below,
  // so this header compiles standalone in every includer.
  void nlServiceFileSystem();
-+#ifndef TARGET_PC
++#ifndef GOLDEN_DISABLE_AUDIO
  extern "C" void sndStreamLPFParameter(unsigned long, bool, unsigned long);
 +#endif
  
@@ -24,7 +24,7 @@ index 2e39c790..5eae84f5 100644
      {
          if (on != m_bLPFOn)
          {
-+#ifndef TARGET_PC
++#ifndef GOLDEN_DISABLE_AUDIO
              sndStreamLPFParameter(m_StreamId, on, m_LPFFreq);
 +#endif
              m_bLPFOn = on;
@@ -34,7 +34,7 @@ index 2e39c790..5eae84f5 100644
      {
          if (m_bLPFOn)
          {
-+#ifndef TARGET_PC
++#ifndef GOLDEN_DISABLE_AUDIO
              sndStreamLPFParameter(m_StreamId, m_bLPFOn, frequency);
 +#endif
          }
@@ -44,7 +44,7 @@ index 2e39c790..5eae84f5 100644
              while (buffer != NULL)
              {
                  buffer->m_Volume = (u8)clampedVolume;
-+#ifndef TARGET_PC
++#ifndef GOLDEN_DISABLE_AUDIO
                  sndStreamMixParameterEx(buffer->m_StreamId, buffer->m_Volume, buffer->m_Pan, buffer->m_SurroundPan, 0, 0);
 +#endif
                  ((unsigned long&)bufferIndex)++;
@@ -54,7 +54,7 @@ index 2e39c790..5eae84f5 100644
  
              while (buffer != NULL)
              {
-+#ifndef TARGET_PC
++#ifndef GOLDEN_DISABLE_AUDIO
                  sndStreamActivate(buffer->m_StreamId);
 +#endif
                  ((unsigned long&)bufferIndex)++;
@@ -64,7 +64,7 @@ index 2e39c790..5eae84f5 100644
              while (pBuffer != NULL)
              {
                  pBuffer->m_Volume = 0;
-+#ifndef TARGET_PC
++#ifndef GOLDEN_DISABLE_AUDIO
                  sndStreamMixParameterEx(
                      pBuffer->m_StreamId,
                      pBuffer->m_Volume,
@@ -80,7 +80,7 @@ index 2e39c790..5eae84f5 100644
  
          while (buffer != NULL)
          {
-+#ifndef TARGET_PC
++#ifndef GOLDEN_DISABLE_AUDIO
              sndStreamActivate(buffer->m_StreamId);
 +#endif
              cursor.Advance();
@@ -90,7 +90,7 @@ index 2e39c790..5eae84f5 100644
              while (pBuffer != NULL)
              {
                  pBuffer->m_Volume = 0;
-+#ifndef TARGET_PC
++#ifndef GOLDEN_DISABLE_AUDIO
                  sndStreamMixParameterEx(
                      pBuffer->m_StreamId,
                      pBuffer->m_Volume,
@@ -110,7 +110,7 @@ index 8e0fc23a..7a02ffca 100644
  
  #include "types.h"
  #include "NL/nlMath.h"
-+#ifndef TARGET_PC
++#ifndef GOLDEN_DISABLE_AUDIO
  #include "musyx/musyx.h"
 +#endif
  
@@ -124,7 +124,7 @@ index 6fe99b56..665031c5 100644
  #include "types.h"
  #include <dolphin/ar.h>
  
-+#ifdef TARGET_PC
++#ifdef GOLDEN_DISABLE_AUDIO
 +void PrintSoundStackInfo() {}
 +void musyXFree(void* addr) { free(addr); }
 +void* musyXAlloc(u32 size) { return malloc(size); }

@@ -44,46 +44,6 @@ index c00f5359..ea2dab97 100644
              unsigned char b;
  
              GXPeekARGB((unsigned short)j, (unsigned short)i, &color);
-diff --git a/src/Game/Sys/GCStream.cpp b/src/Game/Sys/GCStream.cpp
-index 45bbbd0a..936c954b 100644
---- a/src/Game/Sys/GCStream.cpp
-+++ b/src/Game/Sys/GCStream.cpp
-@@ -34,13 +34,13 @@ struct SND_ADPCMSTREAM_INFO;
- 
- extern "C"
- {
--    void sndStreamMixParameterEx(unsigned long stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
--    void sndStreamDeactivate(unsigned long stid);
--    void sndStreamFree(unsigned long stid);
--    void sndStreamARAMUpdate(unsigned long stid, unsigned long off1, unsigned long len1, unsigned long off2, unsigned long len2);
--    void sndStreamFrq(unsigned long stid, unsigned long frq);
--    void sndStreamADPCMParameter(unsigned long stid, SND_ADPCMSTREAM_INFO* adpcmInfo);
--    unsigned long sndStreamAllocEx(unsigned char prio, void* buffer, unsigned long samples, unsigned long frq, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb, unsigned char studio, unsigned long flags, unsigned long (*updateFunction)(void*, unsigned long, void*, unsigned long, unsigned long), unsigned long user, SND_ADPCMSTREAM_INFO* adpcmInfo);
-+    void sndStreamMixParameterEx(SND_STREAMID stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
-+    void sndStreamDeactivate(SND_STREAMID stid);
-+    void sndStreamFree(SND_STREAMID stid);
-+    void sndStreamARAMUpdate(SND_STREAMID stid, u32 off1, u32 len1, u32 off2, u32 len2);
-+    void sndStreamFrq(SND_STREAMID stid, u32 frq);
-+    void sndStreamADPCMParameter(SND_STREAMID stid, SND_ADPCMSTREAM_INFO* adpcmInfo);
-+    SND_STREAMID sndStreamAllocEx(unsigned char prio, void* buffer, u32 samples, u32 frq, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb, unsigned char studio, u32 flags, u32 (*updateFunction)(void*, u32, void*, u32, u32), u32 user, SND_ADPCMSTREAM_INFO* adpcmInfo);
- }
- 
- namespace GCAudioStreaming
-diff --git a/src/Game/Sys/PlatStream.cpp b/src/Game/Sys/PlatStream.cpp
-index 7dc421fb..e234e857 100644
---- a/src/Game/Sys/PlatStream.cpp
-+++ b/src/Game/Sys/PlatStream.cpp
-@@ -5,8 +5,8 @@
- 
- extern "C"
- {
--    void sndStreamMixParameterEx(unsigned long stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
--    void sndStreamDeactivate(unsigned long stid);
-+    void sndStreamMixParameterEx(SND_STREAMID stid, unsigned char vol, unsigned char pan, unsigned char span, unsigned char auxa, unsigned char auxb);
-+    void sndStreamDeactivate(SND_STREAMID stid);
- }
- 
- GCAudioStreaming::AudioBufferMgr g_BufferMgr;
 diff --git a/src/Game/Sys/geventdst.cpp b/src/Game/Sys/geventdst.cpp
 index a708fa13..9e408da4 100644
 --- a/src/Game/Sys/geventdst.cpp
