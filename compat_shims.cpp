@@ -1,3 +1,5 @@
+#include "compat_shims.h"
+
 extern "C" int __float_max[] = { 0x7F7FFFFF };
 extern "C" float __float_min[] = { 0x00800000 };
 extern "C" int __float_nan[] = { 0x7FFFFFFF };
@@ -27,3 +29,80 @@ extern "C" const unsigned short __lower_map[256] = {
 };
 
 extern "C" unsigned char __ctype_map[256] = {0};
+
+extern "C" {
+
+void C_MTX44Identity(Mtx44 m) {
+    m[0][0] = 1.0f; m[0][1] = 0.0f; m[0][2] = 0.0f; m[0][3] = 0.0f;
+    m[1][0] = 0.0f; m[1][1] = 1.0f; m[1][2] = 0.0f; m[1][3] = 0.0f;
+    m[2][0] = 0.0f; m[2][1] = 0.0f; m[2][2] = 1.0f; m[2][3] = 0.0f;
+    m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
+}
+
+void C_MTX44Concat(const Mtx44 a, const Mtx44 b, Mtx44 ab) {
+    Mtx44 tmp;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            tmp[i][j] = a[i][0]*b[0][j] + a[i][1]*b[1][j]
+                      + a[i][2]*b[2][j] + a[i][3]*b[3][j];
+        }
+    }
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            ab[i][j] = tmp[i][j];
+}
+
+void C_MTX44Transpose(const Mtx44 src, Mtx44 xPose) {
+    Mtx44 tmp;
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            tmp[j][i] = src[i][j];
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            xPose[i][j] = tmp[i][j];
+}
+
+void C_MTX44Scale(Mtx44 m, f32 xS, f32 yS, f32 zS) {
+    C_MTX44Identity(m);
+    m[0][0] = xS;
+    m[1][1] = yS;
+    m[2][2] = zS;
+}
+
+u32 C_MTX44Inverse(const Mtx44 src, Mtx44 inv) {
+    f32 a[4][8];
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) a[i][j] = src[i][j];
+        for (int j = 0; j < 4; j++) a[i][j+4] = (i == j) ? 1.0f : 0.0f;
+    }
+
+    for (int col = 0; col < 4; col++) {
+        int pivot = col;
+        f32 maxVal = fabsf(a[col][col]);
+        for (int r = col + 1; r < 4; r++) {
+            if (fabsf(a[r][col]) > maxVal) { maxVal = fabsf(a[r][col]); pivot = r; }
+        }
+        if (maxVal == 0) return 0;
+
+        if (pivot != col) {
+            for (int j = 0; j < 8; j++) std::swap(a[col][j], a[pivot][j]);
+        }
+
+        f32 d = a[col][col];
+        for (int j = 0; j < 8; j++) a[col][j] /= d;
+
+        for (int r = 0; r < 4; r++) {
+            if (r == col) continue;
+            f32 f = a[r][col];
+            for (int j = 0; j < 8; j++) a[r][j] -= f * a[col][j];
+        }
+    }
+
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            inv[i][j] = a[i][j+4];
+
+    return 1;
+}
+
+} // extern "C"
