@@ -1,28 +1,38 @@
 #pragma once
-#include <cstdio>
-#include <limits>
+#include <stdio.h>
+#include <limits.h>
 #include <alloca.h>
+#ifdef __cpluplus
 #include <new> // needed in nlFile.cpp
+#endif
+
 #define __alloca alloca
 #define __fabsf fabsf
 #define __fabs fabs
 #define __VA_LIST_COMPAT_DEFINED
 typedef __builtin_va_list __va_list;
-extern "C" int __float_max[];
-extern "C" float __float_min[];
-extern "C" int __float_nan[];
-extern "C" int __float_huge[];
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+extern int __float_max[];
+extern float __float_min[];
+extern int __float_nan[];
+extern int __float_huge[];
+#ifdef __cplusplus
+}
+#endif
+
 typedef FILE _FILE;
 
-#include <cmath>
-inline double __frsqrte(double x) {
+#include <math.h>
+static inline double __frsqrte(double x) {
     return 1.0 / sqrt(x);
 }
 
-#include <cstring>
+#include <string.h>
 #define __memcpy memcpy
 #if defined(_WIN32) || defined(_MSVC_VER)
-    #include <string.h>
     #ifndef strcmpi
     #define strcmpi _stricmp
     #endif
@@ -80,7 +90,7 @@ inline void GXClearGPMetric() {}
 inline void GXSetGPMetric(int, int) {}
 inline void GXReadGPMetric(u32* val0, u32* val1) { *val0 = 0; *val1 = 0; }
 inline void GXInitFogAdjTable(void* table, u16 width, float projParam[4][4]) { /* stub */ }
-inline GXRenderModeObj GXEurgb60Hz480IntDf = {}; // stub
+inline GXRenderModeObj GXEurgb60Hz480IntDf = {0}; // stub
 typedef const float (*CMtxP)[4];
 inline void SISetSamplingRate(int) {}
 inline void PADSetSamplingCallback(void (*)(void)) {}  // PADSamplingCallback = void (*)(void)
@@ -110,8 +120,8 @@ inline void VIWaitForRetrace() {}
 
 inline u32 VIGetRetraceCount() { return 0; }
 inline void VISetNextFrameBuffer(void*) {}
-inline VIRetraceCallback VISetPreRetraceCallback(VIRetraceCallback) { return nullptr; }
-inline VIRetraceCallback VISetPostRetraceCallback(VIRetraceCallback cb) { return nullptr; }
+inline VIRetraceCallback VISetPreRetraceCallback(VIRetraceCallback) { return NULL; }
+inline VIRetraceCallback VISetPostRetraceCallback(VIRetraceCallback cb) { return NULL; }
 inline u32 VIGetDTVStatus() { return 0; }
 
 
@@ -158,6 +168,7 @@ inline void VMSetLogStatsCallback(VMLogStatsCallback cb) {}
 }
 #endif
 
+#ifdef __cplusplus
 // __construct_new_array: calls constructor for each element
 
 extern "C" inline void* __construct_new_array(void* block, void* ctor, void* dtor, size_t size, size_t n) {
@@ -180,11 +191,14 @@ extern "C" inline unsigned int __cvt_fp2unsigned(double d) {
 }
 
 extern "C" unsigned char __ctype_map[];
+#endif
 
 
 // musyx
 //
-
+#ifndef __cplusplus
+#include <stdbool.h>
+#endif
 #ifndef _MUSYX_VERSION
 #define _MUSYX_VERSION
 

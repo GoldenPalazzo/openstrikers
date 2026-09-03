@@ -19,6 +19,7 @@ file(COPY_FILE
 
 file(GLOB_RECURSE ODE_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/decomp/src/ode/*.cpp
+    ${CMAKE_SOURCE_DIR}/decomp/src/ode/*.c
 )
 # An header called "Opcode.h" is in a legal grey area in the original decomp.
 # Since the only file that uses it is decomp/src/ode/collision_trimesh_internal.h
@@ -30,6 +31,11 @@ list(FILTER ODE_SOURCES EXCLUDE REGEX ".*trimesh.*")
 list(FILTER ODE_SOURCES EXCLUDE REGEX ".*scrapbook.*")
 # same thing for decomp/src/ode/stack.cpp
 list(FILTER ODE_SOURCES EXCLUDE REGEX ".*/ode/stack\\.cpp$")
+list(FILTER ODE_SOURCES EXCLUDE REGEX ".*_orig\\.(cpp|c)$")
+set_source_files_properties(
+    ${ODE_SOURCES}
+    PROPERTIES LANGUAGE CXX
+)
 
 file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/decomp/src/Game/*.cpp
