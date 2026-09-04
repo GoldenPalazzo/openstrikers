@@ -1,0 +1,13 @@
+diff --git a/src/Game/TransitionTask.cpp b/src/Game/TransitionTask.cpp
+index 3b442a5c..f833828d 100644
+--- a/src/Game/TransitionTask.cpp
++++ b/src/Game/TransitionTask.cpp
+@@ -98,7 +98,7 @@ void glResourceRelease(unsigned long long);
+ 
+ extern unsigned char g_JaapAndJacksNastyHackBecauseWeDoNotKnowDifferenceBetweenPausePauseAndPostGamePause;
+ 
+-void PrintAvailableARAMMemory();
++void PrintAvailableARAMMemory() {}
+ void InitializeGameObjectLighting();
+ void AIEventHandler(Event*, void*);
+ void InitializeElectricFence();

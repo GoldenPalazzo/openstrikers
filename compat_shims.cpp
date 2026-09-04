@@ -209,6 +209,9 @@ void OSRestoreInterrupts(BOOL state) {
     (void)state;
 }
 
-
+#ifdef GOLDEN_DISABLE_AUDIO
+u32 THPAudioDecode(void*, void*, long) { return 0; }
+s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work) { return 0; }
+#endif
 
 } // extern "C"
