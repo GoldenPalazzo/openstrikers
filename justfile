@@ -7,6 +7,13 @@ gen:
 build:
     @cmake --build build -j$(nproc)
 
+gen-dbg:
+    @cmake -B build-dbg -G Ninja -DCMAKE_COLOR_DIAGNOSTICS=ON \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
+
+build-dbg:
+    @cmake --build build-dbg -j$(nproc)
+
 show-err:
     @just build | grep --color=auto -i -B 2 -A 5 "error:"
 
