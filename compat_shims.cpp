@@ -105,4 +105,110 @@ u32 C_MTX44Inverse(const Mtx44 src, Mtx44 inv) {
     return 1;
 }
 
+// --- Cache / PPC stubs ---
+void PPCSync() {}
+void DCFlushRangeNoSync(void*, u32) {}
+void DCStoreRangeNoSync(void*, u32) {}
+void DCStoreRange(void*, u32) {}
+
+void DCFlushRange(void*, u32) {}
+void DCZeroRange(void*, u32) {}
+void DCInvalidateRange(void*, u32) {}
+
+
+// --- VI stubs ---
+
+void VISetBlack(int) {}
+void VIWaitForRetrace() {}
+
+u32 VIGetRetraceCount() { return 0; }
+void VISetNextFrameBuffer(void*) {}
+VIRetraceCallback VISetPreRetraceCallback(VIRetraceCallback) { return NULL; }
+VIRetraceCallback VISetPostRetraceCallback(VIRetraceCallback cb) { return NULL; }
+u32 VIGetDTVStatus() { return 0; }
+
+
+
+// --- OS stubs ---
+
+void OSYieldThread() {}
+u32 OSGetConsoleType() { return 0; }
+
+u32 OSGetResetCode() { return 0; }
+void OSResetSystem(int, u32, BOOL) {}
+u32 OSGetSoundMode() { return 0; }
+
+void OSSetSoundMode(u32) {}
+u8 OSGetLanguage() { return 0; }
+u32 OSGetProgressiveMode() { return 0; }
+
+void OSSetProgressiveMode(u32) {}
+u32 OSGetEuRgb60Mode() { return 0; }
+void OSSetEuRgb60Mode(u32) {}
+
+BOOL OSGetResetButtonState() { return 0; }
+void OSClearStack(u8) {}
+
+// --- GX stubs ---
+void GXPeekARGB(u16, u16, u32* val) { *val = 0; }
+
+void GXPokeColorUpdate(GXBool) {}
+void GXPokeBlendMode(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp) {}
+
+void GXPokeARGB(u16, u16, u32) {}
+f32 GXGetYScaleFactor(u16, u16) { return 1.0f; }
+
+// --- VM stubs ---
+
+void VMInit(uintptr_t baseAddr, size_t initialCommitSize, uintptr_t limitAddr) {}
+void VMAlloc(uintptr_t address, size_t size) {}
+void VMSetLogStatsCallback(VMLogStatsCallback cb) {}
+
+void LCEnable() {}
+void LCDisable() {}
+ 
+BOOL THPInit() {
+    return TRUE;
+}
+ 
+
+static void DummyAIDCallback() {}
+ 
+void* AIRegisterDMACallback(void* callback) {
+    (void)callback;
+    static void* sPrevCallback = (void*)DummyAIDCallback;
+    void* prev = sPrevCallback;
+    sPrevCallback = callback ? callback : (void*)DummyAIDCallback;
+    return prev;
+}
+ 
+void AIInitDMA(u32 addr, u32 size) {
+    (void)addr;
+    (void)size;
+}
+ 
+void AIStartDMA() {}
+ 
+u32 AIGetDMAStartAddr() {
+    return 0;
+}
+ 
+u32 AIGetDSPSampleRate() {
+    return 0;
+}
+ 
+BOOL OSEnableInterrupts() {
+    return TRUE;
+}
+ 
+BOOL OSDisableInterrupts() {
+    return TRUE;
+}
+ 
+void OSRestoreInterrupts(BOOL state) {
+    (void)state;
+}
+
+
+
 } // extern "C"
