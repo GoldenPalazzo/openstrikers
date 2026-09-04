@@ -2,7 +2,8 @@
 set -e
 
 ROOT="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
-cd "$ROOT"
+EXTERN_DIR="$ROOT/extern"
+cd "$EXTERN_DIR"
 
 for repo in decomp decomp/extern/musyx aurora; do
   if [ -n "$(git -C "$repo" status --porcelain)" ]; then

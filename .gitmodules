@@ -1,6 +1,6 @@
 [submodule "decomp"]
-	path = decomp
+	path = extern/decomp
 	url = https://github.com/yannicksuter/smstrikers-decomp
 [submodule "aurora"]
-	path = aurora
+	path = extern/aurora
 	url = https://github.com/encounter/aurora

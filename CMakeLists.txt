@@ -3,23 +3,26 @@ project(openstrikers CXX C)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(EXTERN_DIR "${CMAKE_SOURCE_DIR}/extern")
+set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
+set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 
-add_subdirectory(aurora EXCLUDE_FROM_ALL)
+add_subdirectory(${EXTERN_DIR}/aurora EXCLUDE_FROM_ALL)
 
 file(GLOB_RECURSE NL_SOURCES CONFIGURE_DEPENDS
-    ${CMAKE_SOURCE_DIR}/decomp/src/NL/*.cpp
+    ${EXTERN_DIR}/decomp/src/NL/*.cpp
 )
 # was done automatically by decomp/configure.py calling
 # decomp/generate_nlfunction_headers.py
 file(COPY_FILE
-    "${CMAKE_SOURCE_DIR}/decomp/include/NL/detail/nlFunctionPreProcTemplate.h"
-    "${CMAKE_SOURCE_DIR}/decomp/include/NL/detail/nlFunction1PreProcTemplate.h"
+    "${EXTERN_DIR}/decomp/include/NL/detail/nlFunctionPreProcTemplate.h"
+    "${EXTERN_DIR}/decomp/include/NL/detail/nlFunction1PreProcTemplate.h"
     ONLY_IF_DIFFERENT
 )
 
 file(GLOB_RECURSE ODE_SOURCES CONFIGURE_DEPENDS
-    ${CMAKE_SOURCE_DIR}/decomp/src/ode/*.cpp
-    ${CMAKE_SOURCE_DIR}/decomp/src/ode/*.c
+    ${EXTERN_DIR}/decomp/src/ode/*.cpp
+    ${EXTERN_DIR}/decomp/src/ode/*.c
 )
 # An header called "Opcode.h" is in a legal grey area in the original decomp.
 # Since the only file that uses it is decomp/src/ode/collision_trimesh_internal.h
@@ -38,7 +41,7 @@ set_source_files_properties(
 )
 
 file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS
-    ${CMAKE_SOURCE_DIR}/decomp/src/Game/*.cpp
+    ${EXTERN_DIR}/decomp/src/Game/*.cpp
 )
 list(FILTER GAME_SOURCES EXCLUDE REGEX ".*/AI/Scripts/TestCases\\.cpp$")
 # these aren't TUs, their fate is to be included in their base .cpp files
@@ -50,14 +53,15 @@ add_executable(openstrikers
     ${NL_SOURCES}
     ${ODE_SOURCES}
     ${GAME_SOURCES}
-    ./compat_shims.cpp
+    ${SRC_DIR}/compat_shims.cpp
 )
 
 target_include_directories(openstrikers PRIVATE
-    ./aurora/include
-    ./decomp/src/ode
-    ./decomp/include
-    ./decomp/src
+    ${INCLUDE_DIR}
+    ${EXTERN_DIR}/aurora/include
+    ${EXTERN_DIR}/decomp/src/ode
+    ${EXTERN_DIR}/decomp/include
+    ${EXTERN_DIR}/decomp/src
 )
 
 target_link_libraries(openstrikers PRIVATE
@@ -91,6 +95,6 @@ target_compile_definitions(openstrikers PRIVATE
 
 target_compile_options(openstrikers PRIVATE
     -fpermissive
-    -include ${CMAKE_SOURCE_DIR}/compat_shims.h
-    -idirafter ${CMAKE_SOURCE_DIR}/decomp/include/PowerPC_EABI_Support/MSL_C/MSL_Common
+    -include ${INCLUDE_DIR}/compat_shims.h
+    -idirafter ${EXTERN_DIR}/decomp/include/PowerPC_EABI_Support/MSL_C/MSL_Common
 )
