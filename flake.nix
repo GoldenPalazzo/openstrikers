@@ -25,6 +25,7 @@
              cmake
              clang
              gcc
+             gdb
              pkg-config
              just
 
