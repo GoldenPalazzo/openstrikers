@@ -54,6 +54,7 @@ add_executable(openstrikers
     ${ODE_SOURCES}
     ${GAME_SOURCES}
     ${SRC_DIR}/compat_shims.cpp
+    ${SRC_DIR}/main.cpp
 )
 
 target_include_directories(openstrikers PRIVATE
