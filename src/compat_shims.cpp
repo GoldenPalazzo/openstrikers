@@ -1,5 +1,8 @@
 #include "compat_shims.h"
 
+// #include <cerrno>
+#include <cstdarg>
+
 extern "C" int __float_max[] = { 0x7F7FFFFF };
 extern "C" float __float_min[] = { 0x00800000 };
 extern "C" int __float_nan[] = { 0x7FFFFFFF };
@@ -207,6 +210,13 @@ BOOL OSDisableInterrupts() {
  
 void OSRestoreInterrupts(BOOL state) {
     (void)state;
+}
+
+void OSReport(const char* msg, ...) {
+    va_list args;
+    va_start(args, msg);
+    printf(msg, args);
+    va_end(args);
 }
 
 #ifdef GOLDEN_DISABLE_AUDIO
