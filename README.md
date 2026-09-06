@@ -11,8 +11,8 @@ A porting of Super Mario Strikers, the GameCube game, for modern platforms.
 This repository does **not** contain any game assets or assembly whatsoever.
 An existing copy of the game is required.
 
-Based on the [https://github.com/yannicksuter/smstrikers-decomp](decompilation)
-by [https://github.com/yannicksuter](@yannicksuter).
+Based on the [decompilation](https://github.com/yannicksuter/smstrikers-decomp)
+by [@yannicksuter](https://github.com/yannicksuter).
 
 ## Legal status and licensing
 
@@ -25,11 +25,11 @@ engineering and not a source-code release.
 
 There isn't a single license for the entire repo. The decomp itself is
 distributed with all the licenses of each individual component and their
-CC0 1.0 license (see [extern/decomp/LICENSE](`decomp/LICENSE`) and
-[extern/decomp/LICENSE.txt](`decomp/LICENSE-CC0.txt`)).
+CC0 1.0 license (see [`decomp/LICENSE`](extern/decomp/LICENSE) and
+[](extern/decomp/LICENSE.txt)).
 
-[https://github.com/encounter/aurora](aurora) ships with its own MIT license
-(see [extern/aurora/LICENSE](`aurora/LICENSE`)).
+[](https://github.com/encounter/aurora) ships with its own MIT license
+(see [](extern/aurora/LICENSE)).
 
 ## Building from source
 
@@ -37,8 +37,8 @@ CC0 1.0 license (see [extern/decomp/LICENSE](`decomp/LICENSE`) and
 
 Currently, the only tested environment is Linux (specifically NixOS).
 
-It's recommended to use [https://nix.dev/install-nix](nix) as package manager
-to use the [flake.nix](`flake.nix`) provided with repo and install with ease
+It's recommended to use [nix](https://nix.dev/install-nix) as package manager
+to use the [`flake.nix`](flake.nix) provided with repo and install with ease
 all project's dependencies
 
 ### Build
@@ -93,9 +93,9 @@ It will also come with `compile_commands.json` for eventual language servers.
 ## Contributing
 
 Contribute freely to both this repo and the
-[https://github.com/GoldenPalazzo/smstrikers-decomp](decomp's fork) on branch
+[decomp's fork](https://github.com/GoldenPalazzo/smstrikers-decomp) on branch
 `port-x86_64`.
 
 For coordination, join the
-[https://discord.gg/hKx3FJJgrV](GC/Wii decomps Discord server) and chat in
+[GC/Wii decomps Discord server](https://discord.gg/hKx3FJJgrV) and chat in
 `#super-mario-strikers`.
