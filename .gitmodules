@@ -1,6 +1,7 @@
 [submodule "decomp"]
 	path = extern/decomp
-	url = https://github.com/yannicksuter/smstrikers-decomp
+	url = https://github.com/GoldenPalazzo/smstrikers-decomp
+	branch = port-x86_64
 [submodule "aurora"]
 	path = extern/aurora
 	url = https://github.com/encounter/aurora
