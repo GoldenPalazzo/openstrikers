@@ -96,6 +96,11 @@ target_compile_definitions(openstrikers PRIVATE
 
 target_compile_options(openstrikers PRIVATE
     -fpermissive
+    -fsanitize=address
     -include ${INCLUDE_DIR}/compat_shims.h
     -idirafter ${EXTERN_DIR}/decomp/include/PowerPC_EABI_Support/MSL_C/MSL_Common
+)
+
+target_link_options(openstrikers PRIVATE
+    -fsanitize=address
 )
