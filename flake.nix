@@ -1,84 +1,40 @@
 {
-   description = "Development shell for openstrikers";
+  description = "Development shell for openstrikers";
 
-   inputs = {
-     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-     flake-utils.url = "github:numtide/flake-utils";
-   };
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
 
-   outputs = { self, nixpkgs, flake-utils }:
-     flake-utils.lib.eachDefaultSystem (system:
-       let
-         pkgs = import nixpkgs {
-           inherit system;
-         };
-       in {
-         devShells.default = pkgs.mkShell {
-           packages = with pkgs; [
-             python312
-             python312Packages.pip
-             python312Packages.certifi
-             ninja
-             git
-             curl
-             wget
-             cmake
-             clang
-             gcc
-             gdb
-             pkg-config
-             just
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+        tools = with pkgs; [
+          cmake ninja clang gcc gdb pkg-config just git curl wget
+          python312 python312Packages.pip python312Packages.certifi
+        ];
+        libs = with pkgs; [
+          alsa-lib libpulseaudio pipewire sndio jack2 dbus ibus systemd libusb1
 
-             # audio
-             alsa-lib
-             libpulseaudio
-             pipewire
-             sndio
-             jack2
+          libGL libGLU libglvnd mesa vulkan-loader vulkan-headers libdrm
+          libgbm egl-wayland
 
-             # X11
-             xorg.libX11
-             xorg.libXext
-             xorg.libXrandr
-             xorg.libXcursor
-             xorg.libXfixes
-             xorg.libXi
-             xorg.libXScrnSaver
-             xorg.libXtst
-             xorg.libXinerama
-             xorg.libXrender
+          libx11 libxext libxrandr libxcursor libxfixes libxi libxscrnsaver
+          libxtst libxrender libxinerama wayland wayland-protocols libxkbcommon
+          libdecor
 
-             # Wayland
-             wayland
-             wayland-protocols
-             libxkbcommon
-             libdecor
-
-             # grafica / GPU
-             libGL
-             libGLU
-             mesa
-             vulkan-loader
-             vulkan-headers
-             libdrm
-             libgbm
-             egl-wayland
-
-             # varie
-             dbus
-             ibus
-             systemd       # per libudev
-             libusb1
-             fribidi
-             libthai
-             liburing
-
-             # per Aurora/Dawn
-             zstd
-             bzip2
-             sdl3
-             sqlite
-           ];
-         };
-       });
- }
+          zstd bzip2 sdl3 sqlite fribidi libthai liburing
+        ];
+      in {
+        devShells.default = pkgs.mkShell {
+          packages = tools ++ libs;
+          shellHook = ''
+            export LD_LIBRARY_PATH=/run/opengl-driver/lib:${
+              pkgs.lib.makeLibraryPath libs
+            }:$LD_LIBRARY_PATH
+          '';
+        };
+      }
+    );
+}
