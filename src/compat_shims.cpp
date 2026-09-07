@@ -1,4 +1,5 @@
 #include "compat_shims.h"
+#include "compat_shims/endian.h"
 
 // #include <cerrno>
 #include <cstdarg>
@@ -208,8 +209,8 @@ BOOL OSDisableInterrupts() {
     return TRUE;
 }
  
-void OSRestoreInterrupts(BOOL state) {
-    (void)state;
+BOOL OSRestoreInterrupts(BOOL state) {
+    return TRUE;
 }
 
 void OSReport(const char* msg, ...) {
@@ -225,3 +226,15 @@ s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work
 #endif
 
 } // extern "C"
+  //
+
+#include "NL/glx/glxTexture.h"
+
+void SwapGXTextureHeader(GXTextureHeader* header)
+{
+    header->numLevels = bswap(header->numLevels);
+    header->format = (eGXTextureFormat)bswap((u32)header->format);
+    header->width = bswap(header->width);
+    header->height = bswap(header->height);
+    header->numEntries = bswap(header->numEntries);
+}

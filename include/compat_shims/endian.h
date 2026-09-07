@@ -18,3 +18,6 @@ constexpr T bswap(T val) noexcept
         static_assert(sizeof(T) == 0, "unsupported dimension");
 }
 #endif
+
+struct GXTextureHeader;
+void SwapGXTextureHeader(GXTextureHeader* header);

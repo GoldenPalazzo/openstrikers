@@ -3,6 +3,7 @@
                             // vero secondo main() -> conflitto di link
 #include <aurora/aurora.h>
 #include <dolphin/gx/GXAurora.h>
+#include <dolphin/os.h>
 #include <aurora/dvd.h>
 #include "compat_shims.h"
 
@@ -35,5 +36,6 @@ int main(int argc, char* argv[])   // <-- diventa aurora_main via macro
         aurora_shutdown();
         return 1;
     }
+    OSInit();
     return game_main();
 }
