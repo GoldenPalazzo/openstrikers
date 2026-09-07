@@ -2,6 +2,7 @@
 
 // #include <cerrno>
 #include <cstdarg>
+#include <cstring>
 #include <utility> // std::swap, not transitive under libc++
 
 extern "C" int __float_max[] = { 0x7F7FFFFF };
@@ -116,7 +117,7 @@ void DCStoreRangeNoSync(void*, u32) {}
 void DCStoreRange(void*, u32) {}
 
 void DCFlushRange(void*, u32) {}
-void DCZeroRange(void*, u32) {}
+void DCZeroRange(void* addr, u32 nBytes) { std::memset(addr, 0, nBytes); }
 void DCInvalidateRange(void*, u32) {}
 
 
