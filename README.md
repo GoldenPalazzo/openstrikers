@@ -1,10 +1,8 @@
 # openstrikers
-[![Discord Badge]][discord]
-
-[Discord Badge]: https://img.shields.io/discord/727908905392275526?color=%237289DA&logo=discord&logoColor=%23FFFFFF
-[discord]: https://discord.gg/hKx3FJJgrV
-
----
+<!-- [![Discord Badge]][discord] -->
+<!---->
+<!-- [Discord Badge]: https://img.shields.io/discord/727908905392275526?color=%237289DA&logo=discord&logoColor=%23FFFFFF -->
+<!-- [discord]: https://discord.gg/hKx3FJJgrV -->
 
 A porting of Super Mario Strikers, the GameCube game, for modern platforms.
 
@@ -96,6 +94,8 @@ Contribute freely to both this repo and the
 [decomp's fork](https://github.com/GoldenPalazzo/smstrikers-decomp) on branch
 `port-x86_64`.
 
-For coordination, join the
+To talk about the decomp, join the
 [GC/Wii decomps Discord server](https://discord.gg/hKx3FJJgrV) and chat in
 `#super-mario-strikers`.
+
+A discord group for the porting is in the work.
