@@ -2,9 +2,10 @@
 
 // #include <cerrno>
 #include <cstdarg>
+#include <utility> // std::swap, not transitive under libc++
 
 extern "C" int __float_max[] = { 0x7F7FFFFF };
-extern "C" float __float_min[] = { 0x00800000 };
+extern "C" float __float_min[] = { 0x1p-126f };
 extern "C" int __float_nan[] = { 0x7FFFFFFF };
 extern "C" int __float_huge[] = { 0x7F800000 };
 
@@ -215,7 +216,7 @@ void OSRestoreInterrupts(BOOL state) {
 void OSReport(const char* msg, ...) {
     va_list args;
     va_start(args, msg);
-    printf(msg, args);
+    vprintf(msg, args);
     va_end(args);
 }
 

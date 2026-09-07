@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include <limits.h>
 #include <alloca.h>
-#ifdef __cpluplus
+#ifdef __cplusplus
 #include <new> // needed in nlFile.cpp
 #endif
 
+#ifndef __alloca // macOS <alloca.h> already defines this
 #define __alloca alloca
+#endif
 #define __fabsf fabsf
 #define __fabs fabs
 #define __VA_LIST_COMPAT_DEFINED
@@ -45,7 +47,9 @@ static inline double __frsqrte(double x) {
 
 #ifndef __cntlzw
 #if defined(__GNUC__) || defined(__clang__)
-#define __cntlzw(x) ((x) ? __builtin_clz(x) : 32)
+static inline int __cntlzw(unsigned int val) {
+    return val ? __builtin_clz(val) : 32;
+}
 #else
 // Generic fallback
 static inline int __cntlzw(unsigned int val) {
