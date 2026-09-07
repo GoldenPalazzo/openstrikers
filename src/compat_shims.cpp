@@ -186,7 +186,7 @@ void* AIRegisterDMACallback(void* callback) {
     return prev;
 }
  
-void AIInitDMA(u32 addr, u32 size) {
+void AIInitDMA(uintptr_t addr, u32 size) {
     (void)addr;
     (void)size;
 }
@@ -221,7 +221,7 @@ void OSReport(const char* msg, ...) {
 }
 
 #ifdef GOLDEN_DISABLE_AUDIO
-u32 THPAudioDecode(void*, void*, long) { return 0; }
+u32 THPAudioDecode(void*, void*, s32) { return 0; }
 s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work) { return 0; }
 #endif
 
