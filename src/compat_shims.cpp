@@ -1,10 +1,13 @@
 #include "compat_shims.h"
+#include <dolphin/ai.h>
 
 // #include <cerrno>
 #include <cstdarg>
+#include <cstring>
+#include <utility> // std::swap, not transitive under libc++
 
 extern "C" int __float_max[] = { 0x7F7FFFFF };
-extern "C" float __float_min[] = { 0x00800000 };
+extern "C" float __float_min[] = { 0x1p-126f };
 extern "C" int __float_nan[] = { 0x7FFFFFFF };
 extern "C" int __float_huge[] = { 0x7F800000 };
 
@@ -115,7 +118,7 @@ void DCStoreRangeNoSync(void*, u32) {}
 void DCStoreRange(void*, u32) {}
 
 void DCFlushRange(void*, u32) {}
-void DCZeroRange(void*, u32) {}
+void DCZeroRange(void* addr, u32 nBytes) { std::memset(addr, 0, nBytes); }
 void DCInvalidateRange(void*, u32) {}
 
 
@@ -177,15 +180,14 @@ BOOL THPInit() {
 
 static void DummyAIDCallback() {}
  
-void* AIRegisterDMACallback(void* callback) {
-    (void)callback;
-    static void* sPrevCallback = (void*)DummyAIDCallback;
-    void* prev = sPrevCallback;
-    sPrevCallback = callback ? callback : (void*)DummyAIDCallback;
+AIDCallback AIRegisterDMACallback(AIDCallback callback) {
+    static AIDCallback sPrevCallback = DummyAIDCallback;
+    AIDCallback prev = sPrevCallback;
+    sPrevCallback = callback ? callback : DummyAIDCallback;
     return prev;
 }
  
-void AIInitDMA(u32 addr, u32 size) {
+void AIInitDMA(uintptr_t addr, u32 size) {
     (void)addr;
     (void)size;
 }
@@ -215,12 +217,12 @@ void OSRestoreInterrupts(BOOL state) {
 void OSReport(const char* msg, ...) {
     va_list args;
     va_start(args, msg);
-    printf(msg, args);
+    vprintf(msg, args);
     va_end(args);
 }
 
 #ifdef GOLDEN_DISABLE_AUDIO
-u32 THPAudioDecode(void*, void*, long) { return 0; }
+u32 THPAudioDecode(s16*, u8*, s32) { return 0; }
 s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work) { return 0; }
 #endif
 
