@@ -1,4 +1,5 @@
 #include "compat_shims.h"
+#include <dolphin/ai.h>
 
 // #include <cerrno>
 #include <cstdarg>
@@ -179,11 +180,10 @@ BOOL THPInit() {
 
 static void DummyAIDCallback() {}
  
-void* AIRegisterDMACallback(void* callback) {
-    (void)callback;
-    static void* sPrevCallback = (void*)DummyAIDCallback;
-    void* prev = sPrevCallback;
-    sPrevCallback = callback ? callback : (void*)DummyAIDCallback;
+AIDCallback AIRegisterDMACallback(AIDCallback callback) {
+    static AIDCallback sPrevCallback = DummyAIDCallback;
+    AIDCallback prev = sPrevCallback;
+    sPrevCallback = callback ? callback : DummyAIDCallback;
     return prev;
 }
  
@@ -222,7 +222,7 @@ void OSReport(const char* msg, ...) {
 }
 
 #ifdef GOLDEN_DISABLE_AUDIO
-u32 THPAudioDecode(void*, void*, s32) { return 0; }
+u32 THPAudioDecode(s16*, u8*, s32) { return 0; }
 s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work) { return 0; }
 #endif
 
