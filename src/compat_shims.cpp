@@ -1,5 +1,4 @@
 #include "compat_shims.h"
-#include "compat_shims/endian.h"
 
 // #include <cerrno>
 #include <cstdarg>
