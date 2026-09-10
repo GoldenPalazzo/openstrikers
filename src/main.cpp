@@ -37,5 +37,7 @@ int main(int argc, char* argv[])   // <-- diventa aurora_main via macro
         return 1;
     }
     OSInit();
-    return game_main();
+    game_main();
+    aurora_shutdown();
+    return 0;
 }
