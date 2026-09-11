@@ -2,10 +2,11 @@
                             // altrimenti la macro non si applica e hai un
                             // vero secondo main() -> conflitto di link
 #include <aurora/aurora.h>
+#include <aurora/event.h>
 #include <dolphin/gx/GXAurora.h>
 #include <dolphin/os.h>
 #include <aurora/dvd.h>
-#include "compat_shims.h"
+#include "port/helpers.h"
 
 int game_main(); // dichiarato qui, definito nel decomp rinominato
 
@@ -33,11 +34,14 @@ int main(int argc, char* argv[])   // <-- diventa aurora_main via macro
     // AuroraSetDisplayAspect(4/3);
     if (!aurora_dvd_open(disc)) {
         fprintf(stderr, "openstrikers: failed to open disc image %s\n", disc);
+        aurora_dvd_close();
         aurora_shutdown();
         return 1;
     }
     OSInit();
+    framepump_init();
     game_main();
+    aurora_dvd_close();
     aurora_shutdown();
     return 0;
 }

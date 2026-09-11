@@ -121,17 +121,6 @@ void DCInvalidateRange(void*, u32) {}
 
 // --- VI stubs ---
 
-void VISetBlack(int) {}
-void VIWaitForRetrace() {}
-
-u32 VIGetRetraceCount() { return 0; }
-void VISetNextFrameBuffer(void*) {}
-VIRetraceCallback VISetPreRetraceCallback(VIRetraceCallback) { return NULL; }
-VIRetraceCallback VISetPostRetraceCallback(VIRetraceCallback cb) { return NULL; }
-u32 VIGetDTVStatus() { return 0; }
-
-
-
 // --- OS stubs ---
 
 void OSYieldThread() {}
