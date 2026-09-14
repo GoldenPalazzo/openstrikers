@@ -140,6 +140,10 @@ namespace port
         operator U*() const noexcept {
             return reinterpret_cast<U*>(get());
         }
+
+        constexpr bool operator==(nullptr_t other) const noexcept {
+            return get() == other;
+        }
     };
     static_assert(sizeof(SelfRelPtr32<char>) == 4);
 
