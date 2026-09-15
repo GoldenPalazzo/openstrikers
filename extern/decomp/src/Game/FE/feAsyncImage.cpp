@@ -1,6 +1,5 @@
 #include "Game/FE/feAsyncImage.h"
 
-#include "NL/nlDebug.h"
 #include "NL/nlMemory.h"
 #include "NL/nlString.h"
 #include "NL/nlMath.h"
@@ -93,7 +92,6 @@ bool AsyncImage::Update(bool autoswap)
 {
     if (mImageInstance == NULL)
     {
-        nlBreak();
         return false;
     }
 
