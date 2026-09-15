@@ -106,7 +106,7 @@ bool GLMeshWriterCore::Begin(int numVerts, eGLPrimitive prim, int numStreams, co
     }
     memset(pPacket, 0, sizeof(glModelPacket));
 
-    size = (unsigned long)(numStreams * 6);
+    size = (unsigned long)(numStreams * sizeof(glModelStream));
     glModelStream* pPktStreams;
     if (bPermanent)
     {

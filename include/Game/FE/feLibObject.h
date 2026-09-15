@@ -67,4 +67,19 @@ public:
     /* 0x64 */ port::be<eFELibObjectType> m_type;
 }; // total size: 0x68
 
+
+static inline void SwapVector3(feVector3& v)
+{
+    u32* raw = reinterpret_cast<u32*>(&v);
+    for (int i = 0; i < 3; i++)
+        raw[i] = bswap(raw[i]);
+}
+
+static inline void SwapLibObjectAttributes(FELibObjectAttributes& attrs)
+{
+    SwapVector3(attrs.v3Position);
+    SwapVector3(attrs.v3Rotation);
+    SwapVector3(attrs.v3Scale);
+    SwapVector3(attrs.v3Pivot);
+}
 #endif // _FELIBOBJECT_H_

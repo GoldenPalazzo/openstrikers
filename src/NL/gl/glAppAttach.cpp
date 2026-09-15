@@ -147,7 +147,7 @@ void glplatAttachPacket(eGLView view, unsigned long layer, const glModelPacket* 
 
         p1->state.texconfig &= ~0x02;
         p1->state.texconfig &= ~0x20;
-        p1->state.texture[0] = (u32)ResolvedBlackTexture;
+        p1->state.texture[0] = (uintptr_t)ResolvedBlackTexture;
         glSetRasterState(p1->state.raster, (eGLState)5, 2);
 
         pPacket = p1;
@@ -165,7 +165,7 @@ void glplatAttachPacket(eGLView view, unsigned long layer, const glModelPacket* 
         }
 
         p0->state.texconfig = 0x11;
-        p0->state.texture[0] = (u32)ResolvedBlackTexture;
+        p0->state.texture[0] = (uintptr_t)ResolvedBlackTexture;
         glSetRasterState(p0->state.raster, (eGLState)5, 2);
 
         p1->state.texconfig &= ~0x10;
@@ -212,8 +212,8 @@ void glplatAttachPacket(eGLView view, unsigned long layer, const glModelPacket* 
     if (glUserHasType((eGLUserData)6, pPacket))
     {
         glModelPacket* p0 = glModelPacketDup(pPacket, true);
-        p0->state.texture[4] = (u32)ResolvedBlackTexture;
-        p0->state.texture[3] = (u32)ResolvedBlackTexture;
+        p0->state.texture[4] = (uintptr_t)ResolvedBlackTexture;
+        p0->state.texture[3] = (uintptr_t)ResolvedBlackTexture;
         glUserDetach((eGLUserData)6, p0);
         glUserAttach(glapp_NoRasterizedAlphaUserData, p0, false);
 
@@ -226,7 +226,7 @@ void glplatAttachPacket(eGLView view, unsigned long layer, const glModelPacket* 
 
         {
             glModelPacket* p1 = glModelPacketDup(pPacket, true);
-            p1->state.texture[0] = (u32)ResolvedBlackTexture;
+            p1->state.texture[0] = (uintptr_t)ResolvedBlackTexture;
             glSetRasterState(p1->state.raster, (eGLState)5, 3);
             glUserDetach((eGLUserData)1, p1);
 
