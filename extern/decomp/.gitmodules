@@ -1,0 +1,7 @@
+[submodule "extern/musyx"]
+	path = extern/musyx
+	url = https://github.com/yannicksuter/musyx.git
+	branch = smstricker_2_0_3_changes	
+[submodule "extern/dolphin"]
+	path = extern/dolphin
+	url = https://github.com/doldecomp/dolsdk2001.git

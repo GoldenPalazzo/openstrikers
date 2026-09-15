@@ -1,0 +1,42 @@
+{
+  "[c]": {
+    "files.encoding": "utf8",
+    "editor.defaultFormatter": "xaver.clang-format",
+    "editor.formatOnSave": true    
+  },
+  "[cpp]": {
+    "files.encoding": "utf8",
+    "editor.defaultFormatter": "xaver.clang-format",
+    "editor.formatOnSave": true    
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": false
+  },
+  // "editor.tabSize": 2,
+  "files.autoSave": "onFocusChange",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.associations": {
+    "*.inc": "c",
+    ".clangd": "yaml",
+    "*.s": "asm",
+  },
+
+  // Disable C/C++ IntelliSense, use clangd instead
+  "C_Cpp.intelliSenseEngine": "disabled",
+
+  // Allow indexing of build files for quick open
+  "files.exclude": {
+    // Don't exclude build/ from file explorer
+  },
+  "search.exclude": {
+    // Don't exclude build/ from search
+  },
+  "files.watcherExclude": {
+    // Optionally exclude from file watching to improve performance
+    "build/**": true
+  },
+  "python-envs.defaultEnvManager": "ms-python.python:pyenv",
+  "python-envs.pythonProjects": []
+}

@@ -1,0 +1,64 @@
+# See config.example.yml for documentation.
+name: main
+object_base: orig/G4QP01
+object: sys/main.dol
+
+# map: orig/G4QP01/files/MarioSoccerZ.MAP
+
+hash: 6dc83dc91d0a5887f0056623498d4cbcd88bc463
+
+symbols: config/G4QP01/symbols.txt
+splits: config/G4QP01/splits.txt
+
+mw_comment_version: 10 # GC Linker 2.6
+symbols_known: true # Very fast analysis
+fill_gaps: false # Alignments known
+
+write_asm: true
+ldscript_template: config/G4QP01/ldscript.tpl
+
+block_relocations:
+  # Suppress dtk false-positive data relocations in LidOpenMessage image data.
+  # These 29 words inside HEADER_*::g_ImageData arrays coincidentally hold values
+  # matching code-symbol addresses (UpdateDesireState, cCharacter dtor, FormatImpl,
+  # etc.); they are raw compressed-image bytes, not pointers. Blocking lets the
+  # target object store the literal bytes so the C source byte-matches.
+  - source: .rodata:0x8028D1E8
+  - source: .rodata:0x8028D8A4
+  - source: .rodata:0x8028E3B0
+  - source: .rodata:0x8028E54C
+  - source: .rodata:0x8028E678
+  - source: .rodata:0x8028F2A8
+  - source: .rodata:0x8028F39C
+  - source: .rodata:0x8028F8D8
+  - source: .rodata:0x8028F94C
+  - source: .rodata:0x8028FD38
+  - source: .rodata:0x8028FE2C
+  - source: .rodata:0x802904BC
+  - source: .rodata:0x802910A8
+  - source: .rodata:0x802910C0
+  - source: .rodata:0x80291640
+  - source: .rodata:0x80292200
+  - source: .rodata:0x80292294
+  - source: .rodata:0x80292D74
+  - source: .rodata:0x80292D78
+  - source: .rodata:0x80292D7C
+  - source: .rodata:0x80292DA0
+  - source: .rodata:0x80293BF4
+  - source: .rodata:0x80293C74
+  - source: .rodata:0x80293CF8
+  - source: .rodata:0x80294648
+  - source: .rodata:0x802947A8
+  - source: .rodata:0x8029713C
+  - source: .rodata:0x8029780C
+  - source: .rodata:0x80298B58
+  # The BMD skin chunk ID 0x8001B008 happens to equal
+  # UseTeamPowerup + 0xE8. These two instructions form the literal chunk ID,
+  # not a code pointer.
+  - source: .text:0x801BF768
+  - source: .text:0x801BF76C
+  # The world physics chunk ID 0x8001D000 happens to equal
+  # ShouldIStrafe + 0x180. These instructions form the literal chunk ID,
+  # not a code pointer.
+  - source: .text:0x80196C68
+  - source: .text:0x80196C6C

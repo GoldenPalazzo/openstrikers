@@ -1,0 +1,18 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Explicitly declare text files
+*.py   text
+
+# Enforce platform-specific encodings
+*.bat  text eol=crlf
+*.sh   text eol=lf
+*.sha1 text eol=lf
+
+# decomp-toolkit writes files with LF
+config/**/*.txt  text eol=lf
+
+# Retail linker maps use CRLF and contain linker-generated trailing spaces.
+orig/*/files/MarioSoccerZ.MAP text eol=crlf -whitespace
+# G4QE01 was historically committed with CRLF already; keep its bytes stable.
+orig/G4QE01/files/MarioSoccerZ.MAP -text

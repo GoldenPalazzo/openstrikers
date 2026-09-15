@@ -1,0 +1,110 @@
+LICENSING AND RIGHTS NOTICE
+
+This repository contains material with different origins and legal statuses.
+No single license applies to every file. File- and directory-specific notices
+take precedence over this summary.
+
+This notice does not grant rights in third-party material beyond the rights,
+permissions, licenses, or exceptions supplied by the applicable rightsholder
+or by law. It is a practical description of the repository and is not legal
+advice.
+
+1. PROJECT-ORIGINAL CONTRIBUTIONS
+
+Except where a file or directory states otherwise, original material authored
+specifically for this project by its contributors is offered under the CC0
+1.0 Universal Public Domain Dedication, but only to the extent that the
+applicable contributor owns the relevant rights and has authority to make the
+dedication. The CC0 text previously used as this repository's root license is
+preserved byte-for-byte in LICENSE-CC0.txt. The canonical CC0 1.0 legal code
+is available at https://creativecommons.org/publicdomain/zero/1.0/legalcode.
+
+This clarification is not intended to revoke any CC0 dedication that was
+validly made. It clarifies that a contributor cannot dedicate rights that the
+contributor does not own or control.
+
+CC0 does not waive, license, or otherwise affect copyrights, trademarks,
+patents, or other rights belonging to Nintendo, Next Level Games, Open
+Dynamics Engine contributors, or any other third party. Third-party material
+does not become CC0 merely because it is included in, combined with, or
+modified by a project contribution.
+
+2. OPEN DYNAMICS ENGINE
+
+Files under src/ode/, include/ode/, and related locations contain material
+corresponding to Open Dynamics Engine (ODE) version 0.5. Historical ODE 0.5
+source offered a choice of licenses that included the BSD-style license used
+for redistribution of the upstream ODE portions in this repository.
+
+The historical BSD text is reproduced verbatim from the ODE 0.5 release in
+LICENSE-BSD.TXT. Existing ODE copyright, authorship, and licensing notices
+must be preserved. Redistribution of upstream ODE portions must comply with
+the conditions in LICENSE-BSD.TXT, including retention of the notice,
+conditions, and disclaimer for source redistribution and reproduction of
+them in accompanying documentation and/or other materials for binary
+redistribution. The names of ODE's copyright owner and contributors may not
+be used to imply endorsement without specific prior written permission.
+
+Some ODE-related files may include changes or additions authored by the
+game's developer or another third party. The ODE BSD license applies to the
+upstream ODE material; it does not, by itself, establish the licensing status
+of independently copyrightable third-party changes or additions.
+
+See THIRD_PARTY_NOTICES.md and docs/ode-provenance.md for details.
+
+3. OTHER THIRD-PARTY MATERIAL
+
+The repository also contains files carrying other notices, including an
+Apache-2.0-licensed Ninja helper, eCos-derived code carrying GPL terms and a
+file-level linking exception, Sun fdlibm notices, reconstructed proprietary
+runtime or SDK material, and separately governed Git submodules. Their
+applicable file-level notices and component licenses control; none of that
+material is relicensed under CC0 by this repository.
+
+See THIRD_PARTY_NOTICES.md, LICENSE-APACHE-2.0.txt, and LICENSE-GPL-2.0.txt.
+
+4. GAME-DERIVED AND RECONSTRUCTED MATERIAL
+
+This repository is an independently produced source reconstruction based on
+analysis of retail versions of the game. It is not an official source-code
+release.
+
+Some files reconstruct code, organization, interfaces, constants, names,
+behavior, or modifications present in the retail game. Such material may be
+subject to third-party rights. Project contributors do not claim ownership of
+third-party material and cannot grant permission for rights they do not own.
+
+In particular, the CC0 dedication in LICENSE-CC0.txt does not apply to
+copyrightable expression owned by Nintendo, Next Level Games, or another
+third party. Inclusion in this repository is not a representation that such
+material is in the public domain or that every use or redistribution is
+authorized in every jurisdiction.
+
+5. ASSETS, RETAIL COPIES, AND BUILD OUTPUTS
+
+This repository does not grant permission to copy or distribute game assets,
+disc images, trademarks, or other third-party content. Users must provide
+their own lawfully obtained copy of the game where required by the build
+process.
+
+A build produced from this repository may reproduce or contain third-party
+copyrighted material. CC0-covered project contributions and permissively
+licensed components do not, by themselves, grant permission to redistribute
+a complete retail-equivalent executable, disc image, or other build output.
+
+6. TRADEMARKS AND AFFILIATION
+
+Nintendo, Super Mario Strikers, Mario Smash Football, GameCube, and related
+names and marks are the property of their respective owners. Names associated
+with ODE may also be protected names or marks.
+
+This project is not affiliated with, authorized by, sponsored by, or endorsed
+by Nintendo, Next Level Games, Russell L. Smith, the Open Dynamics Engine
+project, or their respective owners or contributors.
+
+7. NO WARRANTY
+
+Project-original material is offered as-is, without warranties or conditions
+of any kind, to the greatest extent permitted by applicable law. Third-party
+components remain subject to their applicable notices and disclaimers,
+including the ODE disclaimer in LICENSE-BSD.TXT.

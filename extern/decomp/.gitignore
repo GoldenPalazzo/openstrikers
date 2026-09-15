@@ -1,0 +1,62 @@
+# IDE folders
+.idea/
+.vs/
+
+# Caches
+__pycache__
+.mypy_cache
+.cache/
+
+# Original files
+orig/*/*
+!orig/*/.gitkeep
+!orig/*/files/
+orig/*/files/*
+*.[dD][oO][lL]
+*.[rR][eE][lL]
+*.[eE][lL][fF]
+*.[rR][vV][zZ]
+*.[iI][sS][oO]
+*.[gG][cC][mM]
+*.[wW][bB][fF][sS]
+*.[wW][iI][aA]
+*.[cC][iI][sS][oO]
+*.[gG][cC][zZ]
+*.[bB][iI][nN]
+*.[iI][mM][gG]
+*.o
+*.map
+*.MAP
+!orig/*/files/MarioSoccerZ.MAP
+*.d
+
+# Build files
+build/
+.ninja_*
+build.ninja
+
+# decompctx output
+ctx.*
+*.ctx
+*.csv
+
+#class_gen output
+include/_class_gen/
+src/_class_gen/
+
+# Generated configs
+objdiff.json
+compile_commands.json
+
+# Miscellaneous
+/*.txt
+!/LICENSE-*.txt
+*.exe
+.DS_Store
+src/SDK/__TRK_MINNOW_DOLPHIN/
+extern/musyx
+/extern
+
+# sms-agent runner state
+.sms-agent-runner.lock
+*.lock

@@ -1,0 +1,30 @@
+# clangd configuration for the Super Mario Strikers decompilation.
+#
+# UnusedIncludes is DISABLED on purpose, and removing this setting is unsafe.
+#
+# In this codebase an include that a header does not reference itself is
+# routinely load-bearing: MWCC GC/2.5 groups weak template instantiations into
+# one .text section per declaring header, and that grouping depends on the order
+# the headers are preprocessed. Deleting an "unused" include from a header
+# therefore moves whole weak-instantiation sections in every dependent
+# translation unit, which reorders their .text contribution and changes the
+# linked image.
+#
+# The failure is silent: objdiff and the per-unit match report both keep
+# reporting 100%, because the per-function bytes really are unchanged. Only
+# `dtk shasum -c config/G4QE01/build.sha1` catches it, and several common ninja
+# targets (all_source, report.json, baseline, changes, diff, a single .o) do not
+# depend on that check.
+#
+# An audit on 2026-07-25 found 22 headers whose "unused" include gates weak
+# template emission in at least one Matching TU, plus 10 more affecting only
+# NonMatching TUs. Accepting clangd's one-click "remove #include directive"
+# quickfix on any of them breaks the DOL. The highest-risk ones additionally
+# carry an `// IWYU pragma: keep` comment at the include site.
+#
+# MissingIncludes is disabled for the mirror-image reason: clang-tidy's
+# misc-include-cleaner wants to add includes to .cpp files, and adding one in
+# the wrong position is the same bug from the other direction.
+Diagnostics:
+  UnusedIncludes: None
+  MissingIncludes: None
