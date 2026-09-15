@@ -737,4 +737,6 @@ inline void AudioStream::WarmReadDone(AudioStreamBuffer* pBuffer)
 
 } // namespace GCAudioStreaming
 
+#include <Game/Audio/AudioStreamVirtuals.h>
+
 #endif // _GCSTREAM_H_

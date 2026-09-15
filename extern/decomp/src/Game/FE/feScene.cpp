@@ -91,6 +91,23 @@ static inline void RelocatePointer(u32* pPointer, void* pData)
     }
 }
 
+static void SwapInstanceRing(TLInstance* ringStart)
+{
+    if (ringStart == nullptr)
+        return;
+    TLInstance* inst = ringStart;
+    do
+    {
+        SwapLibObjectAttributes(inst->m_overloadedAttributes);
+        printf("[TLInstance] %s\n", inst->m_szName);
+        if (inst->pChildren != nullptr)
+        {
+            SwapInstanceRing(inst->pChildren);
+        }
+        inst = inst->m_next;
+    } while (inst != ringStart);
+}
+
 /**
  * Offset/Address/Size: 0xE0 | 0x80209E54 | size: 0x26C
  */
@@ -142,6 +159,31 @@ bool FEScene::LoadPackage(const char* szPackageFileName)
     nlFree(pPointerLocation);
 
     m_pFEPackage = (FEPackage*)pData;
+    {
+    FELibObject* obj = m_pFEPackage->m_pFEObjectLibrary, *startPtr = obj;
+    do {
+        printf("[FELibObject name] %s\n", obj->m_szName);
+        SwapLibObjectAttributes(obj->m_attributes);
+        obj = obj->next;
+    } while (obj != startPtr);
+    }
+    {
+    FEPresentation* presentation = m_pFEPackage->GetPresentation();
+    if (presentation != nullptr && presentation->m_slides != nullptr)
+    {
+        TLSlide* slideStart = presentation->m_slides;
+        TLSlide* slide = slideStart;
+        do
+        {
+            if (slide->m_instances != nullptr)
+            {
+                SwapInstanceRing(slide->m_instances);
+            }
+            slide = slide->m_next;
+        } while (slide != slideStart);
+    }
+}
+
 
     QueueResourceLoadCallback cb;
 

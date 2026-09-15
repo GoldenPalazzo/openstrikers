@@ -208,10 +208,15 @@ void glx_ShadowTextureGrab()
     u32* pClearColour = glGetClearColour();
     GXColor clearColour;
 
-    clearColour.r = ((u8*)pClearColour)[0];
-    clearColour.g = ((u8*)pClearColour)[1];
-    clearColour.b = ((u8*)pClearColour)[2];
-    clearColour.a = ((u8*)pClearColour)[3];
+    // clearColour.r = ((u8*)pClearColour)[0];
+    // clearColour.g = ((u8*)pClearColour)[1];
+    // clearColour.b = ((u8*)pClearColour)[2];
+    // clearColour.a = ((u8*)pClearColour)[3];
+    u32 raw = *pClearColour;
+    clearColour.r = (raw >> 24) & 0xFF;
+    clearColour.g = (raw >> 16) & 0xFF;
+    clearColour.b = (raw >> 8)  & 0xFF;
+    clearColour.a =  raw        & 0xFF;
 
     GXSetCopyClear(clearColour, 0xFFFFFF);
     GXSetTexCopySrc(0, 0, 640, 448);

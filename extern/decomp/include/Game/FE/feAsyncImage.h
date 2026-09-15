@@ -36,6 +36,7 @@ public:
 
     static inline void TextureLoadComplete(void* buffer, unsigned long size, unsigned long userData)
     {
+        printf("FINALLY LOADED IMAGE!\n");
         AsyncImage* self = (AsyncImage*)userData;
         self->mLoadState = LS_LOAD_COMPLETE;
     }
