@@ -28,7 +28,19 @@ inline void GXClearGPMetric() {}
 inline void GXSetGPMetric(int, int) {}
 inline void GXReadGPMetric(u32* val0, u32* val1) { *val0 = 0; *val1 = 0; }
 inline void GXInitFogAdjTable(void* table, u16 width, float projParam[4][4]) { /* stub */ }
-inline GXRenderModeObj GXEurgb60Hz480IntDf = {0}; // stub
+inline GXRenderModeObj GXEurgb60Hz480IntDf = { (VITVMode)20,
+    640,
+    480,
+    480,
+    40,
+    0,
+    640,
+    480,
+    (VIXFBMode)1,
+    0,
+    0,
+    { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 },
+    { 8, 8, 10, 12, 10, 8, 8 } };
 typedef const float (*CMtxP)[4];
 inline void SISetSamplingRate(int) {}
 inline void PADSetSamplingCallback(void (*)(void)) {}  // PADSamplingCallback = void (*)(void)
