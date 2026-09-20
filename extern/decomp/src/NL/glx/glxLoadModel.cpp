@@ -21,7 +21,10 @@
 #include "Game/SAnim.h"
 #include "Game/Sys/debug.h"
 #include "dolphin/os/OSCache.h"
+#include <cstdlib>
 #include <string.h>
+
+#include "port/glDisk.h"
 
 extern GLInventory glInventory;
 
@@ -187,6 +190,13 @@ GLSkinMesh* glx_MakeSkinMesh(nlChunk* outerChunk, glModel* models)
     return mesh;
 }
 
+static int port_cmp_u32(const void* a, const void* b)
+{
+    uint32_t x = *(const uint32_t*)a;
+    uint32_t y = *(const uint32_t*)b;
+    return x < y ? -1 : (x > y ? 1 : 0);
+}
+
 /**
  * Offset/Address/Size: 0x1D0 | 0x801BFDF0 | size: 0xA38
  */
@@ -202,14 +212,16 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
     u32 numModels;
     int numPacketEntries;
     int numStreamEntries;
-    u32 refDataPtr;
+    uintptr_t refDataPtr;
     glModel* pModels;
     glModelPacket* pPackets;
-    u8* pStreamData;
+    glModelStream* pStreamData;
     u8* pDisplayListData;
     u8* pIndexData;
     bool hasSkinData;
     nlChunk* chunk;
+
+    u32 vertexDataSize;
 
     outerChunkPtr = (nlChunk*)data;
     outerEnd = (nlChunk*)(data + size);
@@ -251,7 +263,7 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                 if (((-alignBits | alignBits) >> 31) != 0)
                 {
                     u32 align = 1u << (alignBits >> 24);
-                    chunkData = (u8*)nlAlignUp((u32)(chunk + 1), align);
+                    chunkData = (u8*)nlAlignUp((uintptr_t)(chunk + 1), (uintptr_t)align);
                 }
                 else
                 {
@@ -264,18 +276,22 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                     break;
                 case BMD_CHUNK_REF_DATA:
                 {
-                    void* p = glResourceAlloc(chunkSize, GLM_Matrix);
-                    refDataPtr = (u32)p;
+                    u32* p = (u32*)glResourceAlloc(chunkSize, GLM_Matrix);
+                    refDataPtr = (uintptr_t)p;
                     memcpy(p, chunkData, chunkSize);
+                    for (; (uintptr_t)p < (uintptr_t)p+chunkSize; p++)
+                        *p = bswap(*p);
                     break;
                 }
                 case BMD_CHUNK_MODELS:
                 {
-                    numModels = chunkSize >> 4;
+                    numModels = chunkSize / sizeof(port::disk::glModel);
                     if (pNumModels != NULL)
                         *pNumModels = numModels;
-                    pModels = (glModel*)glResourceAlloc(chunkSize, GLM_Header);
-                    memcpy(pModels, chunkData, chunkSize);
+                    pModels = (glModel*)glResourceAlloc(numModels*sizeof(glModel), GLM_Header);
+                    const auto* diskArr = (const port::disk::glModel*)chunkData;
+                    for (size_t i=0; i<numModels; i++)
+                        port::disk::convert(pModels[i], diskArr[i]);
                     {
                         glModel* pEnt = pModels;
                         glModel* pEntEnd = (glModel*)((u8*)pModels + (numModels << 4));
@@ -296,20 +312,25 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                 }
                 case BMD_CHUNK_PACKETS:
                 {
-                    numPacketEntries = (int)(chunkSize / sizeof(glModelPacket));
-                    pPackets = (glModelPacket*)glResourceAlloc(chunkSize, GLM_Header);
-                    memcpy(pPackets, chunkData, chunkSize);
+                    numPacketEntries = chunkSize / sizeof(port::disk::glModelPacket);
+                    pPackets = (glModelPacket*)glResourceAlloc(numPacketEntries*sizeof(glModelPacket), GLM_Header);
+                    const auto* diskArr = (const port::disk::glModelPacket*)chunkData;
+                    for (size_t i=0; i<numPacketEntries; i++)
+                        port::disk::convert(pPackets[i], diskArr[i]);
                     break;
                 }
                 case BMD_CHUNK_STREAMS:
                 {
-                    numStreamEntries = (int)(chunkSize / sizeof(glModelStream));
-                    pStreamData = (u8*)glResourceAlloc(chunkSize, GLM_Header);
-                    memcpy(pStreamData, chunkData, chunkSize);
+                    numStreamEntries = chunkSize / sizeof(port::disk::glModelStream);
+                    pStreamData = (glModelStream*)glResourceAlloc(numStreamEntries*sizeof(glModelStream), GLM_Header);
+                    const auto* diskArr = (const port::disk::glModelStream*)chunkData;
+                    for (size_t i=0; i<numStreamEntries; i++)
+                        port::disk::convert(pStreamData[i], diskArr[i]);
                     break;
                 }
                 case BMD_CHUNK_DISPLAY_LIST:
                 {
+                    vertexDataSize = chunkSize;
                     pDisplayListData = (u8*)glResourceAlloc(chunkSize, GLM_VertexData);
                     memcpy(pDisplayListData, chunkData, chunkSize);
                     DCFlushRange(pDisplayListData, chunkSize);
@@ -319,6 +340,8 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                 {
                     pIndexData = (u8*)nlMalloc(chunkSize, 8, true);
                     memcpy(pIndexData, chunkData, chunkSize);
+                    for (u32 i = 0; i + 1 < chunkSize; i += 2)
+                        std::swap(pIndexData[i], pIndexData[i + 1]);
                     DCFlushRange(pIndexData, chunkSize);
                     break;
                 }
@@ -414,7 +437,7 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                 glModel* pM = pModels;
                 while (count > 0)
                 {
-                    pM->packets = (glModelPacket*)((u32)pM->packets + (u32)pPackets);
+                    pM->packets = (glModelPacket*)((uintptr_t)pM->packets + (uintptr_t)pPackets);
                     pM++;
                     count--;
                 }
@@ -447,22 +470,63 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                             pPkt->state.raster = glHandleizeRasterState();
                         }
                     }
-                    pPkt->streams = (glModelStream*)((u32)pPkt->streams + (u32)pStreamData);
-                    pPkt->indexBuffer += (u32)pIndexData;
+                    pPkt->streams = (glModelStream*)((uintptr_t)pPkt->streams + (uintptr_t)pStreamData);
+                    pPkt->indexBuffer += (uintptr_t)pIndexData;
                     pPkt->state.matrix += refDataPtr;
-                    pPkt = (glModelPacket*)((u8*)pPkt + 0x4A);
+                    pPkt = (glModelPacket*)((u8*)pPkt + sizeof(glModelPacket));
                 }
             }
 
             {
-                int count = numStreamEntries;
-                u8* p = pStreamData;
-                while (count > 0)
+                // int count = numStreamEntries;
+                // u8* p = pStreamData;
+
                 {
-                    *(u32*)p += (u32)pDisplayListData;
-                    p += 6;
-                    count--;
+                    if (numStreamEntries != 0)
+                    {
+                        glModelStream* streamData = pStreamData;
+                        u32* bounds = (u32*)nlMalloc(numStreamEntries * sizeof(u32));
+                        if (bounds == NULL)
+                            *(u8*)1 = 0;
+                        int n = 0;
+                        for (int i=0; i<numStreamEntries; i++)
+                            bounds[n++] = (u32)streamData[i].address;
+                        qsort(bounds, n, sizeof(u32), port_cmp_u32);
+                        for (int i=0; i<numStreamEntries; i++)
+                        {
+                            u32 off = (u32)streamData[i].address;
+                            u32 end = (u32)vertexDataSize;
+                            uintptr_t lo = 0;
+                            uintptr_t hi = n;
+                            while (lo < hi)
+                            {
+                                uintptr_t mid = lo+(hi-lo)/2;
+                                if (bounds[mid] > off)
+                                {
+                                    hi = mid;
+                                }
+                                else
+                                {
+                                    lo = mid+1;
+                                }
+                            }
+                            if (lo < n && bounds[lo] < end)
+                                end = bounds[lo];
+                            pStreamData[i].dataSize = off < end ? end - off : 0;
+                        }
+                        nlFree(bounds);
+                    }
                 }
+
+
+                for (int i = 0; i < numStreamEntries; i++)
+                    pStreamData[i].address += (uintptr_t)pDisplayListData;
+                // while (count > 0)
+                // {
+                //     *(u32*)p += (u32)pDisplayListData;
+                //     p += 6;
+                //     count--;
+                // }
             }
 
             {
@@ -471,7 +535,7 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                 while (pModel < pModelEnd)
                 {
                     glModelPacket* pPacket = pModel->packets;
-                    while ((u8*)pPacket < (u8*)pModel->packets + pModel->numPackets * 0x4A)
+                    while ((u8*)pPacket < (u8*)pModel->packets + pModel->numPackets * sizeof(glModelPacket))
                     {
                         if (hasSkinData)
                         {
@@ -490,7 +554,7 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                         }
                         if (pPacket->indexBuffer != 0)
                         {
-                            pPacket->indexBuffer = (u32)dlMakeDisplayList(pPacket, true);
+                            pPacket->indexBuffer = (uintptr_t)dlMakeDisplayList(pPacket, true);
                         }
                         if (bLoadTextures)
                         {
@@ -503,13 +567,13 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                                     {
                                         if (glTextureLoad(texHandle))
                                         {
-                                            pPacket->state.texture[s] = (u32)glx_GetTex(texHandle, true, true);
+                                            pPacket->state.texture[s] = (uintptr_t)glx_GetTex(texHandle, true, true);
                                         }
                                     }
                                 }
                             }
                         }
-                        pPacket = (glModelPacket*)((u8*)pPacket + 0x4A);
+                        pPacket = (glModelPacket*)((u8*)pPacket + sizeof(glModelPacket));
                     }
                     pModel++;
                 }
