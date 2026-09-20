@@ -43,12 +43,16 @@ struct glModelStream
     /* 0x0 */ unsigned long address;
     /* 0x4 */ u8 id;
     /* 0x5 */ u8 stride;
+#ifdef TARGET_PC
+    u8 beData;
+    u32 dataSize;
+#endif
 }; // total size: 0x6
 
 struct glModelPacket // size: 0x4A
 {
     /* 0x00 */ u32 userData;
-    /* 0x04 */ u32 indexBuffer;
+    /* 0x04 */ uintptr_t indexBuffer;
     /* 0x08 */ u16 numVertices;
     /* 0x0A */ u8 primType;
     /* 0x0B */ u8 numStreams;
