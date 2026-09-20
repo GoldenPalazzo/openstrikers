@@ -22,10 +22,10 @@ enum AnimType
 class FEAnimationKeyframe
 {
 public:
-    /* 0x00 */ float m_fPoint;
-    /* 0x04 */ float m_fControl1;
-    /* 0x08 */ float m_fControl2;
-    /* 0x0C */ float m_fTime;
+    /* 0x00 */ port::be<f32> m_fPoint;
+    /* 0x04 */ port::be<f32> m_fControl1;
+    /* 0x08 */ port::be<f32> m_fControl2;
+    /* 0x0C */ port::be<f32> m_fTime;
 }; /* size: 0x10 */
 
 typedef struct fAnimationKeyframe
