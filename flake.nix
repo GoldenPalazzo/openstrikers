@@ -13,6 +13,7 @@
         tools = with pkgs; [
           cmake ninja clang gcc gdb pkg-config just git curl wget
           python312 python312Packages.pip python312Packages.certifi
+          renderdoc
         ];
         libs = with pkgs; [
           alsa-lib libpulseaudio pipewire sndio jack2 dbus ibus systemd libusb1
