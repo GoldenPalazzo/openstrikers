@@ -33,17 +33,15 @@ DisplayList* dlMakeDisplayList(const glModelPacket* packet, bool permanent)
     u32 actualSize;
     u32 size;
     u8* p;
-    u32 i;
     u32 j;
     u8 bStitch;
 
     u32 numStreams = packet->numStreams;
 
     bStitch = 0;
-    i = 0;
-    for (j = 0; j < numStreams; j++, i += 6)
+    for (j = 0; j < numStreams; j++)
     {
-        if (((u8*)packet->streams)[i + 4] == 0x0C)
+        if (packet->streams[j].id == 0x0C)
         {
             bStitch = 1;
             break;
@@ -79,7 +77,7 @@ DisplayList* dlMakeDisplayList(const glModelPacket* packet, bool permanent)
 
     p[0] = opcodes[packet->primType];
     *(u16*)(p + 1) = packet->numVertices;
-    i = 0;
+    u32 i = 0;
 
     // TODO: Remove the const cast once a clean source form preserves the exact register allocation.
     while (i < ((glModelPacket*)packet)->numVertices)
