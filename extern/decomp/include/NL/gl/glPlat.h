@@ -62,4 +62,7 @@ void glx_ClearXFB(void* cache);
 u32 glx_GetTargetFPS();
 u32 glx_GetScaledXFBWidth();
 void glx_SetFog(int type);
+#ifdef TARGET_PC
+const GXRenderModeObj& getGlxRmode();
+#endif
 #endif // _GLPLAT_H_

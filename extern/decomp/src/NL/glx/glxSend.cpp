@@ -24,6 +24,7 @@
 #include "dolphin/gx/GXTexture.h"
 #include "NL/nlColour.h"
 #include "NL/platvmath.h"
+#include "port/endian.h"
 #include "types.h"
 #include "dolphin/gx/GXVert.h"
 #include <string.h>
@@ -1917,8 +1918,14 @@ static inline void AdjustViewport(bool bOn)
         }
         GXSetProjection(gx_proj, type);
         GXSetCurrentMtx(0);
+#ifndef TARGET_PC
         GXSetViewport(0.0f, 0.0f, 640.0f, 448.0f, 0.0f, 1.0f);
         GXSetScissor(0, 0, 0x280, 0x1C0);
+#else
+        const auto glx_rmode = getGlxRmode();
+        GXSetViewport(0.0f, 0.0f, glx_rmode.fbWidth, glx_rmode.efbHeight, 0.0f, 1.0f);
+        GXSetScissor(0, 0, glx_rmode.fbWidth, glx_rmode.efbHeight);
+#endif
     }
 }
 
@@ -1928,13 +1935,20 @@ static inline void glud_Scissor(const GLScissorUserData* pScissor)
     u32 yOrig;
     u32 wd;
     u32 ht;
-
+#ifdef TARGET_PC
+    const auto glx_rmode = getGlxRmode();
+#endif
     if (pScissor == NULL)
     {
         xOrig = 0;
         yOrig = xOrig;
+#ifndef TARGET_PC
         wd = 640;
         ht = 448;
+#else
+        wd = glx_rmode.fbWidth;
+        ht = glx_rmode.efbHeight;
+#endif
     }
     else
     {
@@ -2036,7 +2050,12 @@ static void glx_SwitchUserData(const glModelPacket* p)
     glx_translucent = false;
     glx_norasterizedalpha = false;
     glx_NoFog = false;
+#ifndef TARGET_PC
     GXSetScissor(0, 0, 640, 448);
+#else
+    const auto glx_rmode = getGlxRmode();
+    GXSetScissor(0, 0, glx_rmode.fbWidth, glx_rmode.efbHeight);
+#endif
     glx_CoPlanar = false;
 
     if (p == NULL)
@@ -2346,8 +2365,11 @@ static void glx_DrawPacket(const glModelPacket* packet)
                             ptr8 += 3;
                             ptr = (u16*)ptr8;
                         }
-                        GXPosition1x16(*ptr);
-                        // GXWGFifo.u16 = *ptr;
+#ifndef TARGET_PC
+                        GXWGFifo.u16 = *ptr;
+#else
+                        GXPosition1x16(bswap(*ptr));
+#endif
                     }
                 }
             }

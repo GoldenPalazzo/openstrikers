@@ -42,6 +42,11 @@ static GXRenderModeObj glPal480IntDf = { VI_TVMODE_PAL_INT,
     { 8, 8, 10, 12, 10, 8, 8 } };
 
 static GXRenderModeObj glx_rmode;
+#ifdef TARGET_PC
+const GXRenderModeObj& getGlxRmode() {
+    return glx_rmode;
+}
+#endif
 
 // Declaration order below mirrors the original TU: the .sdata (initialised)
 // and .sbss (zero) symbols are interleaved exactly as MWCC laid them out.
