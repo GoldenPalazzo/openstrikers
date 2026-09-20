@@ -2,6 +2,7 @@
 
 #include "Game/FE/feLibObject.h"
 #include "Game/FE/feResourceManager.h"
+#include "Game/FE/tlComponent.h"
 #include "NL/nlDebug.h"
 #include "NL/nlFileGC.h"
 #include "NL/nlMemory.h"
@@ -162,8 +163,24 @@ bool FEScene::LoadPackage(const char* szPackageFileName)
     {
     FELibObject* obj = m_pFEPackage->m_pFEObjectLibrary, *startPtr = obj;
     do {
-        printf("[FELibObject name] %s\n", obj->m_szName);
         SwapLibObjectAttributes(obj->m_attributes);
+        if (obj->m_type == FEOT_COMPONENT)
+        {
+            TLComponent* comp = (TLComponent*)obj;
+            if (comp->pChildren != nullptr)
+            {
+                TLSlide* slideStart = comp->pChildren;
+                TLSlide* slide = slideStart;
+                do
+                {
+                    if (slide->m_instances != nullptr)
+                    {
+                        SwapInstanceRing(slide->m_instances);
+                    }
+                    slide = slide->m_next;
+                } while (slide != slideStart);
+            }
+        }
         obj = obj->next;
     } while (obj != startPtr);
     }
