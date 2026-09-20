@@ -5,3 +5,5 @@ build-dbg/
 .cache
 compile_commands.json
 .idea/
+# should be generated
+extern/decomp/include/NL/detail/nlFunction1PreProcTemplate.h
