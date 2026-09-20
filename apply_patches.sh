@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 EXTERN_DIR="$ROOT/extern"
 cd "$EXTERN_DIR"
 
-for repo in decomp/extern/musyx aurora; do
+for repo in aurora; do
   if [ -n "$(git -C "$repo" status --porcelain)" ]; then
     echo "WARNING: $repo has edits that aren't saved as a patch. Aborting...."
     echo "Generate the missing patch with: git -C $repo diff > patches/.../name.patch"
@@ -13,21 +13,21 @@ for repo in decomp/extern/musyx aurora; do
   fi
 done
 
-echo "== reset musyx at clean HEAD =="
-git -C decomp/extern/musyx checkout -- .
-git -C decomp/extern/musyx clean -fd
+# echo "== reset musyx at clean HEAD =="
+# git -C decomp/extern/musyx checkout -- .
+# git -C decomp/extern/musyx clean -fd
 
 echo "== reset aurora at clean HEAD =="
 git -C aurora checkout -- .
 git -C aurora clean -fd
 
-echo "== applying musyx patches =="
-for p in "$ROOT"/patches/musyx/*.patch; do
-  [ -e "$p" ] || continue
-  echo "-> $p"
-  git -C decomp/extern/musyx apply --check "$p" || { echo "FAILED: $p"; exit 1; }
-  git -C decomp/extern/musyx apply "$p"
-done
+# echo "== applying musyx patches =="
+# for p in "$ROOT"/patches/musyx/*.patch; do
+#   [ -e "$p" ] || continue
+#   echo "-> $p"
+#   git -C decomp/extern/musyx apply --check "$p" || { echo "FAILED: $p"; exit 1; }
+#   git -C decomp/extern/musyx apply "$p"
+# done
 
 echo "== applying aurora patches =="
 for p in "$ROOT"/patches/aurora/*.patch; do
