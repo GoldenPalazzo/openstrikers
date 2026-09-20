@@ -108,11 +108,11 @@ DisplayList* dlMakeDisplayList(const glModelPacket* packet, bool permanent)
 
     if (permanent)
     {
-        pList = (DisplayList*)glResourceAlloc(0x10, GLM_Header);
+        pList = (DisplayList*)glResourceAlloc(sizeof(DisplayList), GLM_Header);
     }
     else
     {
-        pList = (DisplayList*)glFrameAlloc(0x10, GLM_Header);
+        pList = (DisplayList*)glFrameAlloc(sizeof(DisplayList), GLM_Header);
     }
 
     DisplayListEx* pListEx = (DisplayListEx*)pList;
