@@ -53,6 +53,9 @@ bool GLMeshWriterCore::Begin(int numVerts, eGLPrimitive prim, int numStreams, co
     {
         eGLStream id = pStreamIDs[i];
         stream[id].id = (u8)id;
+#ifdef TARGET_PC
+        stream[id].beData = false;
+#endif
         int stride = gl_stream_stride[id];
         size = (unsigned long)(numVerts * stride);
         stream[id].stride = (u8)stride;
@@ -138,6 +141,10 @@ bool GLMeshWriterCore::Begin(int numVerts, eGLPrimitive prim, int numStreams, co
         pPktStreams[i].id = stream[id].id;
         pPktStreams[i].stride = stream[id].stride;
         pPktStreams[i].address = stream[id].address;
+#ifdef TARGET_PC
+        pPktStreams[i].beData = stream[id].beData;
+        pPktStreams[i].dataSize = stream[id].dataSize;
+#endif
     }
 
     return true;
