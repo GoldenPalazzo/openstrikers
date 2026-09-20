@@ -26,6 +26,11 @@ inline unsigned int nlAlignUp(unsigned int value, unsigned int alignment)
     return (value + alignment - 1) & ~(alignment - 1);
 }
 
+inline uintptr_t nlAlignUp(uintptr_t value, uintptr_t alignment)
+{
+    return (value + alignment - 1) & ~(alignment - 1);
+}
+
 inline float nlAbs(const float& value)
 {
     return std::fabsf(value);
