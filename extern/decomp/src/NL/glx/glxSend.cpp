@@ -1287,9 +1287,10 @@ static void glx_SwitchStreams(const glModelPacket* pPacket)
             }
             else
             {
-                // TODO: check if size and le fields assumptions are correct
-                // and don't break anything
-                GXSetArray((GXAttr)attr, (void*)stream->address, pPacket->numVertices * stream->stride, stream->stride, false);
+                u32 arraySize = stream->dataSize != 0
+                    ? stream->dataSize
+                    : (u32)stream->stride * pPacket->numVertices;
+                GXSetArray((GXAttr)attr, (void*)stream->address, arraySize, stream->stride, !stream->beData);
                 GXSetVtxDesc((GXAttr)attr, GX_INDEX16);
                 glx_NumIndices++;
             }
