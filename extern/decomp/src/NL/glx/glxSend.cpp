@@ -1290,7 +1290,8 @@ static void glx_SwitchStreams(const glModelPacket* pPacket)
                 u32 arraySize = stream->dataSize != 0
                     ? stream->dataSize
                     : (u32)stream->stride * pPacket->numVertices;
-                GXSetArray((GXAttr)attr, (void*)stream->address, arraySize, stream->stride, !stream->beData);
+                GXSetArray((GXAttr)attr, (void*)stream->address, arraySize, stream->stride,
+                    stream->endianness == std::endian::little);
                 GXSetVtxDesc((GXAttr)attr, GX_INDEX16);
                 glx_NumIndices++;
             }

@@ -4,6 +4,10 @@
 #include "types.h"
 #include "NL/gl/glStateBundle.h" // Include the new header
 
+#ifdef TARGET_PC
+#include <bit>
+#endif
+
 enum eGLUserData
 {
     GLUD_Skin = 0,
@@ -44,7 +48,7 @@ struct glModelStream
     /* 0x4 */ u8 id;
     /* 0x5 */ u8 stride;
 #ifdef TARGET_PC
-    u8 beData;
+    std::endian endianness;
     u32 dataSize;
 #endif
 }; // total size: 0x6

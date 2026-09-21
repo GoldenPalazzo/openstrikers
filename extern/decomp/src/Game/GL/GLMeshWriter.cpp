@@ -4,6 +4,10 @@
 #include "NL/gl/glMemory.h"
 #include "NL/gl/glState.h"
 
+#ifdef TARGET_PC
+#include <bit>
+#endif
+
 static const int gl_stream_stride[15] = {
     12, 3, 4, 4, 4, 4, 4, 4, 4, 12, 12, 12, 1, 16, 16
 };
@@ -54,7 +58,7 @@ bool GLMeshWriterCore::Begin(int numVerts, eGLPrimitive prim, int numStreams, co
         eGLStream id = pStreamIDs[i];
         stream[id].id = (u8)id;
 #ifdef TARGET_PC
-        stream[id].beData = false;
+        stream[id].endianness = std::endian::native;
         stream[id].dataSize = 0;
 #endif
         int stride = gl_stream_stride[id];
@@ -143,7 +147,7 @@ bool GLMeshWriterCore::Begin(int numVerts, eGLPrimitive prim, int numStreams, co
         pPktStreams[i].stride = stream[id].stride;
         pPktStreams[i].address = stream[id].address;
 #ifdef TARGET_PC
-        pPktStreams[i].beData = stream[id].beData;
+        pPktStreams[i].endianness = stream[id].endianness;
         pPktStreams[i].dataSize = stream[id].dataSize;
 #endif
     }

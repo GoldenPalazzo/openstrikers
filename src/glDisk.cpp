@@ -10,7 +10,7 @@ void convert(::glModelStream& out, const glModelStream& in)
     out.id = in.id;
     out.stride = in.stride;
     out.dataSize = 0;
-    out.beData = true;
+    out.endianness = std::endian::big;
 }
 
 void convert(::glStateBundle& out, const glStateBundle& in)
