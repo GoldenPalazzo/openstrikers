@@ -55,6 +55,7 @@ bool GLMeshWriterCore::Begin(int numVerts, eGLPrimitive prim, int numStreams, co
         stream[id].id = (u8)id;
 #ifdef TARGET_PC
         stream[id].beData = false;
+        stream[id].dataSize = 0;
 #endif
         int stride = gl_stream_stride[id];
         size = (unsigned long)(numVerts * stride);
