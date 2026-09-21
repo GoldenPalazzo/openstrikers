@@ -20,12 +20,12 @@ public:
 
     union
     {               // inferred
-        float e[3]; // offset 0x0, size 0xC
+        port::be<f32> e[3]; // offset 0x0, size 0xC
         struct
         {            // inferred
-            float x; // offset 0x0, size 0x4
-            float y; // offset 0x4, size 0x4
-            float z; // offset 0x8, size 0x4
+            port::be<f32> x; // offset 0x0, size 0x4
+            port::be<f32> y; // offset 0x4, size 0x4
+            port::be<f32> z; // offset 0x8, size 0x4
         } f;
     };
 }; // total size: 0xC
@@ -67,19 +67,4 @@ public:
     /* 0x64 */ port::be<eFELibObjectType> m_type;
 }; // total size: 0x68
 
-
-static inline void SwapVector3(feVector3& v)
-{
-    u32* raw = reinterpret_cast<u32*>(&v);
-    for (int i = 0; i < 3; i++)
-        raw[i] = bswap(raw[i]);
-}
-
-static inline void SwapLibObjectAttributes(FELibObjectAttributes& attrs)
-{
-    SwapVector3(attrs.v3Position);
-    SwapVector3(attrs.v3Rotation);
-    SwapVector3(attrs.v3Scale);
-    SwapVector3(attrs.v3Pivot);
-}
 #endif // _FELIBOBJECT_H_

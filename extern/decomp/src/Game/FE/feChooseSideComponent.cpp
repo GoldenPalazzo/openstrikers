@@ -357,8 +357,14 @@ void IChooseSide::PositionController(int padindex, bool usetween, bool setvisibi
 
     if (usetween)
     {
+        // PORT: createTween copies startVals/endVals into FETweener's own
+        // storage synchronously (see FETweener's ctor), so a local scratch
+        // float is safe here. pos.e can't be passed directly anymore since
+        // it's port::be<f32>-backed (raw bytes are still big-endian); .f.x
+        // performs the swap and yields a real native float to copy out.
+        float startX = pos.f.x;
         FETweener* tween = mTweenManager.createTween(
-            pos.e,
+            &startX,
             &mControllerDestPos[controllerpos],
             0.075f,
             0.0f,
