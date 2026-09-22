@@ -83,7 +83,6 @@ extern "C" inline unsigned int __cvt_fp2unsigned(double d) {
     return static_cast<unsigned int>(d);
 }
 
-extern "C" unsigned char __ctype_map[];
 #endif
 
 

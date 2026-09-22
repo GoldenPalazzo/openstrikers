@@ -1,5 +1,7 @@
 #include "Game/Sys/simpleparser.h"
+#ifdef TARGET_PC
 #include <cctype>
+#endif
 
 #include "ctype.h"
 #include "NL/nlString.h"
@@ -75,7 +77,11 @@ bool SimpleParser::IsWhitespace(char nCharacter)
 {
     bool isWhitespace = false;
     int nChar = (s8)nCharacter;
-    if (isspace((u8)nChar & 0x6) && (m_bSpacesAreWhitespace || nChar != ' '))
+#ifdef TARGET_PC
+    if (isspace((u8)nChar) && (m_bSpacesAreWhitespace || nChar != ' '))
+#else
+    if ((__ctype_map[(u8)nChar] & 0x6) != 0 && (m_bSpacesAreWhitespace || nChar != ' '))
+#endif
         isWhitespace = true;
     return isWhitespace;
 }

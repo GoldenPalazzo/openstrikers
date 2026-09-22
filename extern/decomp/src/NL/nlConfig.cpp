@@ -2,7 +2,12 @@
 #include "Game/Sys/debug.h"
 #include "NL/nlFileGC.h"
 #include "NL/nlTokenizer.h"
+#ifndef TARGET_PC
 #include "PowerPC_EABI_Support/MSL_C/MSL_Common/ctype.h"
+#else
+#include "PowerPC_EABI_Support/MSL_C/MSL_Common/ctype_api.h"
+#include <cctype>
+#endif
 
 /**
  * Offset/Address/Size: 0x0 | 0x801D2C64 | size: 0x13EC
@@ -431,7 +436,11 @@ bool Config::IsBool(const char* str, bool& b) const
     BasicString<char, Detail::TempStringAllocator> s(str);
     for (int i = 0; i < (s.mData ? s.mData->mData.mSize - 1 : 0); i++)
     {
+#ifndef TARGET_PC
         s[i] = _tolower(s[i]);
+#else
+        s[i] = tolower(s[i]);
+#endif
     }
     if (s == "true" || s == "yes" || s == "on" || s == "enable")
     {
