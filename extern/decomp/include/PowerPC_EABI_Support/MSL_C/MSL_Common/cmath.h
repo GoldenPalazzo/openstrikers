@@ -1,5 +1,8 @@
 #pragma once
-#ifndef _GLIBCXX_CMATH
+// TARGET_PC: skip if the host's real <cmath> (libstdc++) has already been included,
+// to avoid a conflicting redefinition of std::* math functions.
+#ifndef _MATH_H
+#define _MATH_H
 #ifndef STD_CMATH_H_
 #define STD_CMATH_H_
 

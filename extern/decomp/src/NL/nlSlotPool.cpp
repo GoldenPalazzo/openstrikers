@@ -22,6 +22,7 @@ void SlotPoolBase::BaseAddNewBlock(SlotPoolBase* slotPool, unsigned int slotSize
         }
 
         totalSlotMemory = slotSize * numSlots;
+        // DECOMP-FIX: sizeof malloc
         memoryBlock = slotPool->m_AllocFn(totalSlotMemory + sizeof(SlotPoolBlock));
         nlListAddStart<SlotPoolBlock>(&slotPool->m_BlockList, (SlotPoolBlock*)((u8*)memoryBlock + totalSlotMemory), 0);
 

@@ -36,6 +36,8 @@ MoviePlayerScene::MoviePlayerScene()
     mWithSound = false;
     mLoopMovie = false;
     mPushWithPop = true;
+    // DECOMP-FIX: mMovieFilename is a char array; nullptr doesn't type-check as a
+    // char value (was likely a mis-transcribed immediate-0 null-terminator write).
     mMovieFilename[0] = '\0';
     if (nlSingleton<GameSceneManager>::s_pInstance)
     {

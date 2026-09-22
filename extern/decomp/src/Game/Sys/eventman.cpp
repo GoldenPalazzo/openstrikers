@@ -91,6 +91,7 @@ void EventManager::Create(unsigned long uEventCount, unsigned long uEventSize)
 #pragma scheduling off
 EventHandler* EventManager::AddEventHandler(EventCallback pEventHandlerFunc, void* pParam, unsigned long uDestinationMask)
 {
+    // DECOMP-FIX: sizeof malloc
     EventHandler* eventHandler = (EventHandler*)nlMalloc(sizeof(EventHandler), 8, 0);
     EventHandler** head = &m_handlers;
 

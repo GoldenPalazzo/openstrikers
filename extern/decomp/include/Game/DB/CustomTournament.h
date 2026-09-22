@@ -24,7 +24,10 @@ public:
     void SerializeData(void* buffer) const;
     void DeserializeData(void* buffer);
 
-    union CupFormat
+    union
+#ifdef TARGET_PC
+        CupFormat
+#endif
     {
         Cup<3, 3> cup31;                         // size 0x144
         Cup<4, 3> cup41;                         // size 0x1E4
@@ -40,8 +43,10 @@ public:
         Cup<8, 14> cup82;                        // size 0x930
         Knockout<4> knockout4;                   // size 0x184
         Knockout<8> knockout8;                   // size 0x304
+#ifdef TARGET_PC
         CupFormat() {}
         ~CupFormat() {}
+#endif
     } m_dataSpace;                               // offset 0x0, size 0x930
     /* 0x930 */ unsigned long m_fenceBoundary;   // offset 0x930, size 0x4
     /* 0x934 */ BaseCup* m_cup;                  // offset 0x934, size 0x4

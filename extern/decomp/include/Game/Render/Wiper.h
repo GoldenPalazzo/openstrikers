@@ -27,6 +27,7 @@ public:
         if (ScreenTransitionManager::s_pInstance == NULL)
         {
             ScreenTransitionManager::s_pInstance = new (nlMalloc(sizeof(ScreenTransitionManager), 8, 0)) ScreenTransitionManager();
+                // DECOMP-FIX: sizeof alloc
         }
         glLoadTextureBundle("transitions/transitions.glt");
         fileSize = 0;

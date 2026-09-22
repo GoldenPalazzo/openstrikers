@@ -6,6 +6,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+// TARGET_PC: skip if dolphin/types.h (Aurora's) already typedef'd Ptr, to avoid
+// a conflicting redefinition.
 #ifndef DOLPHIN_TYPES_H
 typedef void* Ptr;
 #endif

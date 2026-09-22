@@ -55,6 +55,7 @@ ProgressiveScanScene::~ProgressiveScanScene()
     delete mConfirmationImage;
 }
 
+// DECOMP-FIX: matches the u32 return type already declared in NL/nlString.h.
 extern u32 nlStringLowerHash(const char*);
 extern int nlSNPrintf(char*, unsigned long, const char*, ...);
 

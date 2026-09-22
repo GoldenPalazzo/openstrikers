@@ -288,6 +288,8 @@ void OverlayManager::SetVisible(SceneList scene, bool visibility, bool overrideS
 /**
  * Offset/Address/Size: 0xCC | 0x800C7EF8 | size: 0xDC
  */
+// DECOMP-FIX: matches the u32 parameters already declared in OverlayManager.h;
+// upstream had this definition out of sync with its own header (unsigned long here).
 void OverlayManager::HandleStateTransition(u32 to, u32 param_2)
 {
     for (u32 i = 0; i < mCurrentStackDepth; i++)

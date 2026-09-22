@@ -260,6 +260,7 @@ void FESceneManager::LoadScene(
     BaseSceneHandler* pHandler)
 {
     FESceneManager* pSceneManager = FESceneManager::Instance();
+    // DECOMP-FIX: sizeof malloc
     FEScene* pFEScene = new (nlMalloc(sizeof(FEScene), 8, false)) FEScene();
     pFEScene->m_uHashID = nlStringLowerHash(szFilename);
 

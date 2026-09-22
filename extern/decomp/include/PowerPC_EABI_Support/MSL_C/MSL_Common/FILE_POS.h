@@ -1,3 +1,6 @@
+// TARGET_PC: skip these MSL declarations entirely when the host's real <stdio.h>
+// (glibc) has already been included, since fseek/ftell would conflict with it.
+// this guard instead of TARGET_PC should suffice
 #ifndef _STDIO_H
 #ifndef _MSL_COMMON_FILE_POS_H
 #define _MSL_COMMON_FILE_POS_H
