@@ -40,8 +40,8 @@ typedef struct v3AnimationKeyframe
     /* 0x00 */ FEAnimationKeyframe pKeyFrameDataX;
     /* 0x10 */ FEAnimationKeyframe pKeyFrameDataY;
     /* 0x20 */ FEAnimationKeyframe pKeyFrameDataZ;
-    /* 0x30 */ v3AnimationKeyframe* m_next;
-    /* 0x34 */ v3AnimationKeyframe* m_prev;
+    /* 0x30 */ port::SelfRelPtr32<v3AnimationKeyframe> m_next;
+    /* 0x34 */ port::SelfRelPtr32<v3AnimationKeyframe> m_prev;
 } v3AnimationKeyframe; /* size: 0x38 */
 
 class FEAnimation /* size >= 0x1C */

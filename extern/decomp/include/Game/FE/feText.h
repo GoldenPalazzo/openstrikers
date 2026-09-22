@@ -5,10 +5,12 @@
 #include "Game/FE/feFontResource.h"
 #include "Game/FE/tlTextInstance.h"
 
+#include "port/endian.h"
+
 class FEText : public FELibObject
 {
 public:
-    /* 0x68 */ const FEFontResource* m_pFeFontResource;
+    /* 0x68 */ port::SelfRelPtr32<const FEFontResource> m_pFeFontResource;
     /* 0x6C */ FETextLibObjectAttributes m_TextAttributes;
 }; // total size: 0x78
 
