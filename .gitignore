@@ -7,3 +7,7 @@ compile_commands.json
 .idea/
 # should be generated
 extern/decomp/include/NL/detail/nlFunction1PreProcTemplate.h
+
+# sms assets
+*.byte_code
+*.fen
