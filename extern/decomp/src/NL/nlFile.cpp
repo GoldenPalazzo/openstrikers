@@ -83,7 +83,11 @@ void nlLoadEntireFileAsyncCallback(nlFile* file, void* pBuffer, unsigned int uSi
 /**
  * Offset/Address/Size: 0x160 | 0x801CEB90 | size: 0xDC
  */
+#ifdef TARGET_PC
 void* nlLoadEntireFile(const char* filename, u32* outSize, unsigned int alignment, eAllocType type)
+#else
+void* nlLoadEntireFile(const char* filename, unsigned long* outSize, unsigned int alignment, eAllocType type)
+#endif
 {
     unsigned int datasize;
     nlFile* file;

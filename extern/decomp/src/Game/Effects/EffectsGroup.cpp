@@ -660,7 +660,11 @@ static void AddGroupNoCollisions(EffectsGroup* group)
  */
 bool fxLoadGroupBundle(const char* filename)
 {
+#ifdef TARGET_PC
     u32 fileSize;
+#else
+    unsigned long fileSize;
+#endif
     void* data = fxLoadEntireFileHigh(filename, &fileSize);
     return fxLoadGroupBundle(data, fileSize);
 }

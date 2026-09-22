@@ -9,7 +9,11 @@ void glMatrixOrthographicCentered(nlMatrix4& m, float width, float height, float
 void glMatrixOrthographic(nlMatrix4& m, float width, float height);
 void glSetMatrix(unsigned long matrix, const nlMatrix4& m);
 void glGetMatrix(unsigned long matrix, nlMatrix4& m);
+#ifdef TARGET_PC
 uintptr_t glAllocMatrix();
+#else
+u32 glAllocMatrix();
+#endif
 unsigned long glGetIdentityMatrix();
 void gl_MatrixStartup();
 

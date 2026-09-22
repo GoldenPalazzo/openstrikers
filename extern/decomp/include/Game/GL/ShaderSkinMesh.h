@@ -71,13 +71,21 @@ public:
     virtual void SetPoseMatrices(int num, GLSkinMeshMatrix* pMatrices);
 
     void CreateMorphBuffer();
+#ifdef TARGET_PC
     void SetMorphIDs(const u32* ids);
+#else
+    void SetMorphIDs(const unsigned long* ids);
+#endif
     void SetBoneMatrix(unsigned long boneID, const nlMatrix4* matrix);
     void AppendSkinPairList(int numPairs, const SkinPair* pairs);
     void SetSoftwareVertices(int num, const SkinVertex* skinVertices);
     void AppendStitchingInfo(int packetIndex, int _numPackets, int num, const unsigned char* pIndices);
     void* MakeUserData(nlAVLTree<unsigned long, unsigned long, DefaultKeyCompare<unsigned long> >* boneMap);
+#ifdef TARGET_PC
     void SetMorphNumDeltas(const u32* numDeltas);
+#else
+    void SetMorphNumDeltas(const unsigned long* numDeltas);
+#endif
     void SetMorphDeltas(int numDeltas, const MorphDelta* p);
 
     void StitchModel();

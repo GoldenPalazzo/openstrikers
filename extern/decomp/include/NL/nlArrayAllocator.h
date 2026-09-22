@@ -51,7 +51,12 @@ public:
     nlStaticArrayAllocator()
     {
         this->m_pFree = 0;
+#ifdef TARGET_PC
+        // two-phase lookup
         this->Init(reinterpret_cast<T*>(m_Memory), N);
+#else
+        Init(reinterpret_cast<T*>(m_Memory), N);
+#endif
     }
 
     /* 0x4 */ unsigned char m_Memory[sizeof(T) * N]; // offset 0x4

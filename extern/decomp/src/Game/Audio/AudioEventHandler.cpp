@@ -28,7 +28,11 @@
 #include "NL/nlString.h"
 #include "NL/nlTask.h"
 
-// extern "C" int nlPrintf(const char*, ...);
+#ifndef TARGET_PC
+extern "C" int nlPrintf(const char*, ...);
+#endif
+// TARGET_PC: already declared (without extern "C") by NL/nlString.h, included above;
+// re-declaring with different linkage here is a hard conflict under a real compiler.
 
 namespace PlatAudio
 {

@@ -523,7 +523,11 @@ static inline void AddTemplateNoCollisions(EffectsTemplate* p)
  */
 bool fxLoadTemplateBundle(const char* filename)
 {
+#ifdef TARGET_PC
     u32 fileSize;
+#else
+    unsigned long fileSize;
+#endif
     void* data = fxLoadEntireFileHigh(filename, &fileSize);
     return fxLoadTemplateBundle(data, fileSize);
 }

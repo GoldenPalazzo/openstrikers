@@ -54,7 +54,13 @@ void nlTextBox::DrawString(const nlTextBox::StringDrawInfo& DrawInfo, const nlVe
         if (pMatrix)
         {
             unsigned long h = glAllocMatrix();
-            if (h != -1)
+#ifdef TARGET_PC
+            // glAllocMatrix() returns uintptr_t now; the 32-bit-only 0x10000-wraparound
+            // sentinel check below breaks on a 64-bit handle, compare directly instead.
+            if (h != (unsigned long)-1)
+#else
+            if (h + 0x10000 != 0xFFFF)
+#endif
             {
                 glSetMatrix(h, *pMatrix);
             }

@@ -619,7 +619,11 @@ void BasicStadium::LoadListOfGameplayInvisibleModels()
 {
     char szOptBin[80];
     nlSNPrintf(szOptBin, 0x50, "%s-GameplayInvisibleModels.bin", m_szBaseName);
+#ifdef TARGET_PC
     u32 fileSize;
+#else
+    unsigned long fileSize;
+#endif
     u32* pCur;
     u32* pData = (u32*)nlLoadEntireFile(szOptBin, &fileSize, 0x20, AllocateEnd);
     if (pData != NULL)

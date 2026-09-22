@@ -283,7 +283,11 @@ bool cAnimCamera::LoadCameraAnimation(nlChunk* begin, nlChunk* end, const char* 
 bool cAnimCamera::LoadCameraAnimation(const char* szFilename, const char* szCameraName, bool ownsKeyData)
 {
     bool result;
+#ifdef TARGET_PC
     u32 uSize = 0;
+#else
+    unsigned long uSize = 0;
+#endif
     nlChunk* end;
     nlChunk* begin;
     cCameraData* pCamData;

@@ -25,7 +25,9 @@
  * as one is found. See smstrikers-notes docs/0047.
  */
 template <>
+#ifdef TARGET_PC
 template <>
+#endif
 BasicString<char, Detail::TempStringAllocator>& BasicString<char, Detail::TempStringAllocator>::AppendInPlace<Detail::TempStringAllocator>(const BasicString<char, Detail::TempStringAllocator>& rhs)
 {
     (*this)[0];

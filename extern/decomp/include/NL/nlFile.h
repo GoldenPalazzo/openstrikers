@@ -33,7 +33,11 @@ public:
 
 bool nlLoadEntireFileAsync(const char* filename, LoadAsyncCallback callback, void* user_data, unsigned int alignment, eAllocType type);
 void nlLoadEntireFileAsyncCallback(nlFile* file, void* pBuffer, unsigned int uSize, unsigned long uParam);
+#ifdef TARGET_PC
 void* nlLoadEntireFile(const char* filename, u32* outSize, unsigned int alignment, eAllocType type);
+#else
+void* nlLoadEntireFile(const char* filename, unsigned long* outSize, unsigned int alignment, eAllocType type);
+#endif
 void nlClose(nlFile* file);
 void nlRead(nlFile* file, void* buffer, unsigned int size);
 unsigned int nlFileSize(nlFile* file, unsigned int* size);

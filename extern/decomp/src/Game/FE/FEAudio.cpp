@@ -31,7 +31,11 @@ typedef nlListSlotPoolHigh<AnimAudioEventLookup> FELookupPool;
  */
 void FEAudio::BuildAnimAudioEventLookup()
 {
+#ifdef TARGET_PC
     u32 fileSize;
+#else
+    unsigned long fileSize;
+#endif
     ListEntry<AnimAudioEventLookup>* pEntry;
     char* pFileData = (char*)nlLoadEntireFile("audio/FEAnimAudio.txt", &fileSize, 0x20, (eAllocType)1);
 

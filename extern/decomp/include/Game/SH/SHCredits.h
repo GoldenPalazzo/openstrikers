@@ -30,7 +30,11 @@ public:
                 mFileData = NULL;
             }
         }
+#ifdef TARGET_PC
         /* 0x00 */ u32 mFileSize; // size 0x4
+#else
+        /* 0x00 */ unsigned long mFileSize; // size 0x4
+#endif
         /* 0x04 */ char* mFileData;         // size 0x4
         /* 0x08 */ SimpleParser mParser;    // size 0x514
     }; // total size: 0x51C

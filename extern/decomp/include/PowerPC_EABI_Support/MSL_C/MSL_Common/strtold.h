@@ -8,6 +8,9 @@ extern "C" {
 #endif // ifdef __cplusplus
 
 f128 __strtold(int max_width, int (*ReadProc)(void*, int, int), void* ReadProcArg, int* chars_scanned, int* overflow);
+#ifndef TARGET_PC
+s32 strtol(const char* str, char** end, int base);
+#endif
 f64 atof(const char* str);
 
 #ifdef __cplusplus

@@ -1,6 +1,8 @@
 #ifndef MSL_UTILITY_H_
 #define MSL_UTILITY_H_
 
+// TARGET_PC: skip this if the host's real <utility> (libstdc++) has already
+// defined std::pair, to avoid a conflicting redefinition.
 #ifndef _STL_PAIR_H
 namespace std
 {

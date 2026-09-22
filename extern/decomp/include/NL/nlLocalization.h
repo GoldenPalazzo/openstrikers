@@ -44,7 +44,11 @@ public:
     unsigned short* m_FirstString;
     nlLanguage m_CurrentLanguage;
 
+#ifdef TARGET_PC
     static const char* LanguageName[];
+#else
+    static char* LanguageName[];
+#endif
     static const unsigned long LanguageId[];
     static const char Thumbprint[4];
 };

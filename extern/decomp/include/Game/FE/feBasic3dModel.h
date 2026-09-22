@@ -8,7 +8,11 @@
 class FEBasic3dModel
 {
 public:
-    virtual ~FEBasic3dModel() {};
+    virtual ~FEBasic3dModel()
+#ifdef TARGET_PC
+    {}
+#endif
+    ;
 
     /* 0x04 */ FEBasic3dModel* next;
     /* 0x08 */ FEBasic3dModel* prev;

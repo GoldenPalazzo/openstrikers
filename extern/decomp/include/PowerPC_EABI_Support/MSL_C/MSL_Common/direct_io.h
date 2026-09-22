@@ -8,8 +8,14 @@ extern "C" {
 #endif
 
 size_t __fread(const void* buffer, size_t size, size_t count, FILE* stream);
+#ifndef TARGET_PC
+size_t fread(const void* buffer, size_t size, size_t count, FILE* stream);
+#endif
 
 size_t __fwrite(const void* buffer, size_t size, size_t count, FILE* stream);
+#ifndef TARGET_PC
+size_t fwrite(const void* buffer, size_t size, size_t count, FILE* stream);
+#endif
 
 #ifdef __cplusplus
 }

@@ -98,7 +98,13 @@ void glResourceRelease(unsigned long long);
 
 extern unsigned char g_JaapAndJacksNastyHackBecauseWeDoNotKnowDifferenceBetweenPausePauseAndPostGamePause;
 
+#ifdef GOLDEN_DISABLE_AUDIO
+// stub: the real definition (plataudio.cpp) is compiled out under GOLDEN_DISABLE_AUDIO,
+// but this is still called below.
 void PrintAvailableARAMMemory() {}
+#else
+void PrintAvailableARAMMemory();
+#endif
 void InitializeGameObjectLighting();
 void AIEventHandler(Event*, void*);
 void InitializeElectricFence();

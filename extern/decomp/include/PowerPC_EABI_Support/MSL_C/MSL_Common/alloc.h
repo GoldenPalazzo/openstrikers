@@ -6,6 +6,9 @@
 extern "C" {
 #endif
 
+#ifndef TARGET_PC
+void free(void* ptr);
+#endif
 
 #ifdef __cplusplus
 }

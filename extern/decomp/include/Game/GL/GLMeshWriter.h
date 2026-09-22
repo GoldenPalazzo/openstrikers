@@ -56,7 +56,11 @@ public:
     /* 0x10*/ virtual bool End();
     /* 0x14*/ virtual void Colour(const nlColour& c);
     void Colour(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+#ifdef TARGET_PC
     /* 0x18*/ virtual void ColourPlat(u32 rgba);
+#else
+    /* 0x18*/ virtual void ColourPlat(unsigned long rgba);
+#endif
     /* 0x1C*/ virtual void Normal(const nlVector3&) = 0;
     /* 0x20*/ virtual void Texcoord(const nlVector2& uv);
     void Texcoord(float u, float v);

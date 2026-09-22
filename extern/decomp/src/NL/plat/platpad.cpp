@@ -79,7 +79,13 @@ void VBlankPadUpdate()
             {
                 if (fabsf(normalizedX) >= 0.6f)
                 {
+#ifdef TARGET_PC
+                    // PowerPC inline asm doesn't compile on the host toolchain;
+                    // equivalent goto.
                     goto doneNormalizedX;
+#else
+                    asm { b doneNormalizedX }
+#endif
                 }
                 else
                 {

@@ -110,7 +110,11 @@ Presentation::Presentation()
     mUseInterruptWipe = NULL;
     mQueuedFunction = NULL;
     mGoalQuality = HIGHLIGHT_QUALITY_EMPTY;
+#ifdef TARGET_PC
     u32 fileSize = 0;
+#else
+    unsigned long fileSize = 0;
+#endif
     void* byteCode = nlLoadEntireFile("art/presentation/presentation.byte_code", &fileSize, 0x20, AllocateStart);
     LoadByteCode(byteCode);
     nlStrNCpy<char>(mCurrentFunction, idleFun, 64);
