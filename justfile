@@ -33,10 +33,6 @@ clean:
 unpatch:
     @read -p "Checkout all submodules? [y/N] " ans; \
     if [ "$ans" = "y" ] || [ "$ans" = "Y" ]; then \
-        git -C extern/decomp checkout -- . || echo "FAILED: decomp"; \
-        git -C extern/decomp clean -fd || echo "FAILED: clean decomp"; \
-        git -C extern/decomp/extern/musyx checkout -- . || echo "FAILED: musyx"; \
-        git -C extern/decomp/extern/musyx clean -fd || echo "FAILED: clean musyx"; \
         git -C extern/aurora checkout -- . || echo "FAILED: aurora"; \
         git -C extern/aurora clean -fd || echo "FAILED: clean aurora"; \
     else \
