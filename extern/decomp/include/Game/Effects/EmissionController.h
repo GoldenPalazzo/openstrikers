@@ -8,18 +8,10 @@
 #include "Game/Effects/EffectsGroup.h"
 #include "Game/Effects/efList.h"
 
-template <int MIN, int MAX, int BITS> class FloatCompressor;
-
 template <typename T>
 struct ReplayFrameTraits;
 
 class LoadFrame;
-
-template <int N, typename FrameType, typename T>
-void Replayable(FrameType& frame, T& current);
-
-template <int N, typename FrameType, typename T>
-void Replayable(FrameType& frame, const T& proxy);
 
 class cPN_SAnimController;
 class cPoseAccumulator;
@@ -76,64 +68,5 @@ public:
     /* 0x84 */ UserEffectSpec** m_pUserEffects;
     /* 0x88 */ bool m_bPoseErrorDisplayed;
 };
-
-template <typename T>
-inline void EmissionController::Replay(T& frame)
-{
-    ::Replayable<0>(frame, (unsigned int&)m_pPose);
-    ::Replayable<0>(frame, (unsigned int&)m_pAnimController);
-    frame.template Replayable<0>(m_uUserData);
-    ::Replayable<0>(frame, m_fGround);
-    frame.template Replayable<0>(m_aFacing);
-    ::Replayable<0>(frame, (char&)m_GlView);
-    ::Replayable<0>(frame, FloatCompressor<-255, 255, 6>(m_vPosition.x));
-    ::Replayable<0>(frame, FloatCompressor<-255, 255, 6>(m_vPosition.y));
-    ::Replayable<0>(frame, FloatCompressor<-255, 255, 6>(m_vPosition.z));
-    ::Replayable<0>(frame, FloatCompressor<-255, 255, 6>(m_vDirection.x));
-    ::Replayable<0>(frame, FloatCompressor<-255, 255, 6>(m_vDirection.y));
-    ::Replayable<0>(frame, FloatCompressor<-255, 255, 6>(m_vDirection.z));
-    ::Replayable<0>(frame, FloatCompressor<-255, 255, 6>(m_vVelocity.x));
-    ::Replayable<0>(frame, FloatCompressor<-255, 255, 6>(m_vVelocity.y));
-    ::Replayable<0>(frame, FloatCompressor<-255, 255, 6>(m_vVelocity.z));
-
-    if (ReplayFrameTraits<T>::IsLoadFrame)
-    {
-        m_Replaying = true;
-
-        float age = 0.0f;
-        ::Replayable<0>(frame, age);
-        age += reinterpret_cast<LoadFrame&>(frame).mNonBlendableAheadOfFrame;
-        m_ReplayDeltaTime = age - m_Age;
-        m_Age = age;
-
-        unsigned int updateCb = 0;
-        ::Replayable<0>(frame, updateCb);
-        unsigned int callback = updateCb;
-        if (callback != 0)
-        {
-            mUpdateCallback = (void (*)(EmissionController&))callback;
-        }
-
-        unsigned int finishedCb = 0;
-        ::Replayable<0>(frame, finishedCb);
-        callback = finishedCb;
-        if (callback != 0)
-        {
-            mFinishedCallback = (void (*)(EmissionController&))callback;
-        }
-    }
-    else
-    {
-        m_Replaying = false;
-        m_ReplayDeltaTime = 0.0f;
-        ::Replayable<0>(frame, m_Age);
-
-        unsigned int updateCb = (unsigned int)mUpdateCallback.GetFreeFunction();
-        ::Replayable<0>(frame, updateCb);
-
-        unsigned int finishedCb = (unsigned int)mFinishedCallback.GetFreeFunction();
-        ::Replayable<0>(frame, finishedCb);
-    }
-}
 
 #endif // _EMISSIONCONTROLLER_H_
