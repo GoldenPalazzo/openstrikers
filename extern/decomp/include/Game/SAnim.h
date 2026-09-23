@@ -4,22 +4,36 @@
 #include "types.h"
 
 #include "NL/nlMath.h"
+#ifdef TARGET_PC
 #include "port/endian.h"
+#endif
 
 class cPoseAccumulator;
 
 struct PackedScale
 {
+#ifndef TARGET_PC
+    signed short x; // offset 0x0, size 0x2
+    signed short y; // offset 0x2, size 0x2
+    signed short z; // offset 0x4, size 0x2
+#else
     port::be<s16> x; // offset 0x0, size 0x2
     port::be<s16> y; // offset 0x2, size 0x2
     port::be<s16> z; // offset 0x4, size 0x2
+#endif
 }; // total size: 0x6
 
 struct PackedTrans
 {
+#ifndef TARGET_PC
+    float x; // offset 0x0, size 0x4
+    float y; // offset 0x4, size 0x4
+    float z; // offset 0x8, size 0x4
+#else
     port::be<f32> x; // offset 0x0, size 0x4
     port::be<f32> y; // offset 0x4, size 0x4
     port::be<f32> z; // offset 0x8, size 0x4
+#endif
 }; // total size: 0xC
 
 enum ePlayMode
@@ -28,6 +42,8 @@ enum ePlayMode
     PM_HOLD = 1,
 };
 
+// This object should be externally allocated at runtime with nlMallocs, so
+// no swap should be necessary
 class cSAnimCallback
 {
 public:
@@ -52,8 +68,13 @@ public:
     u32 GetChunkAlignment();
     bool IsAlignedChunk();
 
+#ifndef TARGET_PC
+    /* 0x00 */ u32 m_ID;
+    /* 0x04 */ u32 m_Size;
+#else
     /* 0x00 */ port::be<u32> m_ID;
     /* 0x04 */ port::be<u32> m_Size;
+#endif
 }; // size: 0x8
 
 inline nlChunk* nlChunk::GetNextChunk()
@@ -130,8 +151,13 @@ public:
     }
 
 protected:
+#ifndef TARGET_PC
+    /* 0x0 */ const char* m_szName;
+    /* 0x4 */ unsigned int m_uHashID;
+#else
     /* 0x0 */ port::SelfRelPtr32<const char> m_szName;
     /* 0x4 */ port::be<u32> m_uHashID;
+#endif
 }; // total size: 0x8
 
 class cSAnim : public cIdentifier
@@ -164,6 +190,7 @@ public:
         return (float)m_nNumKeys / 30.0f;
     }
 
+#ifndef TARGET_PC
     /* 0x08 */ unsigned int m_nNumKeys;
     /* 0x0C */ unsigned int m_nNumNodes;
     /* 0x10 */ unsigned int m_nNumMorphChannels;
@@ -180,6 +207,24 @@ public:
     /* 0x3C */ cSAnimCallback* m_pCallbackList;
     /* 0x40 */ float m_fLinearSpeed;
     /* 0x44 */ unsigned long m_nHierarchySignature;
+#else
+    /* 0x08 */ port::be<u32> m_nNumKeys;
+    /* 0x0C */ port::be<u32> m_nNumNodes;
+    /* 0x10 */ port::be<u32> m_nNumMorphChannels;
+    /* 0x14 */ port::SelfRelPtr32<const port::be<u32>> m_pNodeProperties;
+    /* 0x18 */ port::SelfRelPtr32<port::SelfRelPtr32<void>> m_pRotKeys;
+    /* 0x1C */ port::SelfRelPtr32<port::SelfRelPtr32<PackedScale>> m_pScaleKeys;
+    /* 0x20 */ port::SelfRelPtr32<port::SelfRelPtr32<PackedTrans>> m_pTransKeys;
+    /* 0x24 */ port::be<u32> m_nNumRootKeys;
+    /* 0x28 */ port::SelfRelPtr32<port::be<u16>> m_pRootRot;
+    /* 0x2C */ port::SelfRelPtr32<nlVector3> m_pRootTrans;
+    /* 0x30 */ port::SelfRelPtr32<const port::be<u32>> m_nMorphIds;
+    /* 0x34 */ port::SelfRelPtr32<const port::be<u32>> m_pNumMorphKeys;
+    /* 0x38 */ port::SelfRelPtr32<const u8> m_pMorphKeys;
+    /* 0x3C */ port::SelfRelPtr32<cSAnimCallback> m_pCallbackList;
+    /* 0x40 */ float m_fLinearSpeed;
+    /* 0x44 */ port::be<u32> m_nHierarchySignature;
+#endif
 }; // total size: 0x48
 
 #endif // _SANIM_H_

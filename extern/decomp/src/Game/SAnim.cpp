@@ -15,8 +15,13 @@ static inline void* nlGetChunkDataSAnim(nlChunk* chunk)
     if (isAligned != 0)
     {
         u32 alignment = 1u << (alignField >> 24);
+#ifndef TARGET_PC
         u32 addr = (u32)chunk + alignment;
         u32 mask = alignment - 1;
+#else
+        uintptr_t addr = (uintptr_t)chunk + alignment;
+        uintptr_t mask = alignment - 1;
+#endif
         addr = (addr + 7) & ~mask;
         return (void*)addr;
     }
@@ -39,8 +44,13 @@ cSAnim* cSAnim::Initialize(nlChunk* pChunk)
 
     cSAnim* pRetval;
     pRetval = (cSAnim*)nlGetChunkDataSAnim(chunkA);
+#ifndef TARGET_PC
     pRetval->m_pCallbackList = NULL;
+#else
+    pRetval->m_pCallbackList = nullptr;
+#endif
 
+#ifndef TARGET_PC
     chunkB = nlGetNextChunk(chunkA);
     pRetval->m_szName = (const char*)nlGetChunkDataSAnim(chunkB);
 
@@ -59,6 +69,40 @@ cSAnim* cSAnim::Initialize(nlChunk* pChunk)
     chunkA = nlGetNextChunk(chunkB);
     pRetval->m_pRootTrans = (nlVector3*)nlGetChunkDataSAnim(chunkA);
 
+#else
+    chunkB = nlGetNextChunk(chunkA);
+    pRetval->m_szName = (const char*)nlGetChunkDataSAnim(chunkB);
+
+    chunkA = nlGetNextChunk(chunkB);
+    pRetval->m_pRotKeys = (port::SelfRelPtr32<void>*)nlGetChunkDataSAnim(chunkA);
+
+    chunkB = nlGetNextChunk(chunkA);
+    pRetval->m_pTransKeys = (port::SelfRelPtr32<PackedTrans>*)nlGetChunkDataSAnim(chunkB);
+
+    chunkA = nlGetNextChunk(chunkB);
+    pRetval->m_pScaleKeys = (port::SelfRelPtr32<PackedScale>*)nlGetChunkDataSAnim(chunkA);
+
+    chunkB = nlGetNextChunk(chunkA);
+    pRetval->m_pRootRot = (port::be<u16>*)nlGetChunkDataSAnim(chunkB);
+
+    chunkA = nlGetNextChunk(chunkB);
+    {
+        // swap BE Vector3s at load time instead of using port::be or other
+        // things since nlVector3s are very usually passed by reference
+        PackedTrans* packedRootTrans = (PackedTrans*)nlGetChunkDataSAnim(chunkA);
+        for (u32 i = 0; i < pRetval->m_nNumRootKeys; i++)
+        {
+            float x = packedRootTrans[i].x;
+            float y = packedRootTrans[i].y;
+            float z = packedRootTrans[i].z;
+            nlVector3* dst = (nlVector3*)&packedRootTrans[i];
+            dst->x = x;
+            dst->y = y;
+            dst->z = z;
+        }
+        pRetval->m_pRootTrans = (nlVector3*)packedRootTrans;
+    }
+#endif
     u32 nodeIndex = 0;
     u32 type;
     nlChunk* nodeChunk = nlGetNextChunk(chunkA);
@@ -75,7 +119,11 @@ cSAnim* cSAnim::Initialize(nlChunk* pChunk)
             {
                 u32 subType = subChunk->m_ID & 0x80FFFFFF;
                 if (subType == 0x17101)
+#ifndef TARGET_PC
                     ((void**)pRetval->m_pRotKeys)[nNodeIndex] = (void*)nlGetChunkDataSAnim(subChunk);
+#else
+                    pRetval->m_pRotKeys[nNodeIndex] = (void*)nlGetChunkDataSAnim(subChunk);
+#endif
                 else if (subType == 0x17102)
                     pRetval->m_pTransKeys[nNodeIndex] = (PackedTrans*)nlGetChunkDataSAnim(subChunk);
                 else if (subType == 0x17103)
@@ -113,6 +161,7 @@ cSAnim* cSAnim::Initialize(nlChunk* pChunk)
         pRetval->m_fLinearSpeed = 0.0f;
     }
 
+#ifndef TARGET_PC
     pRetval->m_pNumMorphKeys = (const unsigned int*)nlGetChunkDataSAnim(nodeChunk);
 
     nodeChunk = nlGetNextChunk(nodeChunk);
@@ -123,6 +172,18 @@ cSAnim* cSAnim::Initialize(nlChunk* pChunk)
 
     nodeChunk = nlGetNextChunk(nodeChunk);
     pRetval->m_pNodeProperties = (const unsigned int*)nlGetChunkDataSAnim(nodeChunk);
+#else
+    pRetval->m_pNumMorphKeys = (const port::be<u32>*)nlGetChunkDataSAnim(nodeChunk);
+
+    nodeChunk = nlGetNextChunk(nodeChunk);
+    pRetval->m_nMorphIds = (const port::be<u32>*)nlGetChunkDataSAnim(nodeChunk);
+
+    nodeChunk = nlGetNextChunk(nodeChunk);
+    pRetval->m_pMorphKeys = (const u8*)nlGetChunkDataSAnim(nodeChunk);
+
+    nodeChunk = nlGetNextChunk(nodeChunk);
+    pRetval->m_pNodeProperties = (const port::be<u32>*)nlGetChunkDataSAnim(nodeChunk);
+#endif
 
     return pRetval;
 }
@@ -133,7 +194,11 @@ cSAnim* cSAnim::Initialize(nlChunk* pChunk)
  */
 void cSAnim::BlendRot(int nodeIndex, int remappedNodeIndex, float tNorm, float weight, cPoseAccumulator* acc, bool additive) const
 {
+#ifndef TARGET_PC
     void* pRawKeys = ((void**)m_pRotKeys)[remappedNodeIndex];
+#else
+    void* pRawKeys = m_pRotKeys[remappedNodeIndex];
+#endif
     if (pRawKeys != NULL && (unsigned int)remappedNodeIndex < m_nNumNodes)
     {
         unsigned int props = m_pNodeProperties[remappedNodeIndex];
@@ -199,13 +264,21 @@ void cSAnim::BlendRot(int nodeIndex, int remappedNodeIndex, float tNorm, float w
 
         if (m_pNodeProperties[remappedNodeIndex] & 0x1)
         {
+#ifndef TARGET_PC
             unsigned short* pKeys = (unsigned short*)(((void**)m_pRotKeys)[remappedNodeIndex]);
+#else
+            unsigned short* pKeys = (unsigned short*)(m_pRotKeys[remappedNodeIndex]);
+#endif
             unsigned short* pKey = &pKeys[nKeyIndex];
             acc->BlendRotAroundZ(nodeIndex, pKey[1], fWeight2);
             return;
         }
 
+#ifndef TARGET_PC
         signed short* pKey = ((signed short*)(((void**)m_pRotKeys)[remappedNodeIndex])) + ((nKeyIndex + 1) * 4);
+#else
+        signed short* pKey = ((signed short*)(m_pRotKeys[remappedNodeIndex])) + ((nKeyIndex + 1) * 4);
+#endif
         nlQuaternion q2;
         q2.x = 0.000061035156f * pKey[0];
         q2.y = 0.000061035156f * pKey[1];
@@ -337,8 +410,24 @@ void cSAnim::BlendTrans(int nAccumulatorNode, int nSAnimNode, float fTime, float
  */
 void cSAnim::Destroy()
 {
+#ifndef TARGET_PC
     nlDeleteList<cSAnimCallback>(&m_pCallbackList);
     m_pCallbackList = 0;
+#else
+    // m_pCallbackList is a SelfRelPtr32 (it lives inside the blob-loaded
+    // cSAnim), but cSAnimCallback::next is a plain native pointer (nodes are
+    // heap-allocated at runtime, not blob data) - the two representations
+    // aren't binary-compatible, so nlDeleteList<T>'s T** head can't be used
+    // here. Walk/free manually instead.
+    cSAnimCallback* node = m_pCallbackList;
+    while (node != NULL)
+    {
+        cSAnimCallback* next = node->next;
+        delete node;
+        node = next;
+    }
+    m_pCallbackList = nullptr;
+#endif
 }
 
 // The by-value inline return gives MWCC the target signed-conversion slot order.
@@ -367,7 +456,12 @@ void cSAnim::GetRootRot(float fTime, unsigned short* pRootRot) const
         nIndex = (int)fRealIndex;
         unsigned short* pRoots = m_pRootRot;
         unsigned short val0 = pRoots[nIndex];
+#ifndef TARGET_PC
+        unsigned short val0 = m_pRootRot[nIndex];
         s16 diff = (s16)(pRoots[nIndex + 1] - val0);
+#else
+        s16 diff = (s16)((unsigned short)m_pRootRot[nIndex + 1] - val0);
+#endif
         *pRootRot = val0 + (int)((fRealIndex - (float)nIndex) * SAnimRootDiffIdentity(diff));
         return;
     }
@@ -414,7 +508,13 @@ void cSAnim::CreateCallback(float fTime, unsigned int nParam1, void (*funcCallba
         pCallback->m_funcCallback = funcCallback;
     }
 
+#ifndef TARGET_PC
     nlListAddStart<cSAnimCallback>(&m_pCallbackList, pCallback, NULL);
+#else
+    // See Destroy() for why nlListAddStart<T> can't be reused here.
+    pCallback->next = m_pCallbackList;
+    m_pCallbackList = pCallback;
+#endif
 }
 
 /**
