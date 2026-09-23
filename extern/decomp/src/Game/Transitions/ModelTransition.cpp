@@ -601,6 +601,9 @@ ModeledScreenTransition* ModeledScreenTransition::LoadFromParser(SimpleParser* p
     m_pPoseAccumulator = new (nlMalloc(sizeof(cPoseAccumulator), 8, false)) cPoseAccumulator(m_pSkeleton, false);
 
     FixupModel();
+    // DECOMP-FIX: added return, probably in the decomp, r3 was never changed
+    // from this. Should investigate but I'm 99% sure it's correct
+    return this;
 }
 
 void ModeledScreenTransition::CreateInstance(TransitionModelStore& modelInfo)
