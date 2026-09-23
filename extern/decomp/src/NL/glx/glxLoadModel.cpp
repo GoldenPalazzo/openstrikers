@@ -279,8 +279,9 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                     u32* p = (u32*)glResourceAlloc(chunkSize, GLM_Matrix);
                     refDataPtr = (uintptr_t)p;
                     memcpy(p, chunkData, chunkSize);
-                    for (; (uintptr_t)p < (uintptr_t)p+chunkSize; p++)
-                        *p = bswap(*p);
+                    u32* pEnd = (u32*)((uintptr_t)p + chunkSize);
+                    for (u32* q = p; q < pEnd; q++)
+                        *q = bswap(*q);
                     break;
                 }
                 case BMD_CHUNK_MODELS:
