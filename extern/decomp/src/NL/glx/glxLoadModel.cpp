@@ -438,7 +438,12 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                 glModel* pM = pModels;
                 while (count > 0)
                 {
+#ifndef TARGET_PC
                     pM->packets = (glModelPacket*)((uintptr_t)pM->packets + (uintptr_t)pPackets);
+#else
+                    uintptr_t diskPacketIndex = (uintptr_t)pM->packets / sizeof(port::disk::glModelPacket);
+                    pM->packets = (glModelPacket*)((u8*)pPackets + diskPacketIndex * sizeof(glModelPacket));
+#endif
                     pM++;
                     count--;
                 }
