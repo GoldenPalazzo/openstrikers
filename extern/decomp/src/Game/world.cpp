@@ -1543,7 +1543,7 @@ static void RenderBoundingSphere(const nlMatrix4& matWorld, f32 fRadius)
     m.e2[1][1] = fRadius;
     m.e2[2][2] = fRadius;
     glModelPacket* pPacket = pNewModel->packets;
-    while (pPacket < (glModelPacket*)((u8*)pNewModel->packets + pNewModel->numPackets * 0x4A))
+    while (pPacket < (glModelPacket*)((u8*)pNewModel->packets + pNewModel->numPackets * sizeof(glModelPacket)))
     {
         glSetRasterState(pPacket->state.raster, (eGLState)5, 1);
         uintptr_t matID = glAllocMatrix();
@@ -1551,7 +1551,7 @@ static void RenderBoundingSphere(const nlMatrix4& matWorld, f32 fRadius)
             glSetMatrix(matID, m);
         pPacket->state.matrix = matID;
         pPacket->state.texture[0] = WhiteTexture;
-        pPacket = (glModelPacket*)((u8*)pPacket + 0x4A);
+        pPacket = (glModelPacket*)((u8*)pPacket + sizeof(glModelPacket));
     }
     glViewAttachModel((eGLView)7, pNewModel);
 }

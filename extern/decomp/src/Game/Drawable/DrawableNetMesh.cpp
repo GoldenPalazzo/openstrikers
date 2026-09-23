@@ -192,12 +192,13 @@ void DrawableNetMesh::Render() const
 
     if (sbAccelerateMeshWriter)
     {
-        glModel* pModel = (glModel*)glFrameAlloc(0x10, GLM_Header);
-        nlZeroMemory(pModel, 0x10);
-        glModelPacket* pPacket = (glModelPacket*)glFrameAlloc(0x4A, GLM_Header);
-        nlZeroMemory(pPacket, 0x4A);
-        glModelStream* pStreams = (glModelStream*)glFrameAlloc(0x12, GLM_Header);
-        nlZeroMemory(pStreams, 0x12);
+        // DECOMP-FIX: sizeof frameallocs and nlZeros
+        glModel* pModel = (glModel*)glFrameAlloc(sizeof(glModel), GLM_Header);
+        nlZeroMemory(pModel, sizeof(glModel));
+        glModelPacket* pPacket = (glModelPacket*)glFrameAlloc(sizeof(glModelPacket), GLM_Header);
+        nlZeroMemory(pPacket, sizeof(glModelPacket));
+        glModelStream* pStreams = (glModelStream*)glFrameAlloc(sizeof(glModelStream) * 3, GLM_Header);
+        nlZeroMemory(pStreams, sizeof(glModelStream) * 3);
 
         pModel->id = (u32)-1;
         pModel->numPackets = 1;

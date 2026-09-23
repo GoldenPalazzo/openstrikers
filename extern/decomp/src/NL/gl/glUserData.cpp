@@ -6,15 +6,18 @@
 /**
  * Offset/Address/Size: 0x0 | 0x801DEB78 | size: 0x2C
  */
+// One pointer-sized slot per eGLUserData type: needs to scale with uintptr_t 
+static constexpr size_t kUserDataBlockSize = GLUD_Num * sizeof(uintptr_t);
+
 bool glUserHasType(eGLUserData type, const glModelPacket* pPacket)
 {
-    u32* userdata = (u32*)(pPacket->userData);
+    uintptr_t* userdata = (uintptr_t*)(pPacket->userData);
     if (userdata == NULL)
     {
         return false;
     }
 
-    u32 val = userdata[(int)type];
+    uintptr_t val = userdata[(int)type];
     return (val != 0) ? true : false;
 }
 
@@ -23,7 +26,7 @@ bool glUserHasType(eGLUserData type, const glModelPacket* pPacket)
  */
 void glUserDetach(eGLUserData type, glModelPacket* pPacket)
 {
-    u32* userdata = (u32*)(pPacket->userData);
+    uintptr_t* userdata = (uintptr_t*)(pPacket->userData);
     userdata[(int)type] = 0;
 }
 
@@ -37,15 +40,15 @@ void glUserDup(glModelPacket* pDest, const glModelPacket* pSrc, bool bPerm)
         void* copyBlock;
         if (bPerm)
         {
-            copyBlock = glResourceAlloc(0x48, GLM_Header);
+            copyBlock = glResourceAlloc(kUserDataBlockSize, GLM_Header);
         }
         else
         {
-            copyBlock = glFrameAlloc(0x48, GLM_Header);
+            copyBlock = glFrameAlloc(kUserDataBlockSize, GLM_Header);
         }
 
-        memcpy(copyBlock, (u32*)pSrc->userData, 0x48);
-        pDest->userData = (u32)copyBlock;
+        memcpy(copyBlock, (uintptr_t*)pSrc->userData, kUserDataBlockSize);
+        pDest->userData = (uintptr_t)copyBlock;
     }
 }
 
@@ -54,24 +57,24 @@ void glUserDup(glModelPacket* pDest, const glModelPacket* pSrc, bool bPerm)
  */
 void glUserAttach(const void* pUserData, glModelPacket* pPacket, bool bPerm)
 {
-    if ((u32*)pPacket->userData == NULL)
+    if ((uintptr_t*)pPacket->userData == NULL)
     {
         void* block;
         if (bPerm)
         {
-            block = glResourceAlloc(0x48, GLM_Header);
+            block = glResourceAlloc(kUserDataBlockSize, GLM_Header);
         }
         else
         {
-            block = glFrameAlloc(0x48, GLM_Header);
+            block = glFrameAlloc(kUserDataBlockSize, GLM_Header);
         }
 
-        nlZeroMemory(block, 0x48);
-        pPacket->userData = (u32)block;
+        nlZeroMemory(block, kUserDataBlockSize);
+        pPacket->userData = (uintptr_t)block;
     }
 
     eGLUserData type = *(eGLUserData*)pUserData;
-    ((u32*)(pPacket->userData))[(int)type] = (u32)pUserData;
+    ((uintptr_t*)(pPacket->userData))[(int)type] = (uintptr_t)pUserData;
 }
 
 /**
