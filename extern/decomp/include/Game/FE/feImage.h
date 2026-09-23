@@ -4,7 +4,7 @@
 #include "Game/FE/feLibObject.h"
 #include "Game/FE/tlInstance.h"
 
-#include "port/endian.h"
+#include "port/endian.hpp"
 
 class FETextureResource;
 

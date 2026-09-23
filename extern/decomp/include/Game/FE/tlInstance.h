@@ -7,7 +7,7 @@
 #include "Game/FE/tlComponent.h"
 #include "Game/FE/FEAudio.h"
 
-#include "port/endian.h"
+#include "port/endian.hpp"
 
 enum eTimeLineAssetType
 {

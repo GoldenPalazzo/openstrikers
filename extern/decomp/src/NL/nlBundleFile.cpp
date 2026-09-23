@@ -2,7 +2,7 @@
 #include "NL/nlMemory.h"
 #include "NL/nlString.h"
 #include <string.h>
-#include "port/endian.h"
+#include "port/endian.hpp"
 
 /**
  * Offset/Address/Size: 0x0 | 0x801E85CC | size: 0xD4

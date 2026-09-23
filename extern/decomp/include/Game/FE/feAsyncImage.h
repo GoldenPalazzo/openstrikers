@@ -6,7 +6,7 @@
 #include "Game/FE/tlInstance.h"
 #include "Game/FE/feTextureResource.h"
 
-#include "port/endian.h"
+#include "port/endian.hpp"
 
 class TLImageInstance : public TLInstance
 {

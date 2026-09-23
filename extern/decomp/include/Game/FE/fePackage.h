@@ -2,7 +2,7 @@
 #define _FEPACKAGE_H_
 
 #include "Game/FE/fePresentation.h"
-#include "port/endian.h"
+#include "port/endian.hpp"
 
 class FELibObject;
 class FEResourceHandle;

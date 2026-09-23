@@ -5,7 +5,7 @@
 #include "Game/FE/feFontResource.h"
 #include "Game/FE/tlTextInstance.h"
 
-#include "port/endian.h"
+#include "port/endian.hpp"
 
 class FEText : public FELibObject
 {

@@ -7,7 +7,7 @@
 
 #include "NL/nlMemory.h"
 
-#include "port/endian.h"
+#include "port/endian.hpp"
 
 typedef unsigned long (*glxTextureLoadCallback_t)(unsigned long);
 

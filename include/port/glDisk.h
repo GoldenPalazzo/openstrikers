@@ -1,5 +1,5 @@
 #pragma once
-#include "endian.h"
+#include "endian.hpp"
 
 struct glModelStream;
 struct glStateBundle;

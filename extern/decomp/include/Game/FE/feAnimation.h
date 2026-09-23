@@ -6,7 +6,7 @@
 #include "Game/FE/tlInstance.h"
 #include "NL/nlDLRing.h"
 
-#include "port/endian.h"
+#include "port/endian.hpp"
 
 enum AnimType
 {

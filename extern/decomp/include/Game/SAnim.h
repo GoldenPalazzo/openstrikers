@@ -5,7 +5,7 @@
 
 #include "NL/nlMath.h"
 #ifdef TARGET_PC
-#include "port/endian.h"
+#include "port/endian.hpp"
 #endif
 
 class cPoseAccumulator;

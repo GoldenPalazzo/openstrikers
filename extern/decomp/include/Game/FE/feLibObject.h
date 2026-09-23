@@ -6,7 +6,7 @@
 #include "NL/nlColour.h"
 #include "NL/nlMath.h"
 
-#include "port/endian.h"
+#include "port/endian.hpp"
 
 class feVector3
 {

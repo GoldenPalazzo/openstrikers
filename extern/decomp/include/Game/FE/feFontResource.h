@@ -5,7 +5,7 @@
 #include "Game/FE/feResourceManager.h"
 
 #ifdef TARGET_PC
-#include "port/endian.h"
+#include "port/endian.hpp"
 #endif
 class FEFontResource : public FEResourceHandle
 {

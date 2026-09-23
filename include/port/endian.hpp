@@ -1,4 +1,3 @@
-#ifdef __cplusplus
 #pragma once
 #include <cstdint>
 #include <bit>
@@ -142,12 +141,10 @@ namespace port
             return reinterpret_cast<U*>(get());
         }
 
-        constexpr bool operator==(nullptr_t other) const noexcept {
+        constexpr bool operator==(std::nullptr_t other) const noexcept {
             return get() == other;
         }
     };
     static_assert(sizeof(SelfRelPtr32<char>) == 4);
 
 }
-
-#endif

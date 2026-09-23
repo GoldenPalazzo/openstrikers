@@ -6,7 +6,7 @@
 #include "NL/nlSingleton.h"
 #include "NL/nlBundleFile.h"
 
-#include "port/endian.h"
+#include "port/endian.hpp"
 
 enum eFEResourceType
 {

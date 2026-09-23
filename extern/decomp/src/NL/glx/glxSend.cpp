@@ -24,7 +24,7 @@
 #include "dolphin/gx/GXTexture.h"
 #include "NL/nlColour.h"
 #include "NL/platvmath.h"
-#include "port/endian.h"
+#include "port/endian.hpp"
 #include "types.h"
 #include "dolphin/gx/GXVert.h"
 #include <string.h>
