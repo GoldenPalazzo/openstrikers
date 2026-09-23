@@ -2242,8 +2242,13 @@ void cFielder::InitActionBombHitReact(const nlVector3& v3BombPosition)
     SetAction(ACTION_HIT_REACT);
 
     u32 index = (((u16)((u16)GetFacingDeltaToPosition(v3BombPosition)) >> 14) & 3);
+#ifndef TARGET_PC
     register volatile HitReactInfo* pHitReactInfo = g_HitReactInfo;
     register int nAnimID = pHitReactInfo[index].nAnimID;
+#else
+    volatile HitReactInfo* pHitReactInfo = g_HitReactInfo;
+    int nAnimID = pHitReactInfo[index].nAnimID;
+#endif
     SetAnimState(nAnimID, true, 0.2f, false, false);
 
     float angleRad = nlATan2f(m_v3Position.y - v3BombPosition.y, m_v3Position.x - v3BombPosition.x);

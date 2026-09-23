@@ -32,8 +32,13 @@ static inline u32 SET_BIT_IMPL(u32 dest, u32 src, u32 shift, u32 bit) {
 PhysicsCharacter::PhysicsCharacter(float radius, float heightScale)
     : PhysicsCharacterBase(g_CollisionSpace, g_PhysicsWorld, radius + (heightScale / 2.0f))
 {
+#ifndef TARGET_PC
     register unsigned int flags;
     register int one = 1;
+#else
+    unsigned int flags;
+    int one = 1;
+#endif
 
     unsigned int* flagsPtr = (unsigned int*)((char*)this + 0x80);
 

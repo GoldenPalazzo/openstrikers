@@ -70,7 +70,11 @@ void nlMultVectorMatrix(nlVector2& v_out, const nlVector2& v_in, const nlMatrix3
  * Offset/Address/Size: 0x4F4 | 0x801C4070 | size: 0x54
  */
 #pragma scheduling off
+#ifndef TARGET_PC
 void nlMultPosVectorMatrix(register nlVector3& result, register const nlVector3& pos, register const nlMatrix4& transformMatrix)
+#else
+void nlMultPosVectorMatrix(nlVector3& result, const nlVector3& pos, const nlMatrix4& transformMatrix)
+#endif
 {
     float x = pos.x * transformMatrix.e2[0][0] + pos.y * transformMatrix.e2[1][0] + pos.z * transformMatrix.e2[2][0] + transformMatrix.e2[3][0];
     float y = pos.x * transformMatrix.e2[0][1] + pos.y * transformMatrix.e2[1][1] + pos.z * transformMatrix.e2[2][1] + transformMatrix.e2[3][1];
@@ -99,7 +103,11 @@ void nlMultVectorMatrix(nlVector4& out, const nlVector4& in, const nlMatrix4& m)
  * Offset/Address/Size: 0x3E4 | 0x801C3F60 | size: 0x44
  */
 #pragma scheduling off
+#ifndef TARGET_PC
 void nlMultDirVectorMatrix(register nlVector3& result, register const nlVector3& direction, register const nlMatrix4& transformMatrix)
+#else
+void nlMultDirVectorMatrix(nlVector3& result, const nlVector3& direction, const nlMatrix4& transformMatrix)
+#endif
 {
     float x = direction.x * transformMatrix.e2[0][0] + direction.y * transformMatrix.e2[1][0] + direction.z * transformMatrix.e2[2][0];
     float y = direction.x * transformMatrix.e2[0][1] + direction.y * transformMatrix.e2[1][1] + direction.z * transformMatrix.e2[2][1];
