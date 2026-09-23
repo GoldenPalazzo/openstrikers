@@ -135,6 +135,8 @@ namespace port
             requires(!std::is_void_v<DummyT>)
         DummyT& operator*() const noexcept { return *get(); }
 
+        // golden TODO: this is extermely dangerous and should be removed
+        // after all major refactors are done
         template <typename U>
         operator U*() const noexcept {
             return reinterpret_cast<U*>(get());
