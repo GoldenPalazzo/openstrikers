@@ -228,7 +228,7 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
     chunkStart = outerChunkPtr;
     chunkEnd = outerEnd;
 
-    if ((*(u32*)outerChunkPtr & ~0x7F000000u) == 0x8001B100u)
+    if ((bswap(*(u32*)outerChunkPtr) & ~0x7F000000u) == 0x8001B100u)
     {
         u32 innerSize = outerChunkPtr->m_Size;
         chunkStart = (nlChunk*)((u8*)outerChunkPtr + 8);
