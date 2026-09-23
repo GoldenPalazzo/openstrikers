@@ -22,7 +22,7 @@ constexpr T bswap(T val) noexcept
 
 namespace port
 {
-
+    static constexpr uint32_t SELFREL_NULL = 0xFFFFFFFFu;
     template <typename T>
     struct be {
         static_assert(std::is_trivially_copyable_v<T>, "BE<T> requires a POD type");
@@ -91,7 +91,6 @@ namespace port
 
     template <typename T>
     struct SelfRelPtr32 {
-#define SELFREL_NULL 0xFFFFFFFFu
         be<int32_t> m_relativeOffset;
 
         T* get() const noexcept {
