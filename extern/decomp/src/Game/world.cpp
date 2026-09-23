@@ -6,6 +6,9 @@
 #include "Game/Camera/MatrixEffectCam.h"
 
 #include "string.h"
+#ifdef TARGET_PC
+#include <cctype>
+#endif
 
 #include "NL/nlPrint.h"
 #include "NL/nlDebug.h"
@@ -927,7 +930,11 @@ void World::CreateEmitterObjFromChunk(nlChunk* pChunk)
         nlStrNCpy<char>(fxName, pPersistentEffectsTag + persistentLen, sizeof(fxName));
 
         i = strlen(fxName);
+#ifdef TARGET_PC
+        if (isdigit((unsigned char)fxName[i - 1]))
+#else
         if (__ctype_map[(unsigned char)fxName[i - 1]] & __digit)
+#endif
         {
             i = strlen(fxName);
             while (i > 0)
