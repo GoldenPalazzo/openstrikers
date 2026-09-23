@@ -16,7 +16,11 @@ public:
     unsigned int LargestFreeBlock();
     unsigned int TotalFreeMemory();
     void Initialize(void* memory, unsigned int size);
+#ifndef TARGET_PC
     void* Allocate(unsigned long size, unsigned int alignment, bool fromEnd);
+#else
+    void* Allocate(u32 size, unsigned int alignment, bool fromEnd);
+#endif
     void Free(void* p);
 
     /* 0x0 */ FreeBlockList* m_free_block_list;

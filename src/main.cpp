@@ -8,6 +8,8 @@
 #include <aurora/dvd.h>
 #include "port/helpers.h"
 
+bool g_EngineArenaReady = false;
+
 int game_main(); // dichiarato qui, definito nel decomp rinominato
 
 static const char* disc_path(int argc, char* argv[]) {
@@ -26,7 +28,7 @@ int main(int argc, char* argv[])   // <-- diventa aurora_main via macro
         .vsync = false,
         .startFullscreen = false,
         .allowTextureDumps = false,
-        .mem1Size = 128 * 1024 * 1024,
+        .mem1Size = 512 * 1024 * 1024,
         .mem2Size = ARAM_DEFAULT_SIZE,
     };
     const AuroraInfo info = aurora_initialize(argc, argv, &config);
@@ -39,6 +41,7 @@ int main(int argc, char* argv[])   // <-- diventa aurora_main via macro
         return 1;
     }
     OSInit();
+    g_EngineArenaReady = true;
     framepump_init();
     game_main();
     aurora_dvd_close();
