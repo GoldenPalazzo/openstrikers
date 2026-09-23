@@ -66,7 +66,11 @@ typedef unsigned char   uint8;
 /* an integer type that we can safely cast a pointer to and from without
  * loss of bits.
  */
+#ifndef TARGET_PC
 typedef uint32 intP;
+#else
+typedef uintptr_t intP;
+#endif
 
 
 /* if we're compiling on a pentium, we may need to know the clock rate so
