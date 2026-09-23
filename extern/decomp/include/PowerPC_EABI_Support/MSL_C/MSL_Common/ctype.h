@@ -1,6 +1,10 @@
 #ifndef _MSL_COMMON_CTYPE_H
 #define _MSL_COMMON_CTYPE_H
 
+#ifdef TARGET_PC
+#include_next <ctype.h>
+#else
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -98,5 +102,7 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
+
+#endif // TARGET_PC
 
 #endif /* _MSL_COMMON_CTYPE_H */

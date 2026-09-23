@@ -1,6 +1,10 @@
 #ifndef MALLOC_H
 #define MALLOC_H
 
+#ifdef TARGET_PC
+#include_next <malloc.h>
+#else
+
 #include "types.h"
 
 #ifdef __cplusplus
@@ -21,5 +25,7 @@ extern void DisplayArena();
 #ifdef __cplusplus
 }
 #endif
+
+#endif // TARGET_PC
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef _STD_LIMITS_H
 #define _STD_LIMITS_H
 
+#ifdef TARGET_PC
+#include_next <limits.h>
+#else
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -99,4 +103,7 @@ public:
 
 } // namespace std
 #endif
+
+#endif // TARGET_PC
+
 #endif

@@ -1,6 +1,10 @@
 #ifndef _MSL_COMMON_STRING_H
 #define _MSL_COMMON_STRING_H
 
+#ifdef TARGET_PC
+#include_next <string.h>
+#else
+
 #include "stddef.h"
 
 #ifdef __cplusplus
@@ -34,5 +38,7 @@ extern "C"
 #ifdef __cplusplus
 };
 #endif
+
+#endif // TARGET_PC
 
 #endif /* _MSL_COMMON_STRING_H */

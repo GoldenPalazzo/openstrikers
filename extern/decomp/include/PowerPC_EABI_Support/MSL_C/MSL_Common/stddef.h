@@ -1,6 +1,10 @@
 #ifndef _STDDEF_H_
 #define _STDDEF_H_
 
+#ifdef TARGET_PC
+#include_next <stddef.h>
+#else
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -22,5 +26,7 @@ typedef long ptrdiff_t;
 #ifdef __cplusplus
 };
 #endif
+
+#endif // TARGET_PC
 
 #endif

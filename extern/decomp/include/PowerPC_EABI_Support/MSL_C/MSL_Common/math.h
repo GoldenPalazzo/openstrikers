@@ -1,6 +1,10 @@
 #ifndef _MATH_H_
 #define _MATH_H_
 
+#ifdef TARGET_PC
+#include_next <math.h>
+#else
+
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -319,5 +323,7 @@ double sqrt(double x);
 #ifdef __cplusplus
 }
 #endif
+
+#endif // TARGET_PC
 
 #endif

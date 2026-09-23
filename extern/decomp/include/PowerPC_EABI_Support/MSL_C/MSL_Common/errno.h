@@ -1,6 +1,10 @@
 #ifndef MSL_COMMON_SRC_ERRNO_H
 #define MSL_COMMON_SRC_ERRNO_H
 
+#ifdef TARGET_PC
+#include_next <errno.h>
+#else
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -16,5 +20,7 @@ extern int errno;
 #ifdef __cplusplus
 }
 #endif
+
+#endif // TARGET_PC
 
 #endif /* MSL_COMMON_SRC_ERRNO_H */

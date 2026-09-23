@@ -1,6 +1,10 @@
 #ifndef _FLOAT_H_
 #define _FLOAT_H_
 
+#ifdef TARGET_PC
+#include_next <float.h>
+#else
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,5 +28,7 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+#endif // TARGET_PC
 
 #endif
