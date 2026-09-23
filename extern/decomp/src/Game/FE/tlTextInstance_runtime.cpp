@@ -10,7 +10,7 @@ static inline const nlFont* GetFontFromComponent(TLComponent* comp)
     struct FontResource
     {
         unsigned char _pad[0x14];
-        const nlFont* m_font;
+        port::SelfRelPtr32<nlFont> m_font;
     };
     return ((const FontResource*)comp->pChildren)->m_font;
 }

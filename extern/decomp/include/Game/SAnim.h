@@ -4,21 +4,22 @@
 #include "types.h"
 
 #include "NL/nlMath.h"
+#include "port/endian.h"
 
 class cPoseAccumulator;
 
 struct PackedScale
 {
-    signed short x; // offset 0x0, size 0x2
-    signed short y; // offset 0x2, size 0x2
-    signed short z; // offset 0x4, size 0x2
+    port::be<s16> x; // offset 0x0, size 0x2
+    port::be<s16> y; // offset 0x2, size 0x2
+    port::be<s16> z; // offset 0x4, size 0x2
 }; // total size: 0x6
 
 struct PackedTrans
 {
-    float x; // offset 0x0, size 0x4
-    float y; // offset 0x4, size 0x4
-    float z; // offset 0x8, size 0x4
+    port::be<f32> x; // offset 0x0, size 0x4
+    port::be<f32> y; // offset 0x4, size 0x4
+    port::be<f32> z; // offset 0x8, size 0x4
 }; // total size: 0xC
 
 enum ePlayMode
@@ -51,8 +52,8 @@ public:
     u32 GetChunkAlignment();
     bool IsAlignedChunk();
 
-    /* 0x00 */ u32 m_ID;
-    /* 0x04 */ u32 m_Size;
+    /* 0x00 */ port::be<u32> m_ID;
+    /* 0x04 */ port::be<u32> m_Size;
 }; // size: 0x8
 
 inline nlChunk* nlChunk::GetNextChunk()
@@ -129,8 +130,8 @@ public:
     }
 
 protected:
-    /* 0x0 */ const char* m_szName;
-    /* 0x4 */ unsigned int m_uHashID;
+    /* 0x0 */ port::SelfRelPtr32<const char> m_szName;
+    /* 0x4 */ port::be<u32> m_uHashID;
 }; // total size: 0x8
 
 class cSAnim : public cIdentifier
