@@ -2,14 +2,18 @@ list:
     @just --list
 
 gen:
-    @cmake -B build -G Ninja -DCMAKE_COLOR_DIAGNOSTICS=ON
+    @cmake -B build -G Ninja -DCMAKE_COLOR_DIAGNOSTICS=ON \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
 
 build:
     @cmake --build build -j$(nproc)
 
 gen-dbg:
     @cmake -B build-dbg -G Ninja -DCMAKE_COLOR_DIAGNOSTICS=ON \
-        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
 
 build-dbg:
     @cmake --build build-dbg -j$(nproc)
