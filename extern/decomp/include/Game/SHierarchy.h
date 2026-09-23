@@ -31,7 +31,19 @@ public:
     inline int GetNumNodes() const { return m_nNumNodes; }
     inline int GetPelvisNodeIndex() const { return m_nPelvisNodeIndex; }
     inline int GetSpineNodeIndex() const { return m_nSpineNodeIndex; }
-
+#ifndef TARGET_PC
+    /* 0x08 */ int m_nNumNodes;
+    /* 0x0C */ u32* m_pNodeID;
+    /* 0x10 */ int* m_pParent;
+    /* 0x14 */ int* m_pNumChildren;
+    /* 0x18 */ int** m_pChildren;
+    /* 0x1C */ int* m_pPushPop;
+    /* 0x20 */ int* m_pMirrorTable;
+    /* 0x24 */ int m_nPelvisNodeIndex;
+    /* 0x28 */ int m_nSpineNodeIndex;
+    /* 0x2C */ nlVector3* m_pV3TranslationOffset;
+    /* 0x30 */ u8* m_pPreserveBoneLength;
+#else
     /* 0x08 */ port::be<int> m_nNumNodes;
     /* 0x0C */ port::SelfRelPtr32<const port::be<u32>> m_pNodeID;
     /* 0x10 */ port::SelfRelPtr32<const port::be<int>> m_pParent;
@@ -43,6 +55,7 @@ public:
     /* 0x28 */ port::be<int> m_nSpineNodeIndex;
     /* 0x2C */ port::SelfRelPtr32<nlVector3> m_pV3TranslationOffset;
     /* 0x30 */ port::SelfRelPtr32<const u8> m_pPreserveBoneLength;
+#endif
 };
 
 #endif // _SHIERARCHY_H_

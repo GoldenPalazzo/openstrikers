@@ -15,22 +15,42 @@ cSHierarchy* cSHierarchy::Initialize(nlChunk* pChunk)
     pRetval->m_szName = (const char*)pChunk->GetData();
 
     pChunk = pChunk->GetNextChunk();
+#ifndef TARGET_PC
     pRetval->m_pNodeID = (u32*)pChunk->GetData();
+#else
+    pRetval->m_pNodeID = (const port::be<u32>*)pChunk->GetData();
+#endif
 
     pChunk = pChunk->GetNextChunk();
+#ifndef TARGET_PC
     pRetval->m_pParent = (int*)pChunk->GetData();
+#else
+    pRetval->m_pParent = (const port::be<int>*)pChunk->GetData();
+#endif
 
     pChunk = pChunk->GetNextChunk();
+#ifndef TARGET_PC
     pRetval->m_pNumChildren = (int*)pChunk->GetData();
+#else
+    pRetval->m_pNumChildren = (const port::be<int>*)pChunk->GetData();
+#endif
 
     pChunk = pChunk->GetNextChunk();
+#ifndef TARGET_PC
     pRetval->m_pChildren = (int**)pChunk->GetData();
+#else
+    pRetval->m_pChildren = (port::SelfRelPtr32<port::be<int>>*)pChunk->GetData();
+#endif
 
     pChunk = pChunk->GetNextChunk();
     pRetval->m_pPushPop = (int*)pChunk->GetData();
 
     pChunk = pChunk->GetNextChunk();
+#ifndef TARGET_PC
     int* pChild = (int*)pChunk->GetData();
+#else
+    port::be<int>* pChild = (port::be<int>*)pChunk->GetData();
+#endif
 
     for (int i = 0; i < pRetval->m_nNumNodes; i++)
     {
@@ -49,13 +69,17 @@ cSHierarchy* cSHierarchy::Initialize(nlChunk* pChunk)
     pRetval->BuildPushPopFlags(0, 0, nCurrentDepth);
 
     pChunk = pChunk->GetNextChunk();
+#ifndef TARGET_PC
     pRetval->m_pMirrorTable = (int*)pChunk->GetData();
+#else
+    pRetval->m_pMirrorTable = (const port::be<int>*)pChunk->GetData();
+#endif
 
     pChunk = pChunk->GetNextChunk();
     pRetval->m_pV3TranslationOffset = (nlVector3*)pChunk->GetData();
 
     pChunk = pChunk->GetNextChunk();
-    pRetval->m_pPreserveBoneLength = (u8*)pChunk->GetData();
+    pRetval->m_pPreserveBoneLength = (const u8*)pChunk->GetData();
 
     return pRetval;
 }
