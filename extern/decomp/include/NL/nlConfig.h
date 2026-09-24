@@ -86,7 +86,7 @@ public:
 
         T Current() const
         {
-            return IteratorBase::Current()->Get<T>();
+            return IteratorBase::Current()->template Get<T>();
         }
 
     private:
