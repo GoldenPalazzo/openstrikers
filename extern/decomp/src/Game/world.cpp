@@ -583,7 +583,12 @@ bool World::LoadObjectData(const char* szWorldName)
         pChunk = pChunk->GetNextChunk();
     }
 
+#ifndef TARGET_PC
     delete pWorldData;
+#else
+    // created with nlLoadEntireFile, free should be the correct call
+    nlFree(pWorldData);
+#endif
     AssignLightBitmasks();
     return true;
 }
