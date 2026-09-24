@@ -7,7 +7,11 @@ SlotPool<cPN_SAnimController> cPN_SAnimController::m_SAnimControllerSlotPool(0x1
 /**
  * Offset/Address/Size: 0xDC0 | 0x801EB41C | size: 0x98
  */
+#ifndef TARGET_PC
 cPN_SAnimController::cPN_SAnimController(cSAnim* pSAnim, const AnimRetarget* pAnimRetarget, ePlayMode playMode, void (*funcPlaybackSpeedCallback)(unsigned int, cPN_SAnimController*), unsigned int nPlaybackSpeedCallbackParam, bool bMirror)
+#else
+cPN_SAnimController::cPN_SAnimController(cSAnim* pSAnim, const AnimRetarget* pAnimRetarget, ePlayMode playMode, void (*funcPlaybackSpeedCallback)(uintptr_t, cPN_SAnimController*), uintptr_t nPlaybackSpeedCallbackParam, bool bMirror)
+#endif
     : cPoseNode()
 {
     m_pSAnim = pSAnim;

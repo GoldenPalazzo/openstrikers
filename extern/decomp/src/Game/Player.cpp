@@ -1447,14 +1447,22 @@ cPN_SingleAxisBlender* cPlayer::CreateSingleAxisBlender(
     const int* pSABAnims,
     int nNumSABAnims,
     int nPrimaryAnim,
+#ifndef TARGET_PC
     void (*fWeightCB)(unsigned int, cPN_SingleAxisBlender*),
+#else
+    void (*fWeightCB)(uintptr_t, cPN_SingleAxisBlender*),
+#endif
     float fWeightSeek,
     cPN_SAnimController* pSynchingController)
 {
     cPN_SAnimController* pNewCurrentAnimController;
     pNewCurrentAnimController = NULL;
 
+#ifndef TARGET_PC
     cPN_SingleAxisBlender* pSAB = ::new (AllocateSingleAxisBlender()) cPN_SingleAxisBlender(nNumSABAnims, fWeightCB, (unsigned int)this, fWeightSeek);
+#else
+    cPN_SingleAxisBlender* pSAB = ::new (AllocateSingleAxisBlender()) cPN_SingleAxisBlender(nNumSABAnims, fWeightCB, (uintptr_t)this, fWeightSeek);
+#endif
 
     const int* pAnims = pSABAnims;
     for (int i = 0; i < nNumSABAnims; i++)
@@ -1483,7 +1491,11 @@ cPN_SingleAxisBlender* cPlayer::CreateSingleAxisBlender(
 /**
  * Offset/Address/Size: 0x5D0 | 0x80057B20 | size: 0x148
  */
+#ifndef TARGET_PC
 void cPlayer::PlayerHeadTrackCallback(unsigned int nSelf, unsigned int nParam2, cPoseAccumulator* pPoseAccumulator,
+#else
+void cPlayer::PlayerHeadTrackCallback(uintptr_t nSelf, unsigned int nParam2, cPoseAccumulator* pPoseAccumulator,
+#endif
     unsigned int nJointIndex, int nParentIndex)
 {
     cPlayer& self = *(cPlayer*)(void*)nSelf;
@@ -1539,7 +1551,11 @@ void cPlayer::PlayerHeadTrackCallback(unsigned int nSelf, unsigned int nParam2, 
  */
 void cPlayer::PrePhysicsUpdate(float dt)
 {
+#ifndef TARGET_PC
     m_pPoseAccumulator->SetBuildNodeMatrixCallback(m_nHeadJointIndex, PlayerHeadTrackCallback, (unsigned int)this, 0);
+#else
+    m_pPoseAccumulator->SetBuildNodeMatrixCallback(m_nHeadJointIndex, PlayerHeadTrackCallback, (uintptr_t)this, 0);
+#endif
 
     bool poseLocal = false;
     if (m_eClassType != GOALIE || m_v3Position.x * g_pBall->m_v3Position.x > 0.0f)

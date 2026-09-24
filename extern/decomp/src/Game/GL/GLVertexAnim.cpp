@@ -35,7 +35,11 @@ glModel* GLVertexAnim::GetModel(int frame)
         {
             if (streams->id == 0)
             {
+#ifndef TARGET_PC
                 streams->address = (u32)vertices;
+#else
+                streams->address = (uintptr_t)vertices;
+#endif
                 break;
             }
             streams++;

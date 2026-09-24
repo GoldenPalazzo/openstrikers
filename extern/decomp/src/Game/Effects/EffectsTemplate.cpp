@@ -417,7 +417,11 @@ static EffectsTemplate* parse_template(SimpleParser* parser, bool bQuick)
             token = parser->NextToken(true);
             nlStrNCat<char>(texname, "effects/", token, 0x100);
             t.m_hTexture = glGetTexture(texname);
+#ifndef TARGET_PC
             t.m_hTexture = (u32)glx_GetTex(t.m_hTexture, true, true);
+#else
+            t.m_hTexture = (uintptr_t)glx_GetTex(t.m_hTexture, true, true);
+#endif
             continue;
         }
 

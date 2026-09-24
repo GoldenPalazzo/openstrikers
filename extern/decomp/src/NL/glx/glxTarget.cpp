@@ -16,14 +16,22 @@
 static const u32 GrabTextureName = glGetTexture("target/grab_texture");
 static const u32 DOFTextureName = glGetTexture("target/dof");
 static void* clearz_mem = 0;
+#ifndef TARGET_PC
 static u32 glx_SharedMemory = 0;
+#else
+static uintptr_t glx_SharedMemory = 0;
+#endif
 static u32 glx_SharedSize = 0;
 static bool glx_SharedLock = false;
 
 /**
  * Offset/Address/Size: 0x890 | 0x801C2F6C | size: 0x8
  */
+#ifndef TARGET_PC
 u32 glx_GetSharedMemory()
+#else
+uintptr_t glx_GetSharedMemory()
+#endif
 {
     return glx_SharedMemory;
 }
@@ -79,7 +87,11 @@ void glxInitTargets()
 
     sharedMemory = (void*)glResourceAlloc(sharedSize + 320 * 224, GLM_TextureData);
 
+#ifndef TARGET_PC
     glx_SharedMemory = (u32)sharedMemory;
+#else
+    glx_SharedMemory = (uintptr_t)sharedMemory;
+#endif
     glx_SharedSize = sharedSize + 320 * 224;
     clearz_mem = (void*)((u8*)sharedMemory + sharedSize);
     numBytes += 320 * 224;

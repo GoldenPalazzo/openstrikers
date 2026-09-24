@@ -65,15 +65,24 @@ u8 AnimTagScriptInterpreter::SetupAnimationTriggers(const char* TriggerFileName,
                 pSlot->ScriptInfo.Trigger = pTriggerRecord->Trigger;
                 pSlot->ScriptInfo.ScriptFuncOffset = pTriggerRecord->ScriptFuncOffset;
 
+#ifndef TARGET_PC
                 iterator.Current()->CreateCallback(pTriggerRecord->Frame / (float)iterator.Current()->m_nNumKeys, (unsigned int)pSlot, AnimTagScriptInterpreter::AnimControllerCB);
+#else
+                iterator.Current()->CreateCallback(pTriggerRecord->Frame / (float)iterator.Current()->m_nNumKeys, (uintptr_t)pSlot, AnimTagScriptInterpreter::AnimControllerCB);
+#endif
 
                 file.m_CurrentTrigger++;
             }
         }
     }
 
+#ifndef TARGET_PC
     m_ppBytecode[m_BytecodeCount] = nlMalloc(file.m_FileSize - ((u32)((u8*)file.m_pFileData + file.m_pFileData->BytecodeOffset) - (u32)file.m_pFileData), 8, false);
     memcpy(m_ppBytecode[m_BytecodeCount], (u8*)file.m_pFileData + file.m_pFileData->BytecodeOffset, file.m_FileSize - ((u32)((u8*)file.m_pFileData + file.m_pFileData->BytecodeOffset) - (u32)file.m_pFileData));
+#else
+    m_ppBytecode[m_BytecodeCount] = nlMalloc(file.m_FileSize - ((uintptr_t)((u8*)file.m_pFileData + file.m_pFileData->BytecodeOffset) - (uintptr_t)file.m_pFileData), 8, false);
+    memcpy(m_ppBytecode[m_BytecodeCount], (u8*)file.m_pFileData + file.m_pFileData->BytecodeOffset, file.m_FileSize - ((uintptr_t)((u8*)file.m_pFileData + file.m_pFileData->BytecodeOffset) - (uintptr_t)file.m_pFileData));
+#endif
     LoadByteCode(m_ppBytecode[m_BytecodeCount]);
     m_BytecodeCount++;
 

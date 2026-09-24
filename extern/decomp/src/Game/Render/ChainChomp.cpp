@@ -387,7 +387,11 @@ void ChainChomp::EmitTrail()
     }
 
     EmissionController* pControl = EmissionManager::Create(pGroup, 0);
+#ifndef TARGET_PC
     pControl->m_uUserData = (u32)this;
+#else
+    pControl->m_uUserData = (uintptr_t)this;
+#endif
 
     pControl->SetUpdateCallback(Function<EmissionController&>(UpdateChainEmitter));
 }

@@ -618,7 +618,11 @@ void Goalie::ActionLooseBallSetup(float fDeltaT)
 /**
  * Offset/Address/Size: 0x358C | 0x80051AC8 | size: 0x1C
  */
+#ifndef TARGET_PC
 void Goalie::MoveDirectionCB(unsigned int nParam, cPN_SingleAxisBlender* blender)
+#else
+void Goalie::MoveDirectionCB(uintptr_t nParam, cPN_SingleAxisBlender* blender)
+#endif
 {
     Goalie* pGoalie = (Goalie*)nParam;
     float result = 0.0f;
@@ -632,7 +636,11 @@ void Goalie::MoveDirectionCB(unsigned int nParam, cPN_SingleAxisBlender* blender
 /**
  * Offset/Address/Size: 0x3544 | 0x80051A80 | size: 0x48
  */
+#ifndef TARGET_PC
 void Goalie::MoveWeightCB(unsigned int nParam, cPN_SingleAxisBlender* blender)
+#else
+void Goalie::MoveWeightCB(uintptr_t nParam, cPN_SingleAxisBlender* blender)
+#endif
 {
     Goalie* pGoalie = (Goalie*)nParam;
     blender->m_fDesiredWeight = (s32)(u16)abs_s16(pGoalie->maLocalAngle) / 32768.0f;
@@ -641,7 +649,11 @@ void Goalie::MoveWeightCB(unsigned int nParam, cPN_SingleAxisBlender* blender)
 /**
  * Offset/Address/Size: 0x3538 | 0x80051A74 | size: 0xC
  */
+#ifndef TARGET_PC
 void Goalie::StrafeSynchronizedSpeedCallback(unsigned int nParam, cPN_SAnimController* controller)
+#else
+void Goalie::StrafeSynchronizedSpeedCallback(uintptr_t nParam, cPN_SAnimController* controller)
+#endif
 {
     Goalie* pGoalie = (Goalie*)nParam;
     controller->m_fPlaybackSpeedScale = pGoalie->mfSpeedScale;
@@ -841,7 +853,11 @@ inline s16 ClampMax(const s16 diff, const s16 max)
 /**
  * Offset/Address/Size: 0x3070 | 0x800515AC | size: 0x70
  */
+#ifndef TARGET_PC
 void Goalie::RunWeightCB(unsigned int nParam, cPN_SingleAxisBlender* blender)
+#else
+void Goalie::RunWeightCB(uintptr_t nParam, cPN_SingleAxisBlender* blender)
+#endif
 {
     const Goalie* pGoalie = (Goalie*)nParam;
 

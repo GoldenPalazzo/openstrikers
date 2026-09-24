@@ -46,7 +46,11 @@ static inline void* nlGetChunkData(nlChunk* chunk)
     if (isAligned != 0)
     {
         u32 alignment = 1u << (alignField >> 24);
+#ifndef TARGET_PC
         u32 ptr = (u32)chunk + alignment;
+#else
+        uintptr_t ptr = (uintptr_t)chunk + alignment;
+#endif
         ptr += 7;
         ptr &= ~(alignment - 1);
         return (void*)ptr;
@@ -69,9 +73,15 @@ static inline void nlGetChunkDataAs(nlChunk* chunk, T*& out)
         u32 alignment;
         T* ptr;
         alignment = 1u << (alignField >> 24);
+#ifndef TARGET_PC
         ptr = (T*)((u32)chunk + alignment);
         ptr = (T*)((u32)ptr + 7);
         out = (T*)((u32)ptr & ~(alignment - 1));
+#else
+        ptr = (T*)((uintptr_t)chunk + alignment);
+        ptr = (T*)((uintptr_t)ptr + 7);
+        out = (T*)((uintptr_t)ptr & ~(alignment - 1));
+#endif
     }
     else
     {
@@ -193,7 +203,11 @@ static bool LoadAnimCameraData(nlChunk* outerChunk, nlChunk* outerEnd, cCameraDa
                     if (isAligned != 0)
                     {
                         u32 mask = (one << (alignField >> 24)) - 1;
+#ifndef TARGET_PC
                         src = (float*)(((u32)chunkData + mask) & ~mask);
+#else
+                        src = (float*)(((uintptr_t)chunkData + mask) & ~mask);
+#endif
                     }
                     else
                     {
@@ -228,7 +242,11 @@ static bool LoadAnimCameraData(nlChunk* outerChunk, nlChunk* outerEnd, cCameraDa
                     if (isAligned != 0)
                     {
                         u32 mask = (one << (alignField >> 24)) - 1;
+#ifndef TARGET_PC
                         src = (float*)(((u32)chunkData + mask) & ~mask);
+#else
+                        src = (float*)(((uintptr_t)chunkData + mask) & ~mask);
+#endif
                     }
                     else
                     {

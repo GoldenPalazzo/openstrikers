@@ -113,7 +113,11 @@ GLSkinMesh* glx_MakeSkinMesh(nlChunk* outerChunk, glModel* models)
         if (((-alignBits | alignBits) >> 31) != 0)
         {
             align = 1 << (alignBits >> 24);
+#ifndef TARGET_PC
             u32 ptr = (u32)chunk;
+#else
+            uintptr_t ptr = (uintptr_t)chunk;
+#endif
             ptr += align;
             ptr += 7;
             result = (u8*)(ptr & ~(align - 1));

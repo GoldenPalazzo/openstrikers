@@ -13,10 +13,18 @@ void SlotPoolBase::BaseAddNewBlock(SlotPoolBase* slotPool, unsigned int slotSize
     void* memoryBlock;
 
     primarySlotCount = slotPool->m_Delta;
+#ifndef TARGET_PC
     if ((primarySlotCount != 0) || ((u32)slotPool->m_BlockList == 0U))
+#else
+    if ((primarySlotCount != 0) || ((uintptr_t)slotPool->m_BlockList == 0U))
+#endif
     {
         numSlots = primarySlotCount;
+#ifndef TARGET_PC
         if ((u32)slotPool->m_BlockList == 0U)
+#else
+        if ((uintptr_t)slotPool->m_BlockList == 0U)
+#endif
         {
             numSlots = slotPool->m_Initial;
         }

@@ -12,7 +12,11 @@ static inline void* nlGetChunkData(nlChunk* chunk)
     if (isAligned != 0)
     {
         u32 alignment = 1u << (alignField >> 24);
+#ifndef TARGET_PC
         u32 ptr = (u32)chunk;
+#else
+        uintptr_t ptr = (uintptr_t)chunk;
+#endif
         ptr += alignment;
         ptr += 7;
         return (void*)(ptr & ~(alignment - 1));

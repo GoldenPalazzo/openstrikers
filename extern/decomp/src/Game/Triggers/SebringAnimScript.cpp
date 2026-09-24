@@ -128,6 +128,10 @@ void SebringAnimTagScriptInterpreter::TriggerFired(unsigned long triggerId)
         AnimTriggerCallbackInfo data;
         data.m_uEventID = triggerId;
         data.m_fIntensity = 100.0f;
+#ifndef TARGET_PC
         CharacterTriggerHandler((unsigned int)&data);
+#else
+        CharacterTriggerHandler((uintptr_t)&data);
+#endif
     }
 }

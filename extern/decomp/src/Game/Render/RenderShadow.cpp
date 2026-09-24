@@ -73,7 +73,11 @@ void RenderShadowModel(unsigned long flags, glModel* model, unsigned long matrix
         while (pkt < model->packets + model->numPackets)
         {
             glModelPacket* dup = glModelPacketDup(pkt, true);
+#ifndef TARGET_PC
             dup->state.texture[0] = (u32)ResolvedWhiteTexture;
+#else
+            dup->state.texture[0] = (uintptr_t)ResolvedWhiteTexture;
+#endif
             dup->state.matrix = matrix;
             glViewAttachPacket(GLV_Unshadowed, dup);
             pkt++;
@@ -280,7 +284,11 @@ void RenderCharacterIntoTexture(const ProjectedShadowParams& params)
             glUserAttach(userData, pPacket, false);
         }
 
+#ifndef TARGET_PC
         pPacket->state.texture[0] = (u32)ResolvedBlackTexture;
+#else
+        pPacket->state.texture[0] = (uintptr_t)ResolvedBlackTexture;
+#endif
         glSetTextureState(pPacket->state.texturestate, (eGLTextureState)0xC, 0x3F);
 
         pPacket++;

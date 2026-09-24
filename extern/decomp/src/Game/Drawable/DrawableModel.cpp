@@ -804,7 +804,8 @@ static void GetShadowBoundingSquare(const glModel* model, const nlMatrix4& matri
 
 static inline void MakePlanarShadowMatrix(nlMatrix4& shadowMatrix, const nlMatrix4& objectToWorldMatrix)
 {
-    const nlVector3& lightVector = *(const nlVector3*)(*(u32*)((u8*)WorldManager::s_World + 0x138) + 4);
+    // DECOMP-FIX: resolved manual dereferences to correct field
+    const nlVector3& lightVector = WorldManager::s_World->m_pShadowLight->m_worldPosition;
     float xOverZ = -lightVector.x / lightVector.z;
     float yOverZ = -lightVector.y / lightVector.z;
 
@@ -927,7 +928,11 @@ static void DrawCoPlanarReference(eGLView view, const glModel& model, const nlMa
     glSetRasterState(GLS_DepthWrite, 0);
 
     glSetCurrentRasterState(glHandleizeRasterState());
+#ifndef TARGET_PC
     glSetCurrentTexture((u32)ResolvedWhiteTexture, GLTT_Diffuse);
+#else
+    glSetCurrentTexture((uintptr_t)ResolvedWhiteTexture, GLTT_Diffuse);
+#endif
 
     glQuad3 quad;
     quad.m_pos[0] = points[0];

@@ -178,9 +178,14 @@ void GameRenderTask::Run(float fDeltaT)
 
     UpdateGameObjectLighting();
 
+#ifndef TARGET_PC
     u32 hasWorld = (u32)WorldManager::s_World;
     if (((-hasWorld) | hasWorld) >> 31)
     {
+#else
+    if (WorldManager::s_World != nullptr)
+    {
+#endif
         nlVector3 shadowPos = { 0.0f, 0.0f, 0.0f };
         ((BasicStadium*)WorldManager::s_World)->m_pShadowLight = WorldManager::s_World->GetShadowLight(shadowPos, 10000000000.0f);
     }

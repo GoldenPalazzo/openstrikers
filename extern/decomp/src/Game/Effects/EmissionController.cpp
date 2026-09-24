@@ -38,9 +38,17 @@ void EmissionController::Replay(T& frame)
         m_ReplayDeltaTime = age - m_Age;
         m_Age = age;
 
+#ifndef TARGET_PC
         unsigned int updateCb = 0;
+#else
+        uintptr_t updateCb = 0;
+#endif
         ::Replayable<0>(frame, updateCb);
+#ifndef TARGET_PC
         unsigned int callback = updateCb;
+#else
+        uintptr_t callback = updateCb;
+#endif
         if (callback != 0)
         {
             mUpdateCallback = (void (*)(EmissionController&))callback;
@@ -60,10 +68,18 @@ void EmissionController::Replay(T& frame)
         m_ReplayDeltaTime = 0.0f;
         ::Replayable<0>(frame, m_Age);
 
+#ifndef TARGET_PC
         unsigned int updateCb = (unsigned int)mUpdateCallback.GetFreeFunction();
+#else
+        uintptr_t updateCb = (uintptr_t)mUpdateCallback.GetFreeFunction();
+#endif
         ::Replayable<0>(frame, updateCb);
 
+#ifndef TARGET_PC
         unsigned int finishedCb = (unsigned int)mFinishedCallback.GetFreeFunction();
+#else
+        uintptr_t finishedCb = (uintptr_t)mFinishedCallback.GetFreeFunction();
+#endif
         ::Replayable<0>(frame, finishedCb);
     }
 }

@@ -375,7 +375,11 @@ void PhysicsObject::GetLinearVelocity(nlVector3* vel) const
                             parent7 = parent6->m_parentObject;
                             if (parent7 != NULL)
                             {
+#ifndef TARGET_PC
                                 if ((u32)parent7->m_parentObject != 0U)
+#else
+                                if ((uintptr_t)parent7->m_parentObject != 0U)
+#endif
                                 {
                                     parent7->m_parentObject->GetLinearVelocity(vel);
                                     return;

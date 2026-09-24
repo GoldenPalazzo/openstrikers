@@ -54,7 +54,11 @@ public:
     bool IsFinished() const;
 
 protected:
+#ifndef TARGET_PC
     u32 Pop()
+#else
+    uintptr_t Pop()
+#endif
     {
         m_SP--;
         return *m_SP;
@@ -63,11 +67,21 @@ protected:
 public:
     /* 0x04 */ u32 m_Return;
     /* 0x08 */ ByteCodeHeader* m_Header;
+#ifndef TARGET_PC
     /* 0x0C */ u32* m_StackSegment;
+#else
+    /* 0x0C */ uintptr_t* m_StackSegment;
+#endif
     /* 0x10 */ u16* m_IP;
+#ifndef TARGET_PC
     /* 0x14 */ u32* m_SP;
     /* 0x18 */ u32* m_BP;
     /* 0x1C */ u32* m_SavedSP;
+#else
+    /* 0x14 */ uintptr_t* m_SP;
+    /* 0x18 */ uintptr_t* m_BP;
+    /* 0x1C */ uintptr_t* m_SavedSP;
+#endif
     /* 0x20 */ u32 m_Stop : 1;
     /* 0x20 */ u32 m_RunState : 2;
 }; // total size: 0x24

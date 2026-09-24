@@ -9,7 +9,11 @@ class cPN_SingleAxisBlender : public cPoseNode
 {
 public:
     cPN_SingleAxisBlender() { }
+#ifndef TARGET_PC
     cPN_SingleAxisBlender(int numChildren, void (*callback)(unsigned int, cPN_SingleAxisBlender*), unsigned int callbackParam, float weightSeek);
+#else
+    cPN_SingleAxisBlender(int numChildren, void (*callback)(uintptr_t, cPN_SingleAxisBlender*), unsigned int callbackParam, float weightSeek);
+#endif
     /* 0x08 */ virtual ~cPN_SingleAxisBlender() { };
     static void* operator new(unsigned long)
     {
@@ -36,7 +40,11 @@ public:
     }
 
     /* 0x14 */ float m_fSmoothedWeight;
+#ifndef TARGET_PC
     /* 0x18 */ void (*m_fWeightCallback)(unsigned int, class cPN_SingleAxisBlender*);
+#else
+    /* 0x18 */ void (*m_fWeightCallback)(uintptr_t, class cPN_SingleAxisBlender*);
+#endif
     /* 0x1C */ unsigned int m_nCallbackParam1;
     /* 0x20 */ float m_fDesiredWeight;
     /* 0x24 */ float m_fWeightSeek;

@@ -7,7 +7,11 @@ SlotPool<cPN_SingleAxisBlender> cPN_SingleAxisBlender::m_SingleAxisBlenderSlotPo
 /**
  * Offset/Address/Size: 0x5DC | 0x801EF320 | size: 0xD4
  */
+#ifndef TARGET_PC
 cPN_SingleAxisBlender::cPN_SingleAxisBlender(int numChildren, void (*callback)(unsigned int, cPN_SingleAxisBlender*), unsigned int callbackParam, float weightSeek)
+#else
+cPN_SingleAxisBlender::cPN_SingleAxisBlender(int numChildren, void (*callback)(uintptr_t, cPN_SingleAxisBlender*), unsigned int callbackParam, float weightSeek)
+#endif
     : cPoseNode(numChildren)
 {
     m_fSmoothedWeight = 0.0f;

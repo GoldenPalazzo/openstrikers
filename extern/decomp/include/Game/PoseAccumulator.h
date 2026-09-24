@@ -7,7 +7,11 @@
 #include "Game/SHierarchy.h"
 #include "Game/PoseNode.h"
 
+#ifndef TARGET_PC
 typedef void (*BuildNodeMatrixFn)(unsigned int, unsigned int, cPoseAccumulator*, unsigned int, int);
+#else
+typedef void (*BuildNodeMatrixFn)(uintptr_t, unsigned int, cPoseAccumulator*, unsigned int, int);
+#endif
 
 class cBuildNodeMatrixCallbackInfo
 {

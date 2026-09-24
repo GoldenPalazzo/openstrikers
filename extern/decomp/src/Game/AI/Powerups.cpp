@@ -1018,7 +1018,11 @@ static inline void ReleasePowerupModel(ePowerUpType type, DrawableObject* pDrawa
  */
 PowerupBase::~PowerupBase()
 {
+#ifndef TARGET_PC
     u32 voiceID = m_uVoiceID;
+#else
+    uintptr_t voiceID = m_uVoiceID;
+#endif
 
     if (voiceID != 0)
     {

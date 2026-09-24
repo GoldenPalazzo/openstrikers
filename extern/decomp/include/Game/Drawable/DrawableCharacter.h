@@ -28,7 +28,11 @@ public:
     void Free();
     cPN_SAnimController& GetAnimController() const;
     void Grab(cCharacter& character);
+#ifndef TARGET_PC
     static void DrawableBowserHeadTrackCallback(unsigned int ctx, unsigned int nParam2, cPoseAccumulator* poseAccumulator, unsigned int currentNodeIndex, int nParentIndex);
+#else
+    static void DrawableBowserHeadTrackCallback(uintptr_t ctx, unsigned int nParam2, cPoseAccumulator* poseAccumulator, unsigned int currentNodeIndex, int nParentIndex);
+#endif
     void BuildNodeMatrices();
     void Render(cCharacter& character) const;
     void SendToGl(const cCharacter& character) const;

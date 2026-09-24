@@ -96,9 +96,15 @@ public:
     virtual void PostPhysicsUpdate();
     virtual void PreUpdate(float dt);
     virtual void PrePhysicsUpdate(float dt);
+#ifndef TARGET_PC
     static void PlayerHeadTrackCallback(unsigned int nSelf, unsigned int nParam2, cPoseAccumulator* pPoseAccumulator,
         unsigned int nJointIndex, int nParentIndex);
     cPN_SingleAxisBlender* CreateSingleAxisBlender(const int* pSABAnims, int nNumSABAnims, int nPrimaryAnim, void (*fWeightCB)(unsigned int, cPN_SingleAxisBlender*), float fWeightSeek, cPN_SAnimController* pSynchingController);
+#else
+    static void PlayerHeadTrackCallback(uintptr_t nSelf, unsigned int nParam2, cPoseAccumulator* pPoseAccumulator,
+        unsigned int nJointIndex, int nParentIndex);
+    cPN_SingleAxisBlender* CreateSingleAxisBlender(const int* pSABAnims, int nNumSABAnims, int nPrimaryAnim, void (*fWeightCB)(uintptr_t, cPN_SingleAxisBlender*), float fWeightSeek, cPN_SAnimController* pSynchingController);
+#endif
     virtual void CollideWithBallCallback(cBall* pBall);
     virtual void CollideWithCharacterCallback(CollisionPlayerPlayerData* pData);
     virtual void CollideWithWallCallback(const CollisionPlayerWallData* pData);

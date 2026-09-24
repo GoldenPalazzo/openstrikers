@@ -224,7 +224,11 @@ static nlMatrix4& GetHeadNodeMatrix(cCharacter* pHeadCharacter);
 /**
  * Offset/Address/Size: 0x2B1C | 0x801A18CC | size: 0x21FC
  */
+#ifndef TARGET_PC
 void CharacterTriggerHandler(unsigned int uParam)
+#else
+void CharacterTriggerHandler(uintptr_t uParam)
+#endif
 {
     class AnimTriggerCallbackInfo
     {

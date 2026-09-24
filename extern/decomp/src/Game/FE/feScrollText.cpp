@@ -196,7 +196,11 @@ void FEScrollText::SetDisplayMessage(const BasicString<unsigned short, Detail::T
         if (origCh == nlEscapeSequence::ESCAPE_BEGIN)
         {
             nlEscapeSequence EscSeq(charPtr);
+#ifndef TARGET_PC
             int skipCount = ((int)EscSeq.m_pEnd - (int)charPtr) / 2;
+#else
+            int skipCount = ((uintptr_t)EscSeq.m_pEnd - (uintptr_t)charPtr) / 2;
+#endif
             i += skipCount - 1;
         }
         else

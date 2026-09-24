@@ -37,8 +37,13 @@ struct GLViewportUserData
     /* 0x02 */ u16 y;
     /* 0x04 */ u16 w;
     /* 0x06 */ u16 h;
+#ifndef TARGET_PC
     /* 0x08 */ u32 view;
     /* 0x0C */ u32 projection;
+#else
+    /* 0x08 */ uintptr_t view;
+    /* 0x0C */ uintptr_t projection;
+#endif
 }; // total size: 0x10
 
 #ifdef TARGET_PC

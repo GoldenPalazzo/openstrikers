@@ -176,7 +176,11 @@ public:
     void MakeSaveEvent(bool bIsSTS);
     void UpdateActionState(float fDeltaTime);
     void SetGoalieAction(eGoalieActionState newGoalieState, int newSubstate);
+#ifndef TARGET_PC
     static void SaveBlendCallback(unsigned int nParam, cPN_SAnimController* pAnimCtrl);
+#else
+    static void SaveBlendCallback(uintptr_t nParam, cPN_SAnimController* pAnimCtrl);
+#endif
     cPoseNode* SetupBlender(bool bPrimary, const float* fStartPercent, int nMainAnimID, int nMilestone);
     void PlayBlendedAnims(float fStartTime, int nMilestone);
     void PlayNewAnim(int nAnimID);
@@ -231,11 +235,19 @@ public:
     void ActionLooseBallPickup(float fDeltaT);
     void ActionLooseBallPursueRolling(float deltaTime);
     void ActionLooseBallSetup(float fDeltaT);
+#ifndef TARGET_PC
     static void MoveDirectionCB(unsigned int nParam, cPN_SingleAxisBlender* blender);
     static void MoveWeightCB(unsigned int nParam, cPN_SingleAxisBlender* blender);
     static void StrafeSynchronizedSpeedCallback(unsigned int nParam, cPN_SAnimController* controller);
     void ActionMove(float deltaTime);
     static void RunWeightCB(unsigned int nParam, cPN_SingleAxisBlender* blender);
+#else
+    static void MoveDirectionCB(uintptr_t nParam, cPN_SingleAxisBlender* blender);
+    static void MoveWeightCB(uintptr_t nParam, cPN_SingleAxisBlender* blender);
+    static void StrafeSynchronizedSpeedCallback(uintptr_t nParam, cPN_SAnimController* controller);
+    void ActionMove(float deltaTime);
+    static void RunWeightCB(uintptr_t nParam, cPN_SingleAxisBlender* blender);
+#endif
 
     void StartRunBlend();
 

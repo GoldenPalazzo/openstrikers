@@ -38,7 +38,11 @@ public:
     /* 0x18 */ u32 m_TextureHandle;
     /* 0x1C */ char m_szTexture[64];
     /* 0x5C */ char m_szStadium[64];
+#ifndef TARGET_PC
     /* 0x9C */ u32 m_BundleLoadBase;
+#else
+    /* 0x9C */ uintptr_t m_BundleLoadBase;
+#endif
 
     static CrowdManager instance;
 }; // total size: 0xA0

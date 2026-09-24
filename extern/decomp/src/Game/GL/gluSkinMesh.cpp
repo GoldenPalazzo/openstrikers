@@ -180,8 +180,13 @@ void ShaderSkinMesh::AttachSkinData(unsigned long program, const nlMatrix4* pRef
         }
         else
         {
+#ifndef TARGET_PC
             pPacket->streams[0].address = (u32)outVertices;
             pPacket->streams[1].address = (u32)outNormals;
+#else
+            pPacket->streams[0].address = (uintptr_t)outVertices;
+            pPacket->streams[1].address = (uintptr_t)outNormals;
+#endif
             pPacket->streams[1].stride = 0xC;
         }
 

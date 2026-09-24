@@ -1359,7 +1359,11 @@ void Goalie::DoNavigation(float fDeltaT, float fIdleDistance, Goalie::eNaviMode 
     cBall* pBall;
     s16 aGoalie2Ball;
     u16 absBallAngleDiff;
+#ifndef TARGET_PC
     unsigned int nParam;
+#else
+    uintptr_t nParam;
+#endif
     int eAnimID;
     int nCurrentAnimID;
     int nFinalAnim;
@@ -1817,7 +1821,11 @@ void Goalie::DoNavigation(float fDeltaT, float fIdleDistance, Goalie::eNaviMode 
     cPN_SingleAxisBlender* pSAB_R = CreateSingleAxisBlender(nRightAnims, 3, 1, MoveWeightCB, 0.1f, 0);
 
     cPN_SingleAxisBlender* pSAB = pSAB_L;
+#ifndef TARGET_PC
     nParam = (unsigned int)this;
+#else
+    nParam = (uintptr_t)this;
+#endif
     cPN_SAnimController* pPrevCtrlr = 0;
     int j;
 
@@ -1837,7 +1845,11 @@ void Goalie::DoNavigation(float fDeltaT, float fIdleDistance, Goalie::eNaviMode 
                 if (pPrevCtrlr == 0)
                 {
                     pCtrlr->m_funcSychronizedWeightCallback = StrafeSynchronizedSpeedCallback;
+#ifndef TARGET_PC
                     pCtrlr->m_nSynchronizedWeightCallbackParam = (unsigned int)this;
+#else
+                    pCtrlr->m_nSynchronizedWeightCallbackParam = (uintptr_t)this;
+#endif
                     pCtrlr->m_fSynchronizedWeight = 0.0f;
                 }
                 else
@@ -3340,7 +3352,11 @@ void Goalie::SetGoalieAction(eGoalieActionState newGoalieState, int newSubstate)
 /**
  * Offset/Address/Size: 0x5F40 | 0x80048A3C | size: 0x64
  */
+#ifndef TARGET_PC
 void Goalie::SaveBlendCallback(unsigned int nParam, cPN_SAnimController* pAnimCtrl)
+#else
+void Goalie::SaveBlendCallback(uintptr_t nParam, cPN_SAnimController* pAnimCtrl)
+#endif
 {
     Goalie* pThis = reinterpret_cast<Goalie*>(nParam & ~3U);
     unsigned int saveDataIndex = nParam & 3U;
@@ -3391,7 +3407,11 @@ cPoseNode* Goalie::SetupBlender(bool bPrimary, const float* fStartPercent, int n
         index2 = 3;
     }
     int animID = GetAnimID(mBlendInfo, index1);
+#ifndef TARGET_PC
     pSaveController1 = NewAnimController(animID, false, false, SaveBlendCallback, index1 + (unsigned int)this);
+#else
+    pSaveController1 = NewAnimController(animID, false, false, SaveBlendCallback, index1 + (uintptr_t)this);
+#endif
     pSaveController1->m_fPlaybackSpeedScale = mBlendInfo.mfMilestoneScale[index1][nMilestone];
     if (fStartPercent[index1] > 0.0f)
     {
@@ -3410,7 +3430,11 @@ cPoseNode* Goalie::SetupBlender(bool bPrimary, const float* fStartPercent, int n
     if (fBlend >= 0.001f)
     {
         animID = GetAnimID(mBlendInfo, index2);
+#ifndef TARGET_PC
         cPN_SAnimController* pSaveController2 = NewAnimController(animID, false, false, SaveBlendCallback, index2 + (unsigned int)this);
+#else
+        cPN_SAnimController* pSaveController2 = NewAnimController(animID, false, false, SaveBlendCallback, index2 + (uintptr_t)this);
+#endif
         pSaveController2->m_fPlaybackSpeedScale = mBlendInfo.mfMilestoneScale[index2][nMilestone];
         if (fStartPercent[index2] > 0.0f)
         {

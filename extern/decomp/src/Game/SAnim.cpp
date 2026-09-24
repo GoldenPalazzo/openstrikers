@@ -496,7 +496,11 @@ void cSAnim::GetRootTrans(float t, nlVector3* out) const
 /**
  * Offset/Address/Size: 0x160 | 0x801E9374 | size: 0x80
  */
+#ifndef TARGET_PC
 void cSAnim::CreateCallback(float fTime, unsigned int nParam1, void (*funcCallback)(unsigned int))
+#else
+void cSAnim::CreateCallback(float fTime, uintptr_t nParam1, void (*funcCallback)(uintptr_t))
+#endif
 {
     cSAnimCallback* pCallback;
     pCallback = (cSAnimCallback*)nlMalloc(sizeof(cSAnimCallback), 8, 0);

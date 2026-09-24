@@ -63,7 +63,11 @@ bool Audio::TrackMgrFileNameParamLookup(const char* param, char* out, unsigned l
 
     case (s32)0xB59118F1:
     {
+#ifndef TARGET_PC
         u32 outValue = (u32)GetTeamName(nlSingleton<GameInfoManager>::Instance()->GetTeam(1));
+#else
+        uintptr_t outValue = (uintptr_t)GetTeamName(nlSingleton<GameInfoManager>::Instance()->GetTeam(1));
+#endif
         nlStrNCpy(out, (const char*)outValue, size);
         break;
     }
@@ -149,7 +153,11 @@ bool Audio::TrackMgrFileNameParamLookup(const char* param, char* out, unsigned l
     {
         int sideInt = g_pTeams[0]->m_nScore < g_pTeams[1]->m_nScore;
         s16 side = (s16)sideInt;
+#ifndef TARGET_PC
         u32 outValue = (u32)GetTeamName(nlSingleton<GameInfoManager>::Instance()->GetTeam(side));
+#else
+        uintptr_t outValue = (uintptr_t)GetTeamName(nlSingleton<GameInfoManager>::Instance()->GetTeam(side));
+#endif
         nlStrNCpy(out, (const char*)outValue, size);
         break;
     }

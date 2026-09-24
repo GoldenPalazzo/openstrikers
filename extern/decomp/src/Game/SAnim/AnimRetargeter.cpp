@@ -28,7 +28,11 @@ static inline void* GetChunkData_ARL(nlChunk* chunk)
     if (((-alignField) | alignField) >> 31)
     {
         alignField = 1u << (alignField >> 24);
+#ifndef TARGET_PC
         u32 result = (u32)chunk + alignField;
+#else
+        uintptr_t result = (uintptr_t)chunk + alignField;
+#endif
         result = (result + 7) & ~(alignField - 1);
         return (void*)result;
     }

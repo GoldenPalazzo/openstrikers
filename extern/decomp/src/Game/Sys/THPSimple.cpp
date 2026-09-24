@@ -244,7 +244,11 @@ extern "C" int THPSimpleInit(long audioSystem)
         {
             memset(SoundBuffer, 0, sizeof(SoundBuffer));
             DCFlushRange(SoundBuffer, sizeof(SoundBuffer));
+#ifndef TARGET_PC
             AIInitDMA((u32)SoundBuffer[SoundBufferIndex], 0x280);
+#else
+            AIInitDMA((uintptr_t)SoundBuffer[SoundBufferIndex], 0x280);
+#endif
             AIStartDMA();
         }
     }
@@ -1025,7 +1029,11 @@ static void THPAudioMixCallback()
     if (AudioSystem == 0)
     {
         SoundBufferIndex ^= 1;
+#ifndef TARGET_PC
         AIInitDMA((u32)SoundBuffer[SoundBufferIndex], 0x280);
+#else
+        AIInitDMA((uintptr_t)SoundBuffer[SoundBufferIndex], 0x280);
+#endif
         BOOL old = OSEnableInterrupts();
         MixAudio(SoundBuffer[SoundBufferIndex], NULL, 0xA0);
         DCFlushRange(SoundBuffer[SoundBufferIndex], 0x280);
@@ -1040,16 +1048,28 @@ static void THPAudioMixCallback()
                 CurAudioBuffer = LastAudioBuffer;
             }
             OldAIDCallback();
+#ifndef TARGET_PC
             LastAudioBuffer = (s16*)((u32)AIGetDMAStartAddr() + 0x80000000);
+#else
+            LastAudioBuffer = (s16*)((uintptr_t)AIGetDMAStartAddr() + 0x80000000);
+#endif
         }
         else
         {
             OldAIDCallback();
+#ifndef TARGET_PC
             CurAudioBuffer = (s16*)((u32)AIGetDMAStartAddr() + 0x80000000);
+#else
+            CurAudioBuffer = (s16*)((uintptr_t)AIGetDMAStartAddr() + 0x80000000);
+#endif
         }
 
         SoundBufferIndex ^= 1;
+#ifndef TARGET_PC
         AIInitDMA((u32)SoundBuffer[SoundBufferIndex], 0x280);
+#else
+        AIInitDMA((uintptr_t)SoundBuffer[SoundBufferIndex], 0x280);
+#endif
         BOOL old = OSEnableInterrupts();
 
         if (CurAudioBuffer != NULL)

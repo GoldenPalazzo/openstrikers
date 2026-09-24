@@ -55,7 +55,11 @@ s32 MemCard::BeginCardAccess(const MemCardFunctor& Callback)
     m_CardState = CS_MOUNTING;
 
     u8* workArea = m_CardWorkArea + CARD_SEG_SIZE - 1;
+#ifndef TARGET_PC
     workArea = (u8*)(((u32)workArea) & ~(CARD_SEG_SIZE - 1));
+#else
+    workArea = (u8*)(((uintptr_t)workArea) & ~(CARD_SEG_SIZE - 1));
+#endif
 
     result = CARDMountAsync(m_Slot, workArea, CardRemovedCB, MountDoneCB);
     if (result != 0)

@@ -158,7 +158,11 @@ void SkinAnimatedNPC::DrawShadow(const cPoseAccumulator& poseAccumulator, const 
  */
 void SkinAnimatedNPC::SetAnimState(cSAnim& pAnim, float fBlendTime, ePlayMode playMode)
 {
+#ifndef TARGET_PC
     cPN_SAnimController* controller = ::new (AllocateSAnimController()) cPN_SAnimController(&pAnim, (const AnimRetarget*)0, playMode, (void (*)(unsigned int, cPN_SAnimController*))0, (unsigned int)0, (bool)0);
+#else
+    cPN_SAnimController* controller = ::new (AllocateSAnimController()) cPN_SAnimController(&pAnim, (const AnimRetarget*)0, playMode, (void (*)(uintptr_t, cPN_SAnimController*))0, (uintptr_t)0, (bool)0);
+#endif
 
     if (mpPoseTree != NULL && fBlendTime > 0.0f)
     {

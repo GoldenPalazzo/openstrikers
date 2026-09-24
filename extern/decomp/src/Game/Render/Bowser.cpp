@@ -38,10 +38,17 @@ float Bowser::mfYAxisTilt = 0.0f;
 /**
  * Offset/Address/Size: 0x4BBC | 0x8015D930 | size: 0x2C
  */
+#ifndef TARGET_PC
 static void AnimSoundCallback(unsigned int eventID)
 {
     g_pEventManager->CreateValidEvent(eventID, 0x14);
 }
+#else
+static void AnimSoundCallback(uintptr_t eventID)
+{
+    g_pEventManager->CreateValidEvent(eventID, 0x14);
+}
+#endif
 
 /**
  * Offset/Address/Size: 0x4638 | 0x8015D3AC | size: 0x584
@@ -883,8 +890,13 @@ void Bowser::ActionThrow()
         mpAnim[BOWSER_ANIM_THROW],
         (const AnimRetarget*)0,
         PM_HOLD,
+#ifndef TARGET_PC
         (void (*)(unsigned int, cPN_SAnimController*))0,
         (unsigned int)0,
+#else
+        (void (*)(uintptr_t, cPN_SAnimController*))0,
+        (uintptr_t)0,
+#endif
         (bool)0);
     mpFeatherController = controller;
 
@@ -935,7 +947,11 @@ void Bowser::ActionStomp()
     nlVector3 vel;
     mAnimID = 1;
     cPN_SAnimController* controller = AllocateSAnimController();
+#ifndef TARGET_PC
     controller = ::new (controller) cPN_SAnimController(mpAnim[1], (const AnimRetarget*)0, PM_HOLD, (void (*)(unsigned int, cPN_SAnimController*))0, (unsigned int)0, (bool)0);
+#else
+    controller = ::new (controller) cPN_SAnimController(mpAnim[1], (const AnimRetarget*)0, PM_HOLD, (void (*)(uintptr_t, cPN_SAnimController*))0, (uintptr_t)0, (bool)0);
+#endif
     if (mpFeatherBlender->GetChild(0) != NULL)
     {
         delete mpFeatherBlender->GetChild(0);
@@ -1012,7 +1028,11 @@ void Bowser::ActionFall()
     mAnimID = BOWSER_ANIM_LAND;
 
     cPN_SAnimController* controller = ::new (AllocateSAnimController()) cPN_SAnimController(
+#ifndef TARGET_PC
         mpAnim[BOWSER_ANIM_LAND], (const AnimRetarget*)0, PM_HOLD, (void (*)(unsigned int, cPN_SAnimController*))0, (unsigned int)0, (bool)0);
+#else
+        mpAnim[BOWSER_ANIM_LAND], (const AnimRetarget*)0, PM_HOLD, (void (*)(uintptr_t, cPN_SAnimController*))0, (uintptr_t)0, (bool)0);
+#endif
 
     if (mpFeatherBlender->GetChild(0) != NULL)
     {
@@ -1659,7 +1679,11 @@ void Bowser::PlaySFX(Audio::eCharSFX type, PosUpdateMethod posUpdateMethod, floa
 
 void Bowser::SetBowserAnimState(eBowserAnim anim, ePlayMode playMode, float fBlendTime)
 {
+#ifndef TARGET_PC
     cPN_SAnimController* controller = ::new (AllocateSAnimController()) cPN_SAnimController(mpAnim[anim], (const AnimRetarget*)0, playMode, (void (*)(unsigned int, cPN_SAnimController*))0, (unsigned int)0, (bool)0);
+#else
+    cPN_SAnimController* controller = ::new (AllocateSAnimController()) cPN_SAnimController(mpAnim[anim], (const AnimRetarget*)0, playMode, (void (*)(uintptr_t, cPN_SAnimController*))0, (uintptr_t)0, (bool)0);
+#endif
 
     cPoseNode* pNewPoseTree;
 
@@ -1693,7 +1717,11 @@ void Bowser::SetBowserFeatherAnimState(eBowserAnim anim, float fBlendTime)
     }
 
     mpFeatherController = ::new (AllocateSAnimController()) cPN_SAnimController(
+#ifndef TARGET_PC
         mpAnim[anim], (const AnimRetarget*)0, PM_HOLD, (void (*)(unsigned int, cPN_SAnimController*))0, (unsigned int)0, (bool)0);
+#else
+        mpAnim[anim], (const AnimRetarget*)0, PM_HOLD, (void (*)(uintptr_t, cPN_SAnimController*))0, (uintptr_t)0, (bool)0);
+#endif
     mpFeatherBlender->ClearNodeWeights();
     mpFeatherBlender->SetNodeWeight(0xE, 1.0f, 0.2f);
     mpFeatherBlender->SetChild(1, mpFeatherController);

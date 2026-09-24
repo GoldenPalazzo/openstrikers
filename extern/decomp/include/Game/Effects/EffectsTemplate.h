@@ -61,7 +61,11 @@ public:
     /* 0x6C */ eEffectsEmitter m_eEmitter;
     /* 0x70 */ eEffectsBlend m_eBlend;
     /* 0x74 */ eEffectsBillboard m_eBillboard;
+#ifndef TARGET_PC
     /* 0x78 */ u32 m_hTexture;
+#else
+    /* 0x78 */ uintptr_t m_hTexture;
+#endif
     /* 0x7C */ s32 m_nFrames;
     /* 0x80 */ fxRange m_rFPS;
     /* 0x88 */ nlColour m_cColour[25];

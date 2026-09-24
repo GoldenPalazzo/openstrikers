@@ -79,7 +79,11 @@ void RunningChecksum::ChecksumData(const void* pData, unsigned long nDataLen)
     const u8* pByte = (const u8*)pData;
     const unsigned long* p32;
 
+#ifndef TARGET_PC
     while (((u32)pByte & 3) && nDataLen != 0)
+#else
+    while (((uintptr_t)pByte & 3) && nDataLen != 0)
+#endif
     {
         u32 temp = m_nChecksum;
         nDataLen--;

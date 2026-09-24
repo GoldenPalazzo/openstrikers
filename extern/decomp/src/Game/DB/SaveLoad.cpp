@@ -114,7 +114,11 @@ static void ConstructIconCfg(MemCard::ICON_CONFIG& IconCfg)
 
 static inline TEXHeaderPtr GetTPLImageHeader(TEXPalettePtr tpl)
 {
+#ifndef TARGET_PC
     return ((TEXDescriptorPtr)((u8*)tpl + (u32)tpl->descriptorArray))->textureHeader;
+#else
+    return ((TEXDescriptorPtr)((u8*)tpl + (uintptr_t)tpl->descriptorArray))->textureHeader;
+#endif
 }
 
 /**
@@ -487,7 +491,11 @@ inline long SaveCallbacks::DoSave(unsigned long Slot)
         bannerDataInfo.pHeaderData = (unsigned char*)gIconDataCache.mIconHdrBuffer;
         TEXPalettePtr bannerTpl = (TEXPalettePtr)gIconDataCache.mBannerBuffer;
         TEXHeaderPtr bannerHeader = GetTPLImageHeader(bannerTpl);
+#ifndef TARGET_PC
         void* srcBanner = (u8*)bannerTpl + (u32)((TEXHeaderPtr)((u8*)bannerTpl + (u32)bannerHeader))->data;
+#else
+        void* srcBanner = (u8*)bannerTpl + (uintptr_t)((TEXHeaderPtr)((u8*)bannerTpl + (uintptr_t)bannerHeader))->data;
+#endif
         void* destBanner = bannerDataInfo.pHeaderData + bannerDataInfo.BannerOffset;
         u8 bannerFmt = m_pSaveFile->IconCfg.BannerFormat;
         memcpy(destBanner, srcBanner, ((bannerFmt == 1) ? 0x200 : 0) + bannerFmt * 0xC00);
@@ -499,7 +507,11 @@ inline long SaveCallbacks::DoSave(unsigned long Slot)
         TEXHeaderPtr iconHeader = GetTPLImageHeader(iconTpl);
         memcpy(
             iconDataInfo.pHeaderData + iconDataInfo.IconOffset[0],
+#ifndef TARGET_PC
             (u8*)iconTpl + (u32)((TEXHeaderPtr)((u8*)iconTpl + (u32)iconHeader))->data,
+#else
+            (u8*)iconTpl + (uintptr_t)((TEXHeaderPtr)((u8*)iconTpl + (uintptr_t)iconHeader))->data,
+#endif
             m_pSaveFile->IconCfg.IconFormat << 10);
 
         char iconFmtH = m_pSaveFile->IconCfg.IconFormat;
@@ -598,7 +610,11 @@ unsigned long SaveCallbacks::CreateFileCB(unsigned long Slot, long Result, void*
     bannerDataInfo.pHeaderData = (unsigned char*)gIconDataCache.mIconHdrBuffer;
     TEXPalettePtr bannerTpl = (TEXPalettePtr)gIconDataCache.mBannerBuffer;
     TEXHeaderPtr bannerHeader = GetTPLImageHeader(bannerTpl);
+#ifndef TARGET_PC
     void* srcBanner = (u8*)bannerTpl + (u32)((TEXHeaderPtr)((u8*)bannerTpl + (u32)bannerHeader))->data;
+#else
+    void* srcBanner = (u8*)bannerTpl + (uintptr_t)((TEXHeaderPtr)((u8*)bannerTpl + (uintptr_t)bannerHeader))->data;
+#endif
     u8 bannerFmt = m_pSaveFile->IconCfg.BannerFormat;
     memcpy((u8*)gIconDataCache.mIconHdrBuffer + bannerDataInfo.BannerOffset, srcBanner, ((bannerFmt == 1) ? 0x200 : 0) + bannerFmt * 0xC00);
 
@@ -609,7 +625,11 @@ unsigned long SaveCallbacks::CreateFileCB(unsigned long Slot, long Result, void*
     TEXHeaderPtr iconHeader = GetTPLImageHeader(iconTpl);
     memcpy(
         iconDataInfo.pHeaderData + iconDataInfo.IconOffset[0],
+#ifndef TARGET_PC
         (u8*)iconTpl + (u32)((TEXHeaderPtr)((u8*)iconTpl + (u32)iconHeader))->data,
+#else
+        (u8*)iconTpl + (uintptr_t)((TEXHeaderPtr)((u8*)iconTpl + (uintptr_t)iconHeader))->data,
+#endif
         m_pSaveFile->IconCfg.IconFormat << 10);
 
     char iconFmtH = m_pSaveFile->IconCfg.IconFormat;
@@ -711,7 +731,11 @@ inline unsigned long SaveCallbacks::CardMountCB(unsigned long Slot, long Result,
         bannerDataInfo.pHeaderData = (unsigned char*)gIconDataCache.mIconHdrBuffer;
         TEXPalettePtr bannerTpl = (TEXPalettePtr)gIconDataCache.mBannerBuffer;
         TEXHeaderPtr bannerHeader = GetTPLImageHeader(bannerTpl);
+#ifndef TARGET_PC
         void* srcBanner = (u8*)bannerTpl + (u32)((TEXHeaderPtr)((u8*)bannerTpl + (u32)bannerHeader))->data;
+#else
+        void* srcBanner = (u8*)bannerTpl + (uintptr_t)((TEXHeaderPtr)((u8*)bannerTpl + (uintptr_t)bannerHeader))->data;
+#endif
         void* destBanner = bannerDataInfo.pHeaderData + bannerDataInfo.BannerOffset;
         u8 bannerFmt = m_pSaveFile->IconCfg.BannerFormat;
         memcpy(
@@ -724,7 +748,11 @@ inline unsigned long SaveCallbacks::CardMountCB(unsigned long Slot, long Result,
         TEXHeaderPtr iconHeader = GetTPLImageHeader(iconTpl);
         memcpy(
             iconDataInfo.pHeaderData + iconDataInfo.IconOffset[0],
+#ifndef TARGET_PC
             (u8*)iconTpl + (u32)((TEXHeaderPtr)((u8*)iconTpl + (u32)iconHeader))->data,
+#else
+            (u8*)iconTpl + (uintptr_t)((TEXHeaderPtr)((u8*)iconTpl + (uintptr_t)iconHeader))->data,
+#endif
             m_pSaveFile->IconCfg.IconFormat << 10);
 
         MemCard::MC_FILE* fileH = m_pSaveFile;

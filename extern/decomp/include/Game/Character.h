@@ -132,8 +132,13 @@ public:
     void CreateWorldMatrix();
     void PoseSkinMesh(cPoseAccumulator* pPoseAccumulator);
     void PoseLocalSpace();
+#ifndef TARGET_PC
     cPN_SAnimController* NewAnimController(int animID, bool bRestartCyclic, bool bForceMirrorSwap, void (*funcPlaybackSpeedCallback)(unsigned int, cPN_SAnimController*), unsigned int nPlaybackSpeedCallbackParam);
     static void MatchAnimSpeedToCharacterSpeed(unsigned int nParam, cPN_SAnimController* pController);
+#else
+    cPN_SAnimController* NewAnimController(int animID, bool bRestartCyclic, bool bForceMirrorSwap, void (*funcPlaybackSpeedCallback)(uintptr_t, cPN_SAnimController*), unsigned int nPlaybackSpeedCallbackParam);
+    static void MatchAnimSpeedToCharacterSpeed(uintptr_t nParam, cPN_SAnimController* pController);
+#endif
     void InitMovementStrafing(float fDirectionSeekSpeed, float fDirectionSeekFalloff, float fAccel, float fDecel);
     void InitMovementRunningNoTurn(float fAccel, float fDecel);
     void InitMovementRunning(float fDirectionSeekSpeed, float fDirectionSeekFalloff, float fAccel, float fDecel);

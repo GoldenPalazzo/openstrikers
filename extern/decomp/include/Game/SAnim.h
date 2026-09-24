@@ -48,8 +48,13 @@ class cSAnimCallback
 {
 public:
     /* 0x0 */ float m_fTime;
+#ifndef TARGET_PC
     /* 0x4 */ unsigned int m_nParam1;
     /* 0x8 */ void (*m_funcCallback)(unsigned int);
+#else
+    /* 0x4 */ uintptr_t m_nParam1;
+    /* 0x8 */ void (*m_funcCallback)(uintptr_t);
+#endif
     /* 0xC */ cSAnimCallback* next;
 }; // total size: 0x10
 
@@ -125,7 +130,11 @@ inline void* nlChunk::GetUnalignedData()
 inline void* nlChunk::GetAlignedData()
 {
     u32 alignment = 1u << (GetChunkAlignment() >> 24);
+#ifndef TARGET_PC
     return (void*)nlAlignUp((unsigned int)GetUnalignedData(), alignment);
+#else
+    return (void*)nlAlignUp((uintptr_t)GetUnalignedData(), (uintptr_t)alignment);
+#endif
 }
 
 inline u32 nlChunk::GetChunkAlignment()
@@ -177,7 +186,11 @@ public:
     void Destroy();
     void GetRootRot(float fTime, unsigned short* pRootRot) const;
     void GetRootTrans(float t, nlVector3* out) const;
+#ifndef TARGET_PC
     void CreateCallback(float fTime, unsigned int nParam1, void (*funcCallback)(unsigned int));
+#else
+    void CreateCallback(float fTime, uintptr_t nParam1, void (*funcCallback)(uintptr_t));
+#endif
     float GetMorphWeight(int channel, float fTime) const;
 
     cSAnimCallback* GetCallbackList() const

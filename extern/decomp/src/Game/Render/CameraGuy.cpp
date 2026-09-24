@@ -22,9 +22,15 @@ inline int GetCameraSpinMax()
     return 0x8000;
 }
 
+#ifndef TARGET_PC
 static u16 g_aCameraOOIConstraint = GetCameraOOIConstraint();
 static int g_nCameraSpinMax = (int)GetCameraOOIConstraint();
 static int g_nCameraTiltMax = GetCameraTiltMax();
+#else
+u16 g_aCameraOOIConstraint = GetCameraOOIConstraint();
+int g_nCameraSpinMax = (int)GetCameraOOIConstraint();
+int g_nCameraTiltMax = GetCameraTiltMax();
+#endif
 
 static const float kUnitsToRad = 0.0000958738f;
 inline float AngUnitsToRad_fromFloat(float fUnits)
@@ -36,7 +42,11 @@ inline float AngUnitsToRad_fromFloat(float fUnits)
 /**
  * Offset/Address/Size: 0x1D0 | 0x8015DB34 | size: 0x1AC
  */
+#ifndef TARGET_PC
 static void CameraGuyHeadTrackUpdateCallback(unsigned int ctx, unsigned int arg1, cPoseAccumulator* poseAccumulator, unsigned int arg3, int arg4)
+#else
+static void CameraGuyHeadTrackUpdateCallback(uintptr_t ctx, unsigned int arg1, cPoseAccumulator* poseAccumulator, unsigned int arg3, int arg4)
+#endif
 {
     nlMatrix4 m4Intermediate;  // r1+0x88
     nlMatrix4 m4RotMatrix;     // r1+0x48
@@ -77,7 +87,11 @@ CameraGuy::CameraGuy(cSHierarchy& pHierarchy, int nModelID)
  */
 void CameraGuy::Init()
 {
+#ifndef TARGET_PC
     mpPoseAccumulator->SetBuildNodeMatrixCallback(2, CameraGuyHeadTrackUpdateCallback, (unsigned int)this, 0);
+#else
+    mpPoseAccumulator->SetBuildNodeMatrixCallback(2, CameraGuyHeadTrackUpdateCallback, (uintptr_t)this, 0);
+#endif
 }
 
 /**

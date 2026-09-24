@@ -266,7 +266,11 @@ void DrawableCharacter::Grab(cCharacter& character)
 /**
  * Offset/Address/Size: 0x29F0 | 0x8011B8A0 | size: 0x2C
  */
+#ifndef TARGET_PC
 static void DrawableCharacterHeadTrackCallback(unsigned int ctx, unsigned int, cPoseAccumulator* poseAccumulator, unsigned int currentNodeIndex, int)
+#else
+static void DrawableCharacterHeadTrackCallback(uintptr_t ctx, unsigned int, cPoseAccumulator* poseAccumulator, unsigned int currentNodeIndex, int)
+#endif
 {
     DrawableCharacter* drawableChar = (DrawableCharacter*)ctx;
     CalcHeadTrackMatrix(drawableChar->mHeadSpin, drawableChar->mHeadTilt, poseAccumulator, currentNodeIndex);
@@ -275,7 +279,11 @@ static void DrawableCharacterHeadTrackCallback(unsigned int ctx, unsigned int, c
 /**
  * Offset/Address/Size: 0x290C | 0x8011B7BC | size: 0xE4
  */
+#ifndef TARGET_PC
 void DrawableCharacter::DrawableBowserHeadTrackCallback(unsigned int ctx, unsigned int nParam2, cPoseAccumulator* poseAccumulator, unsigned int currentNodeIndex, int nParentIndex)
+#else
+void DrawableCharacter::DrawableBowserHeadTrackCallback(uintptr_t ctx, unsigned int nParam2, cPoseAccumulator* poseAccumulator, unsigned int currentNodeIndex, int nParentIndex)
+#endif
 {
     DrawableCharacter* drawableChar = (DrawableCharacter*)ctx;
     nlMatrix4& nodeMatrix = poseAccumulator->GetNodeMatrix(currentNodeIndex);
@@ -294,6 +302,7 @@ void DrawableCharacter::BuildNodeMatrices()
 
     worldMatrix.SetRow_(3, mPosition);
 
+#ifndef TARGET_PC
     if (mCharacter != nullptr)
     {
         mPoseAccumulator->SetBuildNodeMatrixCallback(mCharacter->m_nHeadJointIndex, DrawableCharacterHeadTrackCallback, (unsigned int)this, 0);
@@ -305,6 +314,19 @@ void DrawableCharacter::BuildNodeMatrices()
             mPoseAccumulator->SetBuildNodeMatrixCallback(mBowser->mnHeadJointIndex, DrawableBowserHeadTrackCallback, (unsigned int)this, 0);
         }
     }
+#else
+    if (mCharacter != nullptr)
+    {
+        mPoseAccumulator->SetBuildNodeMatrixCallback(mCharacter->m_nHeadJointIndex, DrawableCharacterHeadTrackCallback, (uintptr_t)this, 0);
+    }
+    else
+    {
+        if (mBowser != nullptr)
+        {
+            mPoseAccumulator->SetBuildNodeMatrixCallback(mBowser->mnHeadJointIndex, DrawableBowserHeadTrackCallback, (uintptr_t)this, 0);
+        }
+    }
+#endif
 
     mPoseAccumulator->BuildNodeMatrices(worldMatrix);
 
@@ -998,6 +1020,7 @@ void DrawableCharacter::Blend(const float* blendFactors, const DrawableCharacter
     rotMatrix.e2[3][0] = mPosition.x;
     rotMatrix.e2[3][1] = mPosition.y;
     rotMatrix.e2[3][2] = mPosition.z;
+#ifndef TARGET_PC
     if (mCharacter != nullptr)
     {
         mPoseAccumulator->SetBuildNodeMatrixCallback(mCharacter->m_nHeadJointIndex, DrawableCharacterHeadTrackCallback, (unsigned int)this, 0);
@@ -1006,6 +1029,16 @@ void DrawableCharacter::Blend(const float* blendFactors, const DrawableCharacter
     {
         mPoseAccumulator->SetBuildNodeMatrixCallback(mBowser->mnHeadJointIndex, DrawableBowserHeadTrackCallback, (unsigned int)this, 0);
     }
+#else
+    if (mCharacter != nullptr)
+    {
+        mPoseAccumulator->SetBuildNodeMatrixCallback(mCharacter->m_nHeadJointIndex, DrawableCharacterHeadTrackCallback, (uintptr_t)this, 0);
+    }
+    else if (mBowser != nullptr)
+    {
+        mPoseAccumulator->SetBuildNodeMatrixCallback(mBowser->mnHeadJointIndex, DrawableBowserHeadTrackCallback, (uintptr_t)this, 0);
+    }
+#endif
     mPoseAccumulator->BuildNodeMatrices(rotMatrix);
     if (mCharacter != nullptr)
     {
@@ -1045,6 +1078,7 @@ void DrawableCharacter::EvaluateFrom(const cPoseNode& poseNode, const nlVector3&
     nlMakeRotationMatrixZ(rotMatrix, angle);
     rotMatrix.SetRow_(3, mPosition);
 
+#ifndef TARGET_PC
     if (mCharacter != nullptr)
     {
         mPoseAccumulator->SetBuildNodeMatrixCallback(mCharacter->m_nHeadJointIndex, DrawableCharacterHeadTrackCallback, (unsigned int)this, 0);
@@ -1056,6 +1090,19 @@ void DrawableCharacter::EvaluateFrom(const cPoseNode& poseNode, const nlVector3&
             mPoseAccumulator->SetBuildNodeMatrixCallback(mBowser->mnHeadJointIndex, DrawableBowserHeadTrackCallback, (unsigned int)this, 0);
         }
     }
+#else
+    if (mCharacter != nullptr)
+    {
+        mPoseAccumulator->SetBuildNodeMatrixCallback(mCharacter->m_nHeadJointIndex, DrawableCharacterHeadTrackCallback, (uintptr_t)this, 0);
+    }
+    else
+    {
+        if (mBowser != nullptr)
+        {
+            mPoseAccumulator->SetBuildNodeMatrixCallback(mBowser->mnHeadJointIndex, DrawableBowserHeadTrackCallback, (uintptr_t)this, 0);
+        }
+    }
+#endif
 
     mPoseAccumulator->BuildNodeMatrices(rotMatrix);
 

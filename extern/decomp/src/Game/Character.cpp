@@ -1722,7 +1722,11 @@ void cCharacter::InitMovementStrafing(float fDirectionSeekSpeed, float fDirectio
 /**
  * Offset/Address/Size: 0x15AC | 0x8000F4F8 | size: 0xD4
  */
+#ifndef TARGET_PC
 void cCharacter::MatchAnimSpeedToCharacterSpeed(unsigned int nParam, cPN_SAnimController* pController)
+#else
+void cCharacter::MatchAnimSpeedToCharacterSpeed(uintptr_t nParam, cPN_SAnimController* pController)
+#endif
 {
     cFielder* fielder = (cFielder*)nParam;
     if (fielder->m_eMovementState != MOVEMENT_FROM_ANIM && fielder->m_eMovementState != MOVEMENT_FROM_ANIM_SEEK)
@@ -1746,12 +1750,21 @@ void cCharacter::MatchAnimSpeedToCharacterSpeed(unsigned int nParam, cPN_SAnimCo
 /**
  * Offset/Address/Size: 0x1270 | 0x8000F1BC | size: 0x33C
  */
+#ifndef TARGET_PC
 cPN_SAnimController* cCharacter::NewAnimController(int animID, bool bRestartCyclic, bool bForceMirrorSwap, void (*funcPlaybackSpeedCallback)(unsigned int, cPN_SAnimController*), unsigned int nPlaybackSpeedCallbackParam)
+#else
+cPN_SAnimController* cCharacter::NewAnimController(int animID, bool bRestartCyclic, bool bForceMirrorSwap, void (*funcPlaybackSpeedCallback)(uintptr_t, cPN_SAnimController*), unsigned int nPlaybackSpeedCallbackParam)
+#endif
 {
     bool restartCyclic = bRestartCyclic;
     bool forceMirrorSwap = bForceMirrorSwap;
+#ifndef TARGET_PC
     void (*playbackSpeedCallback)(unsigned int, cPN_SAnimController*) = funcPlaybackSpeedCallback;
     unsigned int playbackSpeedCallbackParam = (unsigned int)this;
+#else
+    void (*playbackSpeedCallback)(uintptr_t, cPN_SAnimController*) = funcPlaybackSpeedCallback;
+    uintptr_t playbackSpeedCallbackParam = (uintptr_t)this;
+#endif
 
     if (m_pAnimInventory->GetMatchCharacterSpeed(animID))
     {

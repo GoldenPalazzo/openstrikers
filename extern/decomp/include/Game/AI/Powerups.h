@@ -126,7 +126,11 @@ public:
     /* 0x50 */ const char* m_szStreakTexture;
     /* 0x54 */ f32 m_fBlurWidth;
     /* 0x58 */ f32 m_fBlurLength;
+#ifndef TARGET_PC
     /* 0x5C */ u32 m_uVoiceID;
+#else
+    /* 0x5C */ uintptr_t m_uVoiceID; // gets used both as ptr and as handle
+#endif
     /* 0x60 */ BlurHandler* m_pBlurHandler;
     /* 0x64 */ s32 m_nIndex;
     /* 0x68 */ s32 m_nThrowerPadID;

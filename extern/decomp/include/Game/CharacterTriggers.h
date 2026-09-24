@@ -50,7 +50,11 @@ void EmitBallPass(cPlayer* pPlayer);
 void EmitBallImpact(cPlayer* pPlayer, bool bSilent);
 float GetCurrentAnimTriggerTime(cCharacter* pCharacter, unsigned long uTriggerID, unsigned int uInstanceNumber);
 void GetAnimTriggerInfo(cCharacter* pCharacter, int animIndex, bool (*callback)(float, float, unsigned long, float, void*), void* pData);
+#ifndef TARGET_PC
 void CharacterTriggerHandler(unsigned int uParam);
+#else
+void CharacterTriggerHandler(uintptr_t uParam);
+#endif
 EmissionController* EmitGeneric(cCharacter* pCharacter, const char* baseName, const char* characterName);
 void UpdateEmitterFromBall(EmissionController& emitter);
 void UpdateEmitterFromCharacterIdxWithCoordSys(EmissionController& ec, int characterIdx);

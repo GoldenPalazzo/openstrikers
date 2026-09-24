@@ -4263,7 +4263,11 @@ void cFielder::SetIdleWBAnimState()
     InitMovementRunning(pTweaks->fRunningWBDirectionSeekSpeed, pTweaks->fRunningWBDirectionSeekFalloff, pTweaks->fRunningWBAccel, pTweaks->fRunningWBDecel);
 }
 
+#ifndef TARGET_PC
 void cFielder::JogRunSynchronizedWeightCallback(unsigned int nParam, cPN_SAnimController* pController)
+#else
+void cFielder::JogRunSynchronizedWeightCallback(uintptr_t nParam, cPN_SAnimController* pController)
+#endif
 {
     cFielder* pChar = (cFielder*)nParam;
     if (pChar->m_eAnimID == 0x07 || pChar->m_eAnimID == 0x1A)
@@ -4276,7 +4280,11 @@ void cFielder::JogRunSynchronizedWeightCallback(unsigned int nParam, cPN_SAnimCo
     }
 }
 
+#ifndef TARGET_PC
 void cFielder::JogRunSABcallback(unsigned int nParam1, cPN_SingleAxisBlender* pSAB)
+#else
+void cFielder::JogRunSABcallback(uintptr_t nParam1, cPN_SingleAxisBlender* pSAB)
+#endif
 {
     cFielder* pChar = (cFielder*)nParam1;
     if (pChar->m_eAnimID == 0x07)
@@ -4296,7 +4304,11 @@ void cFielder::JogRunSABcallback(unsigned int nParam1, cPN_SingleAxisBlender* pS
 /**
  * Offset/Address/Size: 0x4CA8 | 0x8001DFE4 | size: 0x54
  */
+#ifndef TARGET_PC
 void cFielder::RunningSABcallback(unsigned int nParam1, cPN_SingleAxisBlender* pSAB)
+#else
+void cFielder::RunningSABcallback(uintptr_t nParam1, cPN_SingleAxisBlender* pSAB)
+#endif
 {
     cFielder* pThis = (cFielder*)nParam1;
 
@@ -4345,10 +4357,10 @@ void cFielder::SetJogRunLeanSAB(
 {
     cPN_SAnimController* pJoggingController = NewAnimController(nJogAnim, false, false, NULL, 0);
     pJoggingController->m_funcSychronizedWeightCallback = JogRunSynchronizedWeightCallback;
-    pJoggingController->m_nSynchronizedWeightCallbackParam = (unsigned int)this;
+    pJoggingController->m_nSynchronizedWeightCallbackParam = (uintptr_t)this;
     pJoggingController->m_fSynchronizedWeight = 0.0f;
 
-    cPN_SingleAxisBlender* pRunningSAB = ::new (AllocateSingleAxisBlender()) cPN_SingleAxisBlender(2, JogRunSABcallback, (unsigned int)this, 0.1f);
+    cPN_SingleAxisBlender* pRunningSAB = ::new (AllocateSingleAxisBlender()) cPN_SingleAxisBlender(2, JogRunSABcallback, (uintptr_t)this, 0.1f);
     pRunningSAB->SetChild(0, pJoggingController);
     pRunningSAB->SetChild(1,
         CreateSingleAxisBlender(pRunningAnims, nNumRunningAnims, nPrimaryRunningAnim, RunningSABcallback, 0.1f, pJoggingController));

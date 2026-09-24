@@ -18,6 +18,10 @@ bool glx_GetSharedLock();
 void glx_UnlockSharedMemory();
 void glx_LockSharedMemory();
 u32 glx_GetSharedMemorySize();
+#ifndef TARGET_PC
 u32 glx_GetSharedMemory();
+#else
+uintptr_t glx_GetSharedMemory();
+#endif
 
 #endif // _GLXTARGET_H_

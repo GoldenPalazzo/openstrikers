@@ -220,7 +220,11 @@ void NisPlayer::HandleAsyncs()
                 }
 
                 char* loadAt = mMemory + memoryOffset;
+#ifndef TARGET_PC
                 loadAt = loadAt + (0x20 - ((unsigned int)loadAt & 0x1F));
+#else
+                loadAt = loadAt + (0x20 - ((uintptr_t)loadAt & 0x1F));
+#endif
 
                 if (!mLoadingFromBack)
                 {

@@ -20,7 +20,11 @@ public:
         , m_fTime(0.0f)
     {
     }
+#ifndef TARGET_PC
     cPN_SAnimController(cSAnim* pSAnim, const AnimRetarget* pAnimRetarget, ePlayMode playMode, void (*funcPlaybackSpeedCallback)(unsigned int, cPN_SAnimController*), unsigned int nPlaybackSpeedCallbackParam, bool bMirror);
+#else
+    cPN_SAnimController(cSAnim* pSAnim, const AnimRetarget* pAnimRetarget, ePlayMode playMode, void (*funcPlaybackSpeedCallback)(uintptr_t, cPN_SAnimController*), uintptr_t nPlaybackSpeedCallbackParam, bool bMirror);
+#endif
     /* 0x08 */ virtual ~cPN_SAnimController() { };
     static void* operator new(unsigned long)
     {
@@ -44,11 +48,18 @@ public:
     {
         Replayable<0>(frame, (cPoseNode&)*this);
         Replayable<0>(frame, FloatCompressor<0, 1, 15>(m_fTime));
-
+#ifndef TARGET_PC
         unsigned int animPtr = 0;
+#else
+        uintptr_t animPtr = 0;
+#endif
         if (!ReplayFrameTraits<T>::IsLoadFrame)
         {
+#ifndef TARGET_PC
             animPtr = (unsigned int)m_pSAnim;
+#else
+            animPtr = (uintptr_t)m_pSAnim;
+#endif
             if (m_bMirror)
                 animPtr |= 1;
         }
@@ -90,13 +101,23 @@ public:
     /* 0x28 */ ePlayMode m_ePlayMode;
     /* 0x2C */ mutable float m_fWeight;
     /* 0x30 */ bool m_bIgnoreTriggers;
+#ifndef TARGET_PC
     /* 0x34 */ void (*m_funcPlaybackSpeedCallback)(unsigned int, class cPN_SAnimController*);
     /* 0x38 */ unsigned int m_nPlaybackSpeedCallbackParam;
+#else
+    /* 0x34 */ void (*m_funcPlaybackSpeedCallback)(uintptr_t, class cPN_SAnimController*);
+    /* 0x38 */ uintptr_t m_nPlaybackSpeedCallbackParam;
+#endif
     /* 0x3C */ float m_fPlaybackSpeedScale;
     /* 0x40 */ bool m_bIsSynchronized;
     /* 0x44 */ cPN_SAnimController* m_pSynchronizedController;
+#ifndef TARGET_PC
     /* 0x48 */ void (*m_funcSychronizedWeightCallback)(unsigned int, class cPN_SAnimController*);
     /* 0x4C */ unsigned int m_nSynchronizedWeightCallbackParam;
+#else
+    /* 0x4C */ uintptr_t m_nSynchronizedWeightCallbackParam;
+    /* 0x48 */ void (*m_funcSychronizedWeightCallback)(uintptr_t, class cPN_SAnimController*);
+#endif
     /* 0x50 */ float m_fSynchronizedWeight;
 
     static SlotPool<cPN_SAnimController> m_SAnimControllerSlotPool;

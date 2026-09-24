@@ -346,7 +346,11 @@ void Nis::Trigger::FireEffect(const Nis& nis) const
         EmissionController* ctrl = EmissionManager::Create(group, 0);
         if (ctrl == NULL)
             return;
+#ifndef TARGET_PC
         ctrl->m_uUserData = (u32)player;
+#else
+        ctrl->m_uUserData = (uintptr_t)player;
+#endif
         {
             Function1<void, EmissionController&> update(UpdateEmitterFromBall);
             ctrl->SetUpdateCallback(update);
@@ -377,7 +381,11 @@ void Nis::Trigger::FireEffect(const Nis& nis) const
         if (ctrl == NULL)
             return;
         ctrl->SetAnimController(*nis.mCharacterControllers[charIdx]);
+#ifndef TARGET_PC
         ctrl->m_uUserData = (u32)player;
+#else
+        ctrl->m_uUserData = (uintptr_t)player;
+#endif
         if (!nis.mMirrored)
         {
             nlVector3 mirror = { -1.0f, 1.0f, 1.0f };
@@ -404,7 +412,11 @@ void Nis::Trigger::FireEffect(const Nis& nis) const
             return;
         nlVector3 velocity = { 0.0f, 0.0f, 1.0f };
         EmissionController* ctrl = EmissionManager::Create(fxGetGroup(name), 0);
+#ifndef TARGET_PC
         ctrl->m_uUserData = (u32)player;
+#else
+        ctrl->m_uUserData = (uintptr_t)player;
+#endif
         ctrl->SetVelocity(velocity);
         ctrl->SetPosition(helperObj->m_worldMatrix.GetTranslation());
         ctrl->m_fGround = 0.02f;

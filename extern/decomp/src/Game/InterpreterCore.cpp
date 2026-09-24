@@ -9,7 +9,11 @@
  */
 InterpreterCore::InterpreterCore(unsigned int size)
 {
+#ifndef TARGET_PC
     m_StackSegment = (u32*)nlMalloc(size * 4);
+#else
+    m_StackSegment = (uintptr_t*)nlMalloc(size * sizeof(uintptr_t));
+#endif
     m_Header = NULL;
 }
 
@@ -163,7 +167,11 @@ void InterpreterCore::Step()
     u16 instr;
     u16 op_high;
     u16 op_low;
+#ifndef TARGET_PC
     u32* volatile saved_bp;
+#else
+    uintptr_t* volatile saved_bp;
+#endif
     u16* volatile saved_ip;
 
     instr = *m_IP;
@@ -178,7 +186,11 @@ void InterpreterCore::Step()
         break;
 
     case 0x4000:
+#ifndef TARGET_PC
         *m_SP = (u32)(m_Header->m_StringSegment + op_low);
+#else
+        *m_SP = (uintptr_t)(m_Header->m_StringSegment + op_low);
+#endif
         m_SP++;
         break;
 
@@ -192,7 +204,11 @@ void InterpreterCore::Step()
         {
         case 0x0:
             saved_bp = m_BP;
+#ifndef TARGET_PC
             *m_SP = (u32)m_BP;
+#else
+            *m_SP = (uintptr_t)m_BP;
+#endif
             m_SP++;
             m_BP = m_SP;
             m_SP += (op_low & 0xFF);
@@ -201,7 +217,11 @@ void InterpreterCore::Step()
         case 0x1:
             m_SP -= (op_low & 0xFF);
             m_SP--;
+#ifndef TARGET_PC
             m_BP = (u32*)(*m_SP);
+#else
+            m_BP = (uintptr_t*)(*m_SP);
+#endif
             break;
 
         case 0x2:
@@ -265,7 +285,11 @@ void InterpreterCore::Step()
         {
             u8 index;
             saved_ip = m_IP;
+#ifndef TARGET_PC
             *m_SP = (u32)m_IP;
+#else
+            *m_SP = (uintptr_t)m_IP;
+#endif
             m_SP++;
             index = (u8)(op_low & 0xFF);
             m_IP = (u16*)((u8*)m_Header->m_CodeSegment + (m_Header->m_FunctionTable[index].offset & ~1));

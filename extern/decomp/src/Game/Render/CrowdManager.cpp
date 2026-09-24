@@ -31,7 +31,11 @@ void CrowdManager::Initialize()
     m_TextureHandle = glGetTexture(m_szTexture);
 
     GCTextureSize(GXTex_CMPR, 256, 512, 6, -1); // Result discarded
+#ifndef TARGET_PC
     m_BundleLoadBase = (u32)glResourceAlloc(0x155A0, GLM_TextureData);
+#else
+    m_BundleLoadBase = (uintptr_t)glResourceAlloc(0x155A0, GLM_TextureData);
+#endif
 
     PlatTexture* platTex = glx_CreatePlatTexture();
     platTex->CreateWithMemory(256, 512, GXTex_CMPR, 6, (void*)(m_BundleLoadBase + 0x60));

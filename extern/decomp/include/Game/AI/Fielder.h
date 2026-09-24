@@ -310,9 +310,15 @@ public:
     void SetIdleStrafeAnimState();
     void SetIdleAnimState();
     void SetIdleWBAnimState();
+#ifndef TARGET_PC
     static void JogRunSynchronizedWeightCallback(unsigned int nParam, cPN_SAnimController* pController);
     static void JogRunSABcallback(unsigned int nParam1, cPN_SingleAxisBlender* pSAB);
     static void RunningSABcallback(unsigned int nParam1, cPN_SingleAxisBlender* pSAB);
+#else
+    static void JogRunSynchronizedWeightCallback(uintptr_t nParam, cPN_SAnimController* pController);
+    static void JogRunSABcallback(uintptr_t nParam1, cPN_SingleAxisBlender* pSAB);
+    static void RunningSABcallback(uintptr_t nParam1, cPN_SingleAxisBlender* pSAB);
+#endif
     void SetRunLeanSAB(const int* pSABAnims, int nNumSABAnims, int nPrimaryAnim);
     void SetJogRunLeanSAB(
         const int* pRunningAnims, int nNumRunningAnims, int nPrimaryRunningAnim, int nJogAnim, float fBlendTime, float fWeightSeek);

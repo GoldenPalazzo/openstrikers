@@ -203,7 +203,11 @@ void DrawableNetMesh::Render() const
         pModel->id = (u32)-1;
         pModel->numPackets = 1;
         pModel->packets = pPacket;
+#ifndef TARGET_PC
         pPacket->indexBuffer = (u32)pTriIndices;
+#else
+        pPacket->indexBuffer = (uintptr_t)pTriIndices;
+#endif
         pPacket->numStreams = 3;
         pPacket->numVertices = (u16)m_unk18;
         pPacket->primType = 1;
@@ -219,15 +223,25 @@ void DrawableNetMesh::Render() const
         }
         if (sbUseDisplayLists)
         {
+#ifndef TARGET_PC
             if ((u32)mNumVertices == 0)
             {
                 mNumQuads = pPacket->indexBuffer;
                 mNumVertices = (int)dlMakeDisplayList(pPacket, true);
             }
             pPacket->indexBuffer = (u32)mNumVertices;
+#else
+            if ((uintptr_t)mNumVertices == 0)
+            {
+                mNumQuads = pPacket->indexBuffer;
+                mNumVertices = (intptr_t)dlMakeDisplayList(pPacket, true);
+            }
+            pPacket->indexBuffer = (uintptr_t)mNumVertices;
+#endif
         }
         DCFlushRange(pPosition, (unsigned long)mJolt * (unsigned long)sizeof(nlVector3));
 
+#ifndef TARGET_PC
         pStreams[0].id = GLStream_Position;
         pStreams[0].address = (u32)pPosition;
         pStreams[0].stride = (u8)gl_stream_stride[0];
@@ -239,6 +253,19 @@ void DrawableNetMesh::Render() const
         pStreams[2].address = (u32)pTexcoord;
         pStreams[2].stride = (u8)gl_stream_stride[3];
 
+#else
+        pStreams[0].id = GLStream_Position;
+        pStreams[0].address = (uintptr_t)pPosition;
+        pStreams[0].stride = (u8)gl_stream_stride[0];
+        pColour = (nlColour*)spColour[miNetIndex];
+        pStreams[1].id = GLStream_Colour;
+        pStreams[1].address = (uintptr_t)pColour;
+        pStreams[1].stride = (u8)gl_stream_stride[2];
+        pStreams[2].id = GLStream_Diffuse;
+        pStreams[2].address = (uintptr_t)pTexcoord;
+        pStreams[2].stride = (u8)gl_stream_stride[3];
+
+#endif
         void* pUserDataHandle = glUserAlloc(GLUD_ConstantColour, 4, false);
         pColour = (nlColour*)glUserGetData(pUserDataHandle);
         WorldDarkening& wd = WorldDarkening::Instance();
