@@ -6,6 +6,9 @@
 #include "NL/plat/plataudio.h"
 
 #include "Game/Render/Nis.h"
+#ifdef TARGET_PC
+extern f32 gfVolumeGroups[23];
+#endif
 
 namespace AudioStreamTrack
 {

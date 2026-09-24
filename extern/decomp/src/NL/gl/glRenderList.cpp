@@ -173,7 +173,11 @@ static const unsigned long glv_MaterialChanged = 0x400;
 static const unsigned long glv_UserStateKeyChanged = 0x200;
 static const unsigned long glv_RasterChanged = 0x08;
 static const unsigned long glv_TextureStateChanged = 0x10;
+#ifndef TARGET_PC
 static const unsigned long glv_MatrixChanged = 0x20;
+#else
+extern const unsigned long glv_MatrixChanged = 0x20;
+#endif
 static const unsigned long glv_TexConfigChanged = 0x80;
 static const unsigned long glv_TextureChanged = 0x4;
 static const unsigned long glv_StreamsChanged = 0x40;

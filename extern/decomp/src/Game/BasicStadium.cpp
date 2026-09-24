@@ -24,7 +24,11 @@
 #include "Game/Effects/EmissionManager.h"
 #include "Game/TrophyTextures.h"
 
+#ifndef TARGET_PC
 extern const unsigned long eOC_OPTIMIZE_OUT_FROM_GAMEPLAY;
+#else
+static const unsigned long eOC_OPTIMIZE_OUT_FROM_GAMEPLAY = 0x00008000;
+#endif
 static float g_fSkyboxRotationTime = 1420.0f;
 static float g_fCloudRotationTime = 720.0f;
 
@@ -654,4 +658,6 @@ BasicStadium* BasicStadium::GetCurrentStadium()
     return pBasicStadiumInstance;
 }
 
+#ifndef TARGET_PC
 static const unsigned long eOC_OPTIMIZE_OUT_FROM_GAMEPLAY = 0x00008000;
+#endif

@@ -18,7 +18,11 @@ SoundProperties SUPERCONCRETESoundProperties[] = { { "CHARSFX_RUN_01", "SFXCHAR_
     { "CHARSFX_DEKE_RIGHT", "SFXCHAR_SUPER_Deek_Right", 0.5f, 0.0f, 0.5f, 1, 0 },
     { "CHARSFX_BODYFALL", "SFXCHAR_SUPER_Bodyfall", 0.5f, 0.0f, 0.5f, 1, 0 } };
 
+#ifndef TARGET_PC
 static SUPERCONCRETESoundPropAccessor gSUPERCONCRETESoundPropAccessor;
+#else
+SUPERCONCRETESoundPropAccessor gSUPERCONCRETESoundPropAccessor;
+#endif
 SoundPropAccessor* gpSUPERCONCRETESoundPropAccessor = &gSUPERCONCRETESoundPropAccessor;
 
 /**

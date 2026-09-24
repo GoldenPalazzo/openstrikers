@@ -6,6 +6,9 @@
 #include "NL/nlDLListContainer.h"
 #include "NL/nlSlotPool.h"
 #include "NL/nlSortedSlot.h"
+#ifdef TARGET_PC
+#include "NL/nlString.h"
+#endif
 #include "NL/WalkHelper.h"
 
 namespace GCAudioStreaming

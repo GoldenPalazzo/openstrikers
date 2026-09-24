@@ -65,8 +65,13 @@ static void hitz_SwapBuffers();
 static void hitz_AdvanceFrame();
 static void simple_Post(bool);
 static void simple_Pre(bool);
+#ifndef TARGET_PC
 static void vi_post_cb(unsigned long);
 static void vi_pre_cb(unsigned long);
+#else
+static void vi_post_cb(u32);
+static void vi_pre_cb(u32);
+#endif
 static void loading_indicator();
 static void glx_ScreenCapture(bool);
 
@@ -496,7 +501,7 @@ void glxSwapWaitDrawDone()
 /**
  * Offset/Address/Size: 0x9BC | 0x801BF70C | size: 0x50
  */
-static void vi_post_cb(unsigned long)
+static void vi_post_cb(u32)
 {
     HandleSoftReset();
     if (glx_bLoadingIndicator != false)
@@ -513,7 +518,7 @@ static void vi_post_cb(unsigned long)
 /**
  * Offset/Address/Size: 0xA0C | 0x801BF75C | size: 0xC
  */
-static void vi_pre_cb(unsigned long)
+static void vi_pre_cb(u32)
 {
     bInRetrace = 1;
 }

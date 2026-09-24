@@ -234,16 +234,16 @@ public:
 
     static bool s_InitDone;
 
-    static void CardRemovedCB(long channel, long result) { g_MemCards[channel]->CardRemoved(result); }
-    static void MountDoneCB(long channel, long result) { g_MemCards[channel]->MountDone(result); }
-    static void CardCheckDoneCB(long channel, long result) { g_MemCards[channel]->CardCheckDone(result); }
-    static void CardCheckBrokenDoneCB(long channel, long result) { g_MemCards[channel]->CardCheckBrokenDone(result); }
-    static void FormatDoneCB(long channel, long result) { g_MemCards[channel]->FormatDone(result); }
-    static void CreateFileDoneCB(long channel, long result) { g_MemCards[channel]->CreateFileDone(result); }
-    static void DeleteFileDoneCB(long channel, long result) { g_MemCards[channel]->DeleteFileDone(result); }
-    static void WriteFileDoneCB(long channel, long result) { g_MemCards[channel]->WriteFileDone(result); }
-    static void ReadFileDoneCB(long channel, long result) { g_MemCards[channel]->ReadFileDone(result); }
-    static void SetStatusDoneCB(long channel, long result) { g_MemCards[channel]->SetStatusDone(result); }
+    static void CardRemovedCB(s32 channel, s32 result) { g_MemCards[channel]->CardRemoved(result); }
+    static void MountDoneCB(s32 channel, s32 result) { g_MemCards[channel]->MountDone(result); }
+    static void CardCheckDoneCB(s32 channel, s32 result) { g_MemCards[channel]->CardCheckDone(result); }
+    static void CardCheckBrokenDoneCB(s32 channel, s32 result) { g_MemCards[channel]->CardCheckBrokenDone(result); }
+    static void FormatDoneCB(s32 channel, s32 result) { g_MemCards[channel]->FormatDone(result); }
+    static void CreateFileDoneCB(s32 channel, s32 result) { g_MemCards[channel]->CreateFileDone(result); }
+    static void DeleteFileDoneCB(s32 channel, s32 result) { g_MemCards[channel]->DeleteFileDone(result); }
+    static void WriteFileDoneCB(s32 channel, s32 result) { g_MemCards[channel]->WriteFileDone(result); }
+    static void ReadFileDoneCB(s32 channel, s32 result) { g_MemCards[channel]->ReadFileDone(result); }
+    static void SetStatusDoneCB(s32 channel, s32 result) { g_MemCards[channel]->SetStatusDone(result); }
 }; // total size: 0xA620
 
 #endif // _GCMEMCARD_H_

@@ -10,7 +10,11 @@
 
 static glPoly2 g_poly[128];
 static float font_z;
+#ifndef TARGET_PC
 static void* handle;
+#else
+static u32 handle;
+#endif
 static bool bInsideBegin;
 static bool bDrop;
 static bool bEnabled;
@@ -207,7 +211,11 @@ void glFontVirtualPosToScreenCoordPos(float x, float y, float& outX, float& outY
  */
 void gl_FontStartup()
 {
+#ifndef TARGET_PC
     handle = (void*)glGetTexture("font/fixed8x8");
+#else
+    handle = glGetTexture("font/fixed8x8");
+#endif
     glplatCreateFont(0x40, 0x80, _fontData, (unsigned long)handle);
     bInsideBegin = 0;
     bEnabled = 1;

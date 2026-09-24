@@ -293,7 +293,11 @@ void glx_SendEnd()
     glx_SwitchUserData(nullptr);
 }
 
+#ifndef TARGET_PC
 extern const u32 glv_MatrixChanged;
+#else
+extern const unsigned long glv_MatrixChanged;
+#endif
 
 /**
  * Offset/Address/Size: 0x2B1C | 0x801BC61C | size: 0x2154
@@ -2583,4 +2587,6 @@ void glx_SendFrame_cb(eGLView view, unsigned long flags, const glModelPacket* p)
     }
 }
 
+#ifndef TARGET_PC
 static const u32 glv_MatrixChanged __attribute__((section(".sdata2"))) = 0x20;
+#endif

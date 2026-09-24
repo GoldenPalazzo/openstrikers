@@ -81,7 +81,11 @@ static SND_AUX_REVERBSTD gDPL2ReverbStdSettings;
 static SND_AUX_REVERBHI gDPL2ReverbHiSettings;
 
 Audio::SoundAttributes gDelayedSFX[15];
+#ifndef TARGET_PC
 static f32 gfVolumeGroups[23];
+#else
+f32 gfVolumeGroups[23];
+#endif
 #include "Game/Audio/AudioStream.h"
 const char* AUDIO_DEFAULT_VOLUMEGROUPS_CONFIG_FILE = "audio/VolumeGroups.ini";
 static float gfSilenceTimer = -1.0f;
@@ -1144,10 +1148,16 @@ static void ReadVolGroupSettings()
 namespace Audio
 {
 
+#ifndef TARGET_PC
 static inline char* GetStadiumStr(eStadiumID stadiumID)
 {
     char* retval;
 
+#else
+static inline const char* GetStadiumStr(eStadiumID stadiumID)
+{
+    const char* retval;
+#endif
     switch (stadiumID)
     {
     case STAD_MARIO_STADIUM:
@@ -1215,7 +1225,11 @@ bool InitializeReverb(eStadiumID stadiumID, unsigned char studio)
     }
     else
     {
+#ifndef TARGET_PC
         char* stadiumStr = GetStadiumStr(stadiumID);
+#else
+        const char* stadiumStr = GetStadiumStr(stadiumID);
+#endif
         nlStrNCpy(headerStr, stadiumStr, 0x50);
     }
 
@@ -2082,7 +2096,11 @@ unsigned long PlaySFXEventFromScript(const SoundEventData& sfxEventData, const c
     sndAtr.ms_EventName = sfxEventData.eventName;
     sndAtr.mi_GroupPriority = sfxEventData.eventPriority;
 
+#ifndef TARGET_PC
     char* pdest = strstr(szSFXType, "CROWDSFX");
+#else
+    const char* pdest = strstr(szSFXType, "CROWDSFX");
+#endif
     int loc = pdest - szSFXType;
     if (pdest != NULL && loc == 0)
     {
