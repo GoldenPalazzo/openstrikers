@@ -11,7 +11,7 @@
       let
         pkgs = import nixpkgs { inherit system; };
         tools = with pkgs; [
-          cmake ninja clang gdb pkg-config just git curl wget
+          cmake ninja clang libllvm gdb pkg-config just git curl wget
           python312 python312Packages.pip python312Packages.certifi
           renderdoc
         ];
