@@ -137,6 +137,7 @@ namespace port
         // golden TODO: this is extermely dangerous and should be removed
         // after all major refactors are done
         template <typename U>
+            requires(!std::is_same_v<std::remove_cv_t<T>, std::remove_cv_t<U>>)
         operator U*() const noexcept {
             return reinterpret_cast<U*>(get());
         }
