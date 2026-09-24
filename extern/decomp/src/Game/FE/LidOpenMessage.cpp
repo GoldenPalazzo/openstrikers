@@ -65975,7 +65975,11 @@ static void DisplayMessage(int imagewidth, int imageheight, const unsigned char*
     UncompressLidMessage(datastart, datasize, expanded);
 
     GXPokeColorUpdate(1);
+#ifndef TARGET_PC
     GXPokeBlendMode(0, 1, 0, 0xF);
+#else
+    GXPokeBlendMode((GXBlendMode)0, (GXBlendFactor)1, (GXBlendFactor)0, (GXLogicOp)0xF);
+#endif
 
     const int xStartTemp = (0x280 - imagewidth) / 2;
     centeredFlag = ((unsigned char)centered == 0);
