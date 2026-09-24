@@ -853,7 +853,11 @@ void World::CreateHelperObjFromChunk(nlChunk* chunk)
         u8* pChunkData = (u8*)chunk;
         pChunkData = pChunkData + alignBytes;
         pChunkData = pChunkData + 7;
+#ifndef TARGET_PC
         pWorldHelperChunkData = (WorldHelperChunkData*)((u32)pChunkData & ~(alignBytes - 1));
+#else
+        pWorldHelperChunkData = (WorldHelperChunkData*)((uintptr_t)pChunkData & ~(alignBytes - 1));
+#endif
     }
     else
     {
