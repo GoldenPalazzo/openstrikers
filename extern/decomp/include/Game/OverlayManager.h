@@ -19,6 +19,7 @@ enum OverlaySlideName
     NUM_SLIDE_NAMES = 8,
 };
 
+#ifndef TARGET_PC
 static char* TEAM_SLIDE_NAMES[8] = {
     "DAISY",
     "DK",
@@ -29,6 +30,18 @@ static char* TEAM_SLIDE_NAMES[8] = {
     "WARIO",
     "YOSHI"
 };
+#else
+static const char* TEAM_SLIDE_NAMES[8] = {
+    "DAISY",
+    "DK",
+    "LUIGI",
+    "MARIO",
+    "PEACH",
+    "WALUIGI",
+    "WARIO",
+    "YOSHI"
+};
+#endif
 
 class OverlayManager : public BaseGameSceneManager, public nlSingleton<OverlayManager>
 {
