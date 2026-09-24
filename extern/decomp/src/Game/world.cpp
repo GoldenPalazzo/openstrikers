@@ -571,7 +571,11 @@ bool World::LoadObjectData(const char* szWorldName)
         case 0x19201:
             CreateHelperObjFromChunk(pChunk);
             break;
+#ifndef TARGET_PC
         case (int)0x8001D000:
+#else
+        case 0x8001D000: // don't know why this was casted tbh
+#endif
             LoadPhysicsPrimitives(pChunk);
             break;
         }
