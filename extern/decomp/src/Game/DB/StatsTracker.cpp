@@ -7,8 +7,10 @@
 #include "NL/nlFormat.h"
 #include "PowerPC_EABI_Support/MSL_C/MSL_Common/direct_io.h"
 
+#ifndef TARGET_PC
 template <>
 StatsTracker* nlSingleton<StatsTracker>::s_pInstance = 0;
+#endif
 
 static const char* STATS_FILE = "statsfile.csv";
 

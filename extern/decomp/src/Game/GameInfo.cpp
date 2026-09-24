@@ -25,8 +25,10 @@ static bool isGiantUnlocked = false;
 static bool isExplosiveUnlocked = false;
 static bool isFreezingUnlocked = false;
 
+#ifndef TARGET_PC
 template <>
 GameInfoManager* nlSingleton<GameInfoManager>::s_pInstance = 0;
+#endif
 
 bool inline CheckUnlockStatus(const bool& globalFlag, const unsigned char& trophyValue, const unsigned int bit)
 {

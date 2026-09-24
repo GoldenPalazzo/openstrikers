@@ -1,7 +1,9 @@
 #include "Game/GameSceneManager.h"
 
+#ifndef TARGET_PC
 template <>
 GameSceneManager* nlSingleton<GameSceneManager>::s_pInstance = 0;
+#endif
 
 /**
  * Offset/Address/Size: 0x80 | 0x80096C18 | size: 0x3C

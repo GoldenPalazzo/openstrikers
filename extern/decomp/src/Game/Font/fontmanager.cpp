@@ -5,8 +5,10 @@
 #include "NL/gl/glTexture.h"
 #include "NL/nlBundleFile.h"
 
+#ifndef TARGET_PC
 template <>
 FontManager* nlSingleton<FontManager>::s_pInstance = 0;
+#endif
 
 /**
  * Offset/Address/Size: 0x4CC | 0x80209B60 | size: 0x70

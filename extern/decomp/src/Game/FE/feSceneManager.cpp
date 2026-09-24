@@ -8,8 +8,10 @@
 
 extern FEInput* g_pFEInput;
 
+#ifndef TARGET_PC
 template <>
 FESceneManager* nlSingleton<FESceneManager>::s_pInstance = 0;
+#endif
 
 SlotPool<PackagePushPopMessage> PackagePushPopMessage::m_PushPopMessageSlotPool(0x14, 0);
 nlDLListSlotPool<PackagePushPopMessage*> m_pushPopMessageQueue(0x14, 0);

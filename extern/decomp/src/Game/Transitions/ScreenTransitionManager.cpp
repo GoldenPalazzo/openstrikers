@@ -12,8 +12,10 @@
 #include "NL/nlMath.h"
 #include "NL/nlString.h"
 
+#ifndef TARGET_PC
 template <>
 ScreenTransitionManager* nlSingleton<ScreenTransitionManager>::s_pInstance = 0;
+#endif
 
 /**
  * Offset/Address/Size: 0x9DC | 0x80205ACC | size: 0xA4

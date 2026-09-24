@@ -40,10 +40,10 @@ public:
     /* 0x48 */ unsigned long mSwapTextureID;
 }; // total size: 0x4C
 
-#ifdef TARGET_PC
+#ifndef TARGET_PC
 template<>
-#endif
 FEAnimModelManager* nlSingleton<FEAnimModelManager>::s_pInstance = NULL;
+#endif
 
 /**
  * Offset/Address/Size: 0x3E8 | 0x80094B94 | size: 0xB0

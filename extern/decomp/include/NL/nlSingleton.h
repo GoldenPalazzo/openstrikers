@@ -26,7 +26,11 @@ public:
             s_pInstance = 0;
         }
     }
+#ifndef TARGET_PC
     static T* s_pInstance;
+#else
+    static inline T* s_pInstance = nullptr;
+#endif
 };
 
 #endif // NL_SINGLETON_H

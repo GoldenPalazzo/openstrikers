@@ -20,8 +20,10 @@ static BundleFile* s_pPermanentBundle;
 static BundleFile* s_pOnDemandBundle;
 static FESceneResource* s_pPermanentBundleSceneResource;
 
+#ifndef TARGET_PC
 template <>
 FEResourceManager* nlSingleton<FEResourceManager>::s_pInstance = 0;
+#endif
 
 void FEResourceManager::AddResourceToResourceList(FEResourceHandle* pFEResourceHandle)
 {

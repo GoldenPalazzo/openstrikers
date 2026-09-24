@@ -18,8 +18,10 @@
 #include "NL/nlConfig.h"
 #include "Game/main.h"
 
+#ifndef TARGET_PC
 template <>
 OverlayManager* nlSingleton<OverlayManager>::s_pInstance = 0;
+#endif
 
 static bool isSlowMotionOn;
 static bool isGoalScored;
