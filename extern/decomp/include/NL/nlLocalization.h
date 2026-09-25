@@ -1,13 +1,24 @@
 #ifndef _NLLOCALIZATION_H_
 #define _NLLOCALIZATION_H_
 
+#ifdef TARGET_PC
+#include "port/endian.hpp"
+#endif
+
 struct LOCHeader
 {
     char Thumbprint[4];
+#ifndef TARGET_PC
     unsigned long Version;
     unsigned long Language;
     unsigned long StringCount;
     unsigned long Flags;
+#else
+    port::be<u32> Version;
+    port::be<u32> Language;
+    port::be<u32> StringCount;
+    port::be<u32> Flags;
+#endif
 };
 
 class nlLocalization
@@ -15,10 +26,17 @@ class nlLocalization
 public:
     struct StringLookup
     {
+#ifndef TARGET_PC
         unsigned long hash;
         unsigned long StringOffset;
 
         operator unsigned long() const { return hash; }
+#else
+        port::be<u32> hash;
+        port::be<u32> StringOffset;
+
+        operator u32() const { return hash; }
+#endif
     };
 
     enum nlLanguage
