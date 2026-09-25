@@ -4,6 +4,20 @@
 #include <cstdarg>
 #include <utility>
 
+namespace port
+{
+    void SelfRelPtr32OutOfRange(const void* field, const void* target, long long offset)
+    {
+        fprintf(stderr,
+                "SelfRelPtr32: target %p is out of range from field %p "
+                "(offset %lld, limit +/-2GiB).\n"
+                "The target is not in the game arena -- a stack local, a global, or "
+                "a string literal cannot be stored in a self-relative pointer.\n",
+                target, field, offset);
+        abort();
+    }
+}
+
 extern "C" int __float_max[] = { 0x7F7FFFFF };
 extern "C" float __float_min[] = { 0x00800000 };
 extern "C" int __float_nan[] = { 0x7FFFFFFF };

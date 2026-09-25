@@ -22,6 +22,10 @@ constexpr T bswap(T val) noexcept
 namespace port
 {
     static constexpr uint32_t SELFREL_NULL = 0xFFFFFFFFu;
+
+    // Reports a target that a 32-bit self-relative pointer cannot reach, and
+    // aborts.
+    [[noreturn]] void SelfRelPtr32OutOfRange(const void* field, const void* target, long long offset);
     template <typename T>
     struct be {
         static_assert(std::is_trivially_copyable_v<T>, "BE<T> requires a POD type");
@@ -85,16 +89,37 @@ namespace port
             return *this;
         }
 
+        be& operator&=(T v) noexcept {
+            *this = static_cast<T>(*this) & v;
+            return *this;
+        }
+
+        be& operator^=(T v) noexcept {
+            *this = static_cast<T>(*this) ^ v;
+            return *this;
+        }
+
     };
     static_assert(sizeof(be<char>) == 1);
 
-    template <typename T>
-    struct SelfRelPtr32 {
+    enum class RelNull
+    {
+        Sentinel,
+        SentinelOrZero
+    };
+
+    template <typename T, RelNull Nulls>
+    struct RelPtr32 {
         be<int32_t> m_relativeOffset;
+
+        static constexpr uint32_t NullEncoding =
+            (Nulls == RelNull::SentinelOrZero) ? 0u : SELFREL_NULL;
 
         T* get() const noexcept {
             uint32_t raw = static_cast<uint32_t>(m_relativeOffset.val);
             if (raw == SELFREL_NULL) return nullptr;
+            if constexpr (Nulls == RelNull::SentinelOrZero)
+                if (raw == 0) return nullptr;
 
             uintptr_t base = reinterpret_cast<uintptr_t>(this);
             intptr_t offset = static_cast<int32_t>(m_relativeOffset);
@@ -102,28 +127,29 @@ namespace port
             return reinterpret_cast<T*>(base + offset);
         }
 
-        SelfRelPtr32& operator=(T* target) noexcept {
+        RelPtr32& operator=(T* target) noexcept {
             if (!target) {
-                m_relativeOffset = SELFREL_NULL;
+                m_relativeOffset = static_cast<int32_t>(NullEncoding);
             } else {
                 uintptr_t base = reinterpret_cast<uintptr_t>(this);
                 uintptr_t dest = reinterpret_cast<uintptr_t>(target);
                 intptr_t offset = dest-base;
-                assert(offset >= INT32_MIN && offset <= INT32_MAX && "SelfRelPtr32 offset overflow");
-                int32_t diff = static_cast<int32_t>(offset);
-                m_relativeOffset = diff;
+                if (offset < INT32_MIN || offset > INT32_MAX) {
+                    SelfRelPtr32OutOfRange(this, target, (long long)offset);
+                }
+                m_relativeOffset = static_cast<int32_t>(offset);
             }
             return *this;
         }
 
-        SelfRelPtr32& operator=(std::nullptr_t) noexcept {
-            m_relativeOffset = SELFREL_NULL;
+        RelPtr32& operator=(std::nullptr_t) noexcept {
+            m_relativeOffset = static_cast<int32_t>(NullEncoding);
             return *this;
         }
 
         template <typename Integral>
         requires std::is_integral_v<Integral>
-        SelfRelPtr32& operator=(Integral /*val*/) noexcept {
+        RelPtr32& operator=(Integral /*val*/) noexcept {
             m_relativeOffset = SELFREL_NULL;
             return *this;
         }
@@ -146,6 +172,10 @@ namespace port
             return get() == other;
         }
     };
+    template <typename T> using SelfRelPtr32 = RelPtr32<T, RelNull::Sentinel>;
+    template <typename T> using UnrelocatedRelPtr32 = RelPtr32<T, RelNull::SentinelOrZero>;
+    static_assert(sizeof(RelPtr32<int, RelNull::Sentinel>) == 4);
     static_assert(sizeof(SelfRelPtr32<char>) == 4);
+    static_assert(sizeof(UnrelocatedRelPtr32<void>) == 4);
 
 }
