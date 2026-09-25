@@ -3,6 +3,7 @@
 #include "NL/nlAlgorithm.h"
 #include "NL/nlFont.h"
 #include "NL/nlLocalization.h"
+#include "NL/nlMemory.h"
 #include "NL/nlTextBox.h"
 
 static inline const nlFont* GetFontFromComponent(TLComponent* comp)
@@ -19,6 +20,42 @@ static inline const nlFont* GetFontFromComponent(TLComponent* comp)
     return ((const FontResource*)comp->pChildren)->m_font;
 }
 
+#ifdef TARGET_PC
+// same rationale behind the nlLocalization arena scratch
+static nlMatrix4* GetArenaMatrixScratch()
+{
+    static nlMatrix4* pScratch = NULL;
+    if (pScratch == NULL)
+    {
+        pScratch = (nlMatrix4*)nlMalloc(sizeof(nlMatrix4), 32, false);
+    }
+    return pScratch;
+}
+
+static unsigned short* GetArenaStringScratch(unsigned long chars)
+{
+    static unsigned short* pScratch = NULL;
+    static unsigned long capacity = 0;
+
+    if (chars > capacity)
+    {
+        if (pScratch != NULL)
+        {
+            nlFree(pScratch);
+        }
+        pScratch = (unsigned short*)nlMalloc(chars * sizeof(unsigned short), 32, false);
+        capacity = chars;
+    }
+    return pScratch;
+}
+
+void TLTextInstance::SetMatrix(nlMatrix4* pMatrix)
+{
+    nlMatrix4* pArenaMatrix = GetArenaMatrixScratch();
+    *pArenaMatrix = *pMatrix;
+    m_DrawInfo.pMatrix = pArenaMatrix;
+}
+#endif
 /**
  * Offset/Address/Size: 0x0 | 0x802101D8 | size: 0x1C
  */
@@ -38,7 +75,11 @@ void TLTextInstance::SetString(const unsigned short* utf16)
 {
     m_wcUserString = utf16;
     m_pFontString = NULL;
+#ifndef TARGET_PC
     m_OverloadFlags &= 0xFFFFFFF7;
+#else
+    m_OverloadFlags &= 0xFFFFFFF7u;
+#endif
 }
 
 /**
@@ -97,7 +138,11 @@ void TLTextInstance::Render(eGLView view, const nlColour& colour) const
 
     if (pWideTextString != NULL)
     {
+#ifndef TARGET_PC
         unsigned short* buffer = (unsigned short*)__alloca((nlStrLen<unsigned short>(pWideTextString) + 1) * sizeof(unsigned short));
+#else
+        unsigned short* buffer = GetArenaStringScratch(nlStrLen<unsigned short>(pWideTextString) + 1);
+#endif
 
         pFont = GetFontFromComponent(component);
         FontCharString charString(pWideTextString, pFont, buffer);

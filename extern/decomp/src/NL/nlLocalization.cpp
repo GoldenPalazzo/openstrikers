@@ -2,6 +2,9 @@
 #include "NL/nlMemory.h"
 #include "NL/nlFile.h"
 #include "NL/nlPrint.h"
+#ifdef TARGET_PC
+#include "NL/nlString.h"
+#endif
 
 extern const unsigned short LocalizationTableNotFound[] = {
     'L','o','c','a','l','i','z','a','t','i','o','n',' ','T','a','b','l','e',' ',
@@ -10,6 +13,46 @@ extern const unsigned short LocalizationTableNotFound[] = {
 extern const unsigned short MissingLocString[] = {
     'm','i','s','s','i','n','g',' ','l','o','c',' ','s','t','r','i','n','g', 0
 };
+
+#ifdef TARGET_PC
+// since pointers to localization table errors aren't allocated in the arena,
+// it's possible that they can't be addressed by a relpointer, so each
+// reference of LocalizationTableNotFound and MissingLocString will be an
+// arena copy
+const unsigned short* staticLocArena(const unsigned short* pString)
+{
+    static const unsigned short* pSource[2] = { NULL, NULL };
+    static const unsigned short* pCopy[2] = { NULL, NULL };
+
+    if (pString == NULL)
+    {
+        return NULL;
+    }
+
+    for (int i = 0; i < 2; i++)
+    {
+        if (pSource[i] == pString)
+        {
+            return pCopy[i];
+        }
+        if (pSource[i] == NULL)
+        {
+            unsigned long chars = nlStrLen<unsigned short>(pString) + 1;
+            unsigned short* pNew = (unsigned short*)nlMalloc(chars * sizeof(unsigned short), 32, false);
+            for (unsigned long c = 0; c < chars; c++)
+            {
+                pNew[c] = pString[c];
+            }
+            pSource[i] = pString;
+            pCopy[i] = pNew;
+            return pNew;
+        }
+    }
+
+    nlPrintf("staticLocCopy: out of slots (addr %lu)\n", pString);
+    return pString;
+}
+#endif
 
 const unsigned long nlLocalization::LanguageId[] = {
     0x7A947B29,

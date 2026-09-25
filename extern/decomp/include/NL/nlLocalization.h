@@ -56,5 +56,8 @@ public:
 extern nlLocalization* g_pLocalization;
 extern const unsigned short LocalizationTableNotFound[];
 extern const unsigned short MissingLocString[];
+#ifdef TARGET_PC
+const unsigned short* staticLocArena(const unsigned short* pString);
+#endif
 
 #endif // _NLLOCALIZATION_H_

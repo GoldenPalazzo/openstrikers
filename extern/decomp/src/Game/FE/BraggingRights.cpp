@@ -58,7 +58,11 @@ static inline const unsigned short* LookupLocHash(nlLocalization* loc, unsigned 
 {
     if (loc->m_LookupTable == 0)
     {
+#ifndef TARGET_PC
         return LocalizationTableNotFound;
+#else
+        return staticLocArena(LocalizationTableNotFound);
+#endif
     }
 
     nlLocalization::StringLookup* entry = nlBSearch<nlLocalization::StringLookup, unsigned long>(hash, loc->m_LookupTable, (int)loc->m_pFile->StringCount);
@@ -67,7 +71,11 @@ static inline const unsigned short* LookupLocHash(nlLocalization* loc, unsigned 
         return loc->m_FirstString + entry->StringOffset;
     }
 
+#ifndef TARGET_PC
     return MissingLocString;
+#else
+    return staticLocArena(MissingLocString);
+#endif
 }
 
 static inline const unsigned short* LookupLocHash(unsigned long hash)

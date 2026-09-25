@@ -7,6 +7,9 @@
 #include "NL/gl/gl.h"
 #include "NL/gl/glMatrix.h"
 
+#ifdef TARGET_PC
+#include "port/endian.hpp"
+#endif
 struct Row
 {
     /* 0x0 */ unsigned short XOffset;
@@ -34,10 +37,20 @@ public:
     {
         static const unsigned long MAX_ROWS = 16;
 
+#ifndef TARGET_PC
         /* 0x00 */ const nlFont* pFont;
         /* 0x04 */ const unsigned short* String;
         /* 0x08 */ const nlMatrix4* pMatrix;
         /* 0x0C */ unsigned long DrawOptions;
+#else
+        // Even though these don't get relocated and should be
+        // UnrelocatedPtr32, they never get NULL checked or dereferenced
+        // straight after being reinterpret_casted from the loadscene
+        /* 0x00 */ port::SelfRelPtr32<const nlFont> pFont;
+        /* 0x04 */ port::SelfRelPtr32<const unsigned short> String;
+        /* 0x08 */ port::SelfRelPtr32<const nlMatrix4> pMatrix;
+        /* 0x0C */ u32 DrawOptions;
+#endif
         /* 0x10 */ unsigned short RowCount;
         /* 0x12 */ signed short YOffset;
         /* 0x14 */ Row Rows[MAX_ROWS + 1];

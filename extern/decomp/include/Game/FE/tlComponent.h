@@ -22,7 +22,9 @@ public:
 
     /* 0x68 */ port::SelfRelPtr32<TLSlide> pChildren;
     /* 0x6C */ port::SelfRelPtr32<TLSlide> m_pActiveSlide;
+#ifndef TARGET_PC
     /* 0x70 */ nlVector2 m_BoxSize; // something is fishy here -> feHelpFuncs/MakeTextBoxReallyWide needs a nlVector2 here.
+#endif
     /* 0x70 */ char m_szName[32];
     /* 0x90 */ port::be<u32> m_hashID;
 }; // total size: 0x94

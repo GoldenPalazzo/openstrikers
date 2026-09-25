@@ -23,6 +23,9 @@ using TakeGameMemSnapshot::LexicalCast;
 #include "Game/FE/feInput.h"
 #include "Game/FE/tlInstance.h"
 #include "Game/FE/tlSlide.h"
+#ifdef TARGET_PC
+#include "Game/FE/feText.h"
+#endif
 #include "Game/FE/tlTextInstance.h"
 #include "Game/GameInfo.h"
 #include "Game/DB/UserOptions.h"
@@ -850,8 +853,14 @@ const char* GetCupStreamName(eTrophyType trophyType)
  */
 void MakeTextBoxReallyWide(TLTextInstance& textInstance)
 {
+#ifndef TARGET_PC
     nlVector2& boxSize = ((textInstance.m_OverloadFlags & 0x4) != 0) ? textInstance.m_OverloadedAttributes.BoxSize : textInstance.m_component->m_BoxSize;
     nlVector2 bb = boxSize;
+#else
+    nlVector2 bb = ((textInstance.m_OverloadFlags & 0x4) != 0)
+        ? (nlVector2)textInstance.m_OverloadedAttributes.BoxSize
+        : (nlVector2)((const FEText*)textInstance.m_component)->m_TextAttributes.BoxSize;
+#endif
     bb.x = 999.9f;
     textInstance.m_OverloadedAttributes.BoxSize = bb;
     textInstance.m_OverloadFlags |= 0x4;
