@@ -49,8 +49,10 @@ CrossFaderScene::~CrossFaderScene()
  */
 void CrossFaderScene::SceneCreated()
 {
+#ifndef TARGET_PC
     typedef TLImageInstance* (*FindImageByValue)(FEPresentation*, InlineHasher, InlineHasher, InlineHasher, InlineHasher, InlineHasher, InlineHasher);
     typedef TLImageInstance* (*FindImageByRef)(FEPresentation*, InlineHasher&, InlineHasher&, InlineHasher&, InlineHasher&, InlineHasher&, InlineHasher&);
+#endif
 
     FEPresentation* pPresentation;
     bool doCrossFade = true;
@@ -103,6 +105,7 @@ void CrossFaderScene::SceneCreated()
             hA = hash;
             hB = hash;
 
+#ifndef TARGET_PC
             union
             {
                 FindImageByValue byValue;
@@ -117,6 +120,16 @@ void CrossFaderScene::SceneCreated()
                 (InlineHasher&)h5,
                 (InlineHasher&)h3,
                 (InlineHasher&)h1);
+#else
+            TLImageInstance* found = FEFinder<TLImageInstance, 2>::Find<FEPresentation>(
+                pPresentation,
+                InlineHasher(hB),
+                InlineHasher(h9),
+                InlineHasher(h7),
+                InlineHasher(h5),
+                InlineHasher(h3),
+                InlineHasher(h1));
+#endif
 
             if (found == NULL)
             {
@@ -148,6 +161,7 @@ void CrossFaderScene::SceneCreated()
             s7 = hash;
             s8 = hash;
 
+#ifndef TARGET_PC
             union
             {
                 FindImageByValue byValue;
@@ -162,6 +176,16 @@ void CrossFaderScene::SceneCreated()
                 (InlineHasher&)h5,
                 (InlineHasher&)h3,
                 (InlineHasher&)h1);
+#else
+            mImageInstances[i] = FEFinder<TLImageInstance, 2>::Find<FEPresentation>(
+                pPresentation,
+                InlineHasher(s8),
+                InlineHasher(s6),
+                InlineHasher(s4),
+                InlineHasher(h5),
+                InlineHasher(h3),
+                InlineHasher(h1));
+#endif
 
             if (i == 0)
             {
@@ -199,6 +223,7 @@ void CrossFaderScene::SceneCreated()
             t8 = hash;
         }
 
+#ifndef TARGET_PC
         union
         {
             FindImageByValue byValue;
@@ -213,6 +238,16 @@ void CrossFaderScene::SceneCreated()
             (InlineHasher&)h5,
             (InlineHasher&)h3,
             (InlineHasher&)h1);
+#else
+        mCurrentImageInstance = FEFinder<TLImageInstance, 2>::Find<FEPresentation>(
+            pPresentation,
+            InlineHasher(t8),
+            InlineHasher(t6),
+            InlineHasher(t4),
+            InlineHasher(h5),
+            InlineHasher(h3),
+            InlineHasher(h1));
+#endif
 
         mFadeState = FS_FADE_IN_INIT;
         mCurrentImage = 0;
