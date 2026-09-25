@@ -111,7 +111,11 @@ public:
         /* 0x14 */ T* m_pObject;
     };
 
+#ifndef TARGET_PC
     /* 0x00 */ mutable unsigned char m_FunctorMem[24];
+#else
+    /* 0x00 */ mutable unsigned char m_FunctorMem[sizeof(MCMemberFunctor<class T>)];
+#endif
 }; // total size: 0x18
 
 inline MemCardFunctor::MemCardFunctor()
