@@ -1,0 +1,14 @@
+diff --git a/lib/dolphin/card.cpp b/lib/dolphin/card.cpp
+index 25f74df..016409e 100644
+--- a/lib/dolphin/card.cpp
++++ b/lib/dolphin/card.cpp
+@@ -524,6 +524,9 @@ s32 CARDMountAsync(const s32 chan, void* workArea [[maybe_unused]], const CARDCa
+   if (chan < 0 || chan >= 2) {
+     return CARD_RESULT_FATAL_ERROR;
+   }
++  if (attachCallback) {
++    attachCallback(chan, CARD_RESULT_READY);
++  }
+   return CARD_RESULT_READY;
+ }
+ 
