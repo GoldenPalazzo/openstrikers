@@ -353,8 +353,13 @@ unsigned char nlFont::Load(const char* szFontName, char* pFontDescData, unsigned
     unsigned long page;
     for (page = 0; page < m_PageCount; page++)
     {
+#ifndef TARGET_PC
         nlStrNCpy(sHashFontName, szFontName, 0x109);
+        // this is undefined behaviour
         nlSNPrintf(sHashFontName, 0x109, "%s_%d", sHashFontName, page + 1);
+#else
+        nlSNPrintf(sHashFontName, 0x109, "%s_%d", szFontName, page + 1);
+#endif
         m_TextureHandles[page] = nlStringHash(sHashFontName);
 
         if (m_TextureType == SplitFX)
