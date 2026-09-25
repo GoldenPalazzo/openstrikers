@@ -230,6 +230,14 @@ static void Initialize()
         AudioLoader::LoadFEButtonSoundGroup();
         Audio::InitStreaming();
     }
+#ifdef GOLDEN_DISABLE_AUDIO
+    else
+    {
+        // needed to initialize g_pTrackManager
+        // it's safe since all audio primitives are already stubbed and safe
+        Audio::Initialize(false);
+    }
+#endif
 
     g_pEventManager->AddEventHandler(ReplayManager::EventHandler, ReplayManager::Instance(), (u32)-1);
     g_pEventManager->AddEventHandler(ReplayChoreo::EventHandler, &ReplayChoreo::Instance(), (u32)-1);
