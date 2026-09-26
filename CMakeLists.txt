@@ -100,6 +100,7 @@ target_compile_options(openstrikers PRIVATE
     -O0
     -g3
     -fsanitize=address
+    -fshort-wchar
     -Werror=pointer-to-int-cast
     -Werror=int-to-pointer-cast
     -include ${INCLUDE_DIR}/compat_shims.h

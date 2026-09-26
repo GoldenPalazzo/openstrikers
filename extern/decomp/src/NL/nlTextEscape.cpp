@@ -1,8 +1,38 @@
 #include "NL/nlTextEscape.h"
 
 #include "NL/nlAlgorithm.h"
+#ifdef TARGET_PC
+#include "port/endian.hpp"
+#endif
 
+#ifndef TARGET_PC
 extern "C" unsigned long wcstoul(const unsigned short* str, unsigned short** end, int base);
+#else
+// override glibc's wcstoul that takes 32-bit wchar_t but game strings are u16
+static unsigned long wcstoul(const unsigned short* str, unsigned short** end, int base)
+{
+    unsigned long value = 0;
+    for (; *str != 0; str++)
+    {
+        unsigned short c = *str;
+        int digit;
+        if (c >= '0' && c <= '9')
+            digit = c - '0';
+        else if (c >= 'a' && c <= 'z')
+            digit = c - 'a' + 10;
+        else if (c >= 'A' && c <= 'Z')
+            digit = c - 'A' + 10;
+        else
+            break;
+        if (digit >= base)
+            break;
+        value = value * base + digit;
+    }
+    if (end != 0)
+        *end = (unsigned short*)str;
+    return value;
+}
+#endif
 
 const unsigned long nlEscapeSequence::ESCAPE_DEFN[ESC_COUNT] = {
     0x00000000,
@@ -37,10 +67,18 @@ static EscapeSorter s_EscapeSorter;
  */
 nlEscapeSequence::nlEscapeSequence(const unsigned short* str)
 {
+#ifndef TARGET_PC
     char Seq[4] = { 0, 0, 0, 0 };
+#else
+    u32 Seq = 0;
+#endif
     const unsigned short* ExtendedStart = 0;
     const unsigned short* p = str;
+#ifndef TARGET_PC
     char* pSeq = Seq;
+#else
+    char* pSeq = (char*)&Seq;
+#endif
     unsigned long Char = 0;
     unsigned long key;
     ESCAPE_LOOKUP* pEscape;
@@ -92,7 +130,11 @@ nlEscapeSequence::nlEscapeSequence(const unsigned short* str)
     m_Extended[Char] = 0;
     m_pEnd = (ExtendedStart ? ExtendedStart : str + 1) + Char + 1;
 
+#ifndef TARGET_PC
     key = *(unsigned long*)Seq;
+#else
+    key = bswap(Seq);
+#endif
     pEscape = nlBSearch(key, s_EscapeLookup, ESC_COUNT);
     if (pEscape != 0)
     {

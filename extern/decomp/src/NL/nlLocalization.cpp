@@ -118,6 +118,14 @@ unsigned char nlLocalization::Load(nlLanguage Language, bool ingameloc)
 
     m_LookupTable = (StringLookup*)(m_pFile + 1);
     m_FirstString = (unsigned short*)(&m_LookupTable[m_pFile->StringCount]);
+#ifdef TARGET_PC
+    // PORT: the string block is UTF-16BE on disc and read raw through m_FirstString
+    // by many FE callers, so swap it once here to native order.
+    for (unsigned short* p = m_FirstString; p < (unsigned short*)((u8*)m_pFile + FileSize); p++)
+    {
+        *p = bswap<unsigned short>(*p);
+    }
+#endif
     return 1;
 }
 
