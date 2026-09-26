@@ -2,6 +2,7 @@
 
 // #include <cerrno>
 #include <cstdarg>
+#include <cstring>
 #include <utility>
 
 namespace port
@@ -109,7 +110,7 @@ void DCStoreRangeNoSync(void*, u32) {}
 void DCStoreRange(void*, u32) {}
 
 void DCFlushRange(void*, u32) {}
-void DCZeroRange(void*, u32) {}
+void DCZeroRange(void* addr, u32 nBytes) { memset(addr, 0, nBytes); }
 void DCInvalidateRange(void*, u32) {}
 
 

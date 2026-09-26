@@ -51,7 +51,9 @@ extern "C" {
 extern GXRenderModeObj GXNtsc480Prog; // declaration only, defined in compat_shims.cpp
 
 typedef void (*VMLogStatsCallback)(u32 faultAddr, u32 mainAddr, u32 pageIndex, u32 elapsed, u32 wroteBack);
-inline void GXWaitDrawDone() {}
+// idk, apparently the game needs to wait a drawdone
+// golden TODO: investigate this
+inline void GXWaitDrawDone() { GXDrawDone(); }
 #ifdef __cplusplus
 }
 #endif
