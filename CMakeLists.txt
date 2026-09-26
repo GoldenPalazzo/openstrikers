@@ -97,6 +97,8 @@ target_compile_definitions(openstrikers PRIVATE
 )
 
 target_compile_options(openstrikers PRIVATE
+    -O0
+    -g3
     -fsanitize=address
     -Werror=pointer-to-int-cast
     -Werror=int-to-pointer-cast

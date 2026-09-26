@@ -11,6 +11,7 @@
 bool g_EngineArenaReady = false;
 
 int game_main(); // dichiarato qui, definito nel decomp rinominato
+extern "C" const char* __asan_default_options() { return "poison_history_size=65536"; }
 
 static const char* disc_path(int argc, char* argv[]) {
   if (argc > 1) {

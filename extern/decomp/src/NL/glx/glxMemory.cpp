@@ -14,6 +14,15 @@
 #include "../../Game/Sys/tweak.h"
 #include "Game/GL/GLInventory.h"
 
+#ifdef TARGET_PC
+#if defined(__has_feature)
+#if __has_feature(address_sanitizer)
+#include <sanitizer/asan_interface.h>
+#define GLX_ASAN_FRAME 1
+#endif
+#endif
+#endif
+
 static u8 glx_MemoryDump;
 static u32 ResourceMemSize = MB(12) - KB(12);
 static u32 FrameMemSizeReal = KB(896);
@@ -130,6 +139,14 @@ bool glxInitMemory()
     n_frame[0][1] = 0;
     FrameMemSizes[0] = FrameMemSizeReal;
     FrameMemSizes[1] = FrameMemSizeVirt;
+
+#ifdef GLX_ASAN_FRAME
+    for (int f = 0; f < 2; f++)
+    {
+        ASAN_POISON_MEMORY_REGION((void*)p_frame[f][0], FrameMemSizes[0]);
+        ASAN_POISON_MEMORY_REGION((void*)p_frame[f][1], FrameMemSizes[1]);
+    }
+#endif
 
     return true;
 }
@@ -297,6 +314,9 @@ inline uintptr_t AlignUp(uintptr_t value, uintptr_t alignment)
 void* glx_FrameAlloc(unsigned long size, eGLMemory memType, bool bCanReturnNULL)
 {
     u32 isLow = RealOrVirtual(memType);
+#ifdef GLX_ASAN_FRAME
+    unsigned long requested = size;
+#endif
     uintptr_t newTop = AlignUp(p_frame[i_frame][isLow] + n_frame[i_frame][isLow], 32);
     size += newTop - p_frame[i_frame][isLow];
 
@@ -312,6 +332,9 @@ void* glx_FrameAlloc(unsigned long size, eGLMemory memType, bool bCanReturnNULL)
     }
 
     n_frame[i_frame][isLow] = size;
+#ifdef GLX_ASAN_FRAME
+    ASAN_UNPOISON_MEMORY_REGION((void*)newTop, requested);
+#endif
     return (void*)newTop;
 }
 
@@ -341,6 +364,11 @@ void glplatFrameAllocNextFrame()
     i_frame = newFrame;
     n_frame[newFrame][0] = 0;
     n_frame[newFrame][1] = 0;
+#ifdef GLX_ASAN_FRAME
+    GXDrawDone(); // poison only once the GPU can no longer read the buffer; on GC the flip only resets counters
+    ASAN_POISON_MEMORY_REGION((void*)p_frame[newFrame][0], FrameMemSizes[0]);
+    ASAN_POISON_MEMORY_REGION((void*)p_frame[newFrame][1], FrameMemSizes[1]);
+#endif
 
     GXInvalidateVtxCache();
     GXInvalidateTexAll();
