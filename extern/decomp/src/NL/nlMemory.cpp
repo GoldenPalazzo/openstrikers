@@ -38,16 +38,7 @@ static constexpr size_t g_virtualSize = 0x900000;
 static const void* g_virtualBase;
 
 #include <mutex>
-// Guards nlInitMemory()'s init sequence below. Must be recursive:
-// DVDInit/VIInit/PADInit run *inside* the guarded block on the initializing
-// thread and may themselves allocate, re-entering nlInitMemory() on that same
-// thread before the lock is released. A plain mutex would deadlock there; a
-// std::once_flag can't be made reentrant at all. Being recursive also gives
-// other threads the property s_MemoryInitialized alone never had: they
-// genuinely block on the lock until initialization is fully done.
 static std::recursive_mutex s_memoryInitMutex;
-static std::mutex s_standardMutex;
-static std::mutex s_virtualMutex;
 #endif
 
 /**
@@ -67,12 +58,10 @@ void nlFree(void* ptr)
 #else
     if (ptr >= g_virtualBase && (uintptr_t)ptr < (uintptr_t)g_virtualBase+g_virtualSize)
     {
-        const std::lock_guard<std::mutex> lock(s_virtualMutex);
         VirtualAllocator.Free(ptr);
     }
     else if (ptr >= g_standardBase && (uintptr_t)ptr < (uintptr_t)g_standardBase + g_standardSize)
     {
-        const std::lock_guard<std::mutex> lock(s_standardMutex);
         StandardAllocator.Free(ptr);
     }
     else
@@ -106,7 +95,6 @@ void* nlMalloc(unsigned long size, unsigned int alignment, bool atEnd)
     }
 #endif
 #ifdef TARGET_PC
-    const std::lock_guard<std::mutex> lock(s_standardMutex);
     void* result = StandardAllocator.Allocate(size, alignment, atEnd);
     return result;
 #else
@@ -133,7 +121,6 @@ void* nlMalloc(unsigned long size)
     }
 #endif
 #ifdef TARGET_PC
-    const std::lock_guard<std::mutex> lock(s_standardMutex);
     void* result = StandardAllocator.Allocate(size, 8, false);
     return result;
 #else
@@ -163,7 +150,6 @@ unsigned int nlVirtualLargestBlock()
 void nlVirtualFree(void* ptr)
 {
 #ifdef TARGET_PC
-    const std::lock_guard<std::mutex> lock(s_virtualMutex);
     VirtualAllocator.Free(ptr);
 #else
     VirtualAllocator.Free(ptr);
@@ -176,7 +162,6 @@ void nlVirtualFree(void* ptr)
 void* nlVirtualAlloc(unsigned long size, bool bZero)
 {
 #ifdef TARGET_PC
-    const std::lock_guard<std::mutex> lock(s_virtualMutex);
     void* result = VirtualAllocator.Allocate(size, 0x20, bZero);
     return result;
 #else

@@ -17,6 +17,23 @@
 #include "NL/nlDLRing.h"
 #include "NL/MemAlloc.h"
 
+#ifdef TARGET_PC
+#if defined(__has_feature)
+#if __has_feature(address_sanitizer)
+#include <sanitizer/asan_interface.h>
+#define MEMALLOC_ASAN 1
+#endif
+#endif
+#endif
+
+#ifdef MEMALLOC_ASAN
+#define MA_POISON(p, n) ASAN_POISON_MEMORY_REGION((void*)(p), (size_t)(n))
+#define MA_UNPOISON(p, n) ASAN_UNPOISON_MEMORY_REGION((void*)(p), (size_t)(n))
+#else
+#define MA_POISON(p, n) ((void)0)
+#define MA_UNPOISON(p, n) ((void)0)
+#endif
+
 // Built with `-inline deferred`: MWCC emits .text in REVERSE source order, so the
 // functions below are declared last-to-first relative to their addresses. Parse-time
 // .data (the ptmf constants) still follows source order, which is what pins
@@ -27,6 +44,9 @@
  */
 void MemoryAllocator::Free(void* p)
 {
+#ifdef TARGET_PC
+    const std::lock_guard<std::recursive_mutex> guard(m_lock);
+#endif
     FreeBlockList* block;
     MemoryAllocator* self;
     FreeBlockList* start;
@@ -42,6 +62,11 @@ void MemoryAllocator::Free(void* p)
         return;
     }
 
+#ifdef MEMALLOC_ASAN
+    // double free / free of a non-heap pointer: ASan reports this read with the caller's stack
+    (void)*(volatile char*)p;
+    MA_UNPOISON((char*)p - 4, 4);
+#endif
     block = (FreeBlockList*)((char*)p - 4);
     self = this;
     header = *(u32*)block;
@@ -50,17 +75,26 @@ void MemoryAllocator::Free(void* p)
     size &= 0xFFFFFFFC;
     if (header & 0x40000000)
     {
+        MA_UNPOISON((char*)p + size, 4);
         size += *(u32*)((char*)p + size);
     }
 
     size += 4;
     if (header & 0x80000000)
     {
+        MA_UNPOISON((char*)block - 4, 4);
         offset = *(u32*)((char*)block - 4);
         block = (FreeBlockList*)((char*)block - offset);
         size += offset;
     }
 
+#ifdef MEMALLOC_ASAN
+    FreeBlockList* ownStart = block;
+    s32 ownSize = size;
+    FreeBlockList* absorbedNext = NULL;
+    bool mergedIntoPrev = false;
+    MA_UNPOISON(ownStart, ownSize);
+#endif
     block->m_size = size;
     start = nlDLRingGetStart<FreeBlockList>(self->m_free_block_list);
     if ((start > block) || (start == NULL))
@@ -89,6 +123,9 @@ void MemoryAllocator::Free(void* p)
         {
             block->m_size = size + next->m_size;
             nlDLRingRemove<FreeBlockList>(&self->m_free_block_list, next);
+#ifdef MEMALLOC_ASAN
+            absorbedNext = next;
+#endif
         }
     }
 
@@ -100,8 +137,23 @@ void MemoryAllocator::Free(void* p)
         {
             prev->m_size = size + block->m_size;
             nlDLRingRemove<FreeBlockList>(&self->m_free_block_list, block);
+#ifdef MEMALLOC_ASAN
+            mergedIntoPrev = true;
+#endif
         }
     }
+
+#ifdef MEMALLOC_ASAN
+    MA_POISON(ownStart, ownSize);
+    if (absorbedNext != NULL)
+    {
+        MA_POISON(absorbedNext, sizeof(FreeBlockList));
+    }
+    if (!mergedIntoPrev)
+    {
+        MA_UNPOISON(ownStart, sizeof(FreeBlockList));
+    }
+#endif
 }
 
 /**
@@ -113,6 +165,9 @@ void* MemoryAllocator::Allocate(unsigned long size, unsigned int alignment, bool
 void* MemoryAllocator::Allocate(u32 size, unsigned int alignment, bool fromEnd)
 #endif
 {
+#ifdef TARGET_PC
+    const std::lock_guard<std::recursive_mutex> guard(m_lock);
+#endif
     void* result;
 #ifndef TARGET_PC
     u32 offset;
@@ -173,6 +228,11 @@ void* MemoryAllocator::Allocate(u32 size, unsigned int alignment, bool fromEnd)
 
         {
             u32 remaining = blockSize - requestSize;
+#ifdef MEMALLOC_ASAN
+            char* regionStart = (remaining > sizeof(FreeBlockList)) ? (char*)cur + remaining : (char*)cur;
+            size_t regionSize = ((char*)cur + blockSize) - regionStart;
+            MA_UNPOISON(regionStart, regionSize);
+#endif
             alignment = 4;
 #ifndef TARGET_PC
             if (remaining > 0xC)
@@ -224,6 +284,10 @@ void* MemoryAllocator::Allocate(u32 size, unsigned int alignment, bool fromEnd)
             }
             *(u32*)((char*)allocPtr - 4) = header;
             result = allocPtr;
+#ifdef MEMALLOC_ASAN
+            MA_POISON(regionStart, regionSize);
+            MA_UNPOISON(allocPtr, savedSize);
+#endif
         }
     }
     else
@@ -295,6 +359,7 @@ void* MemoryAllocator::Allocate(u32 size, unsigned int alignment, bool fromEnd)
 #endif
             {
                 FreeBlockList* newFree = (FreeBlockList*)((char*)cur + offset);
+                MA_UNPOISON(newFree, sizeof(FreeBlockList));
                 newFree->m_size = remaining;
                 if (m_free_block_list == NULL || cur == start)
                 {
@@ -308,6 +373,7 @@ void* MemoryAllocator::Allocate(u32 size, unsigned int alignment, bool fromEnd)
             }
 
             u32 currentBlockSize = cur->m_size;
+            MA_UNPOISON(cur, currentBlockSize);
             u32 header = savedSize;
             void* allocPtr = (void*)((char*)cur + requestSize);
 #ifndef TARGET_PC
@@ -338,6 +404,10 @@ void* MemoryAllocator::Allocate(u32 size, unsigned int alignment, bool fromEnd)
             }
             *(u32*)((char*)allocPtr - 4) = header;
             result = allocPtr;
+#ifdef MEMALLOC_ASAN
+            MA_POISON(cur, currentBlockSize);
+            MA_UNPOISON(allocPtr, savedSize);
+#endif
         }
     }
 
@@ -349,6 +419,9 @@ void* MemoryAllocator::Allocate(u32 size, unsigned int alignment, bool fromEnd)
  */
 void MemoryAllocator::Initialize(void* memory, unsigned int size)
 {
+#ifdef TARGET_PC
+    const std::lock_guard<std::recursive_mutex> guard(m_lock);
+#endif
     FreeBlockList* start;
     FreeBlockList* iter;
     FreeBlockList* next;
@@ -399,6 +472,12 @@ void MemoryAllocator::Initialize(void* memory, unsigned int size)
             nlDLRingRemove<FreeBlockList>(&m_free_block_list, (FreeBlockList*)memory);
         }
     }
+
+#ifdef MEMALLOC_ASAN
+    // m_free_block_list is reset above, so memory is always a single standalone block here
+    MA_POISON(memory, size);
+    MA_UNPOISON(memory, sizeof(FreeBlockList));
+#endif
 }
 
 class TotalFreeMemCallback
@@ -420,6 +499,9 @@ public:
  */
 unsigned int MemoryAllocator::TotalFreeMemory()
 {
+#ifdef TARGET_PC
+    const std::lock_guard<std::recursive_mutex> guard(m_lock);
+#endif
     TotalFreeMemCallback callback;
     callback.size = 0;
     nlWalkDLRing<FreeBlockList, TotalFreeMemCallback>(m_free_block_list, &callback, &TotalFreeMemCallback::Callback);
@@ -454,6 +536,9 @@ public:
  */
 unsigned int MemoryAllocator::LargestFreeBlock()
 {
+#ifdef TARGET_PC
+    const std::lock_guard<std::recursive_mutex> guard(m_lock);
+#endif
     LargestFreeBlockCallback callback;
     callback.largest = 0;
     nlWalkDLRing<FreeBlockList, LargestFreeBlockCallback>(m_free_block_list, &callback, &LargestFreeBlockCallback::Callback);

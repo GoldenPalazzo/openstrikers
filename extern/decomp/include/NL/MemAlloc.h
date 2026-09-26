@@ -1,6 +1,9 @@
 #ifndef _MEMALLOC_H_
 #define _MEMALLOC_H_
 
+#ifdef TARGET_PC
+#include <mutex>
+#endif
 #include "types.h"
 
 struct FreeBlockList
@@ -24,6 +27,10 @@ public:
     void Free(void* p);
 
     /* 0x0 */ FreeBlockList* m_free_block_list;
+#ifdef TARGET_PC
+private:
+    std::recursive_mutex m_lock;
+#endif
 };
 
 extern MemoryAllocator StandardAllocator;
