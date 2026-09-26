@@ -15,7 +15,7 @@ public:
 #ifndef TARGET_PC
     /* 0x14 */ nlFont* m_pFontReference;
 #else
-    /* 0x14 */ port::SelfRelPtr32<nlFont> m_pFontReference;
+    /* 0x14 */ port::UnrelocatedRelPtr32<nlFont> m_pFontReference;
 #endif
 };
 

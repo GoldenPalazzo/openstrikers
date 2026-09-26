@@ -84,7 +84,11 @@ public:
                 /* 0x0 */ unsigned short A;
                 /* 0x2 */ unsigned short B;
             } s;
+#ifndef TARGET_PC
             /* 0x0 */ unsigned long hash;
+#else
+            /* 0x0 */ u32 hash;
+#endif
         };
         /* 0x4 */ int Kern;
 
