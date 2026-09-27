@@ -299,7 +299,11 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                         port::disk::convert(pModels[i], diskArr[i]);
                     {
                         glModel* pEnt = pModels;
+#ifndef TARGET_PC
                         glModel* pEntEnd = (glModel*)((u8*)pModels + (numModels << 4));
+#else
+                        glModel* pEntEnd = (glModel*)((u8*)pModels + (numModels * sizeof(glModel)));
+#endif
                         for (; pEnt < pEntEnd; pEnt++)
                         {
                             if (glIgnoreDuplicateModels)
@@ -511,7 +515,12 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                             pPkt->state.raster = glHandleizeRasterState();
                         }
                     }
+#ifndef TARGET_PC
                     pPkt->streams = (glModelStream*)((uintptr_t)pPkt->streams + (uintptr_t)pStreamData);
+#else
+                    uintptr_t diskStreamIndex = (uintptr_t)pPkt->streams / sizeof(port::disk::glModelStream);
+                    pPkt->streams = (glModelStream*)((uintptr_t)pStreamData + diskStreamIndex * sizeof(glModelStream));
+#endif
                     pPkt->indexBuffer += (uintptr_t)pIndexData;
                     pPkt->state.matrix += refDataPtr;
                     pPkt = (glModelPacket*)((u8*)pPkt + sizeof(glModelPacket));
@@ -572,7 +581,11 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
 
             {
                 glModel* pModel = pModels;
+#ifndef TARGET_PC
                 glModel* pModelEnd = (glModel*)((u8*)pModels + (numModels << 4));
+#else
+                glModel* pModelEnd = (glModel*)((u8*)pModels + (numModels * sizeof(glModel)));
+#endif
                 while (pModel < pModelEnd)
                 {
                     glModelPacket* pPacket = pModel->packets;
