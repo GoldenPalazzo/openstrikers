@@ -41,7 +41,11 @@ CupTrophyScene::CupTrophyScene()
     , mButtonState(ButtonComponent::BS_A_AND_B)
 {
     const char* asyncPath = "art/fe/TrophiesUI.res";
+#ifndef TARGET_PC
     AsyncImage* image = new (nlMalloc(0x1C, 0x20, true)) AsyncImage(asyncPath, NULL);
+#else
+    AsyncImage* image = new (nlMalloc(sizeof(AsyncImage), 0x20, true)) AsyncImage(asyncPath, NULL);
+#endif
     mAsyncTrophy = image;
 }
 

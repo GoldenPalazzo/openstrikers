@@ -546,7 +546,11 @@ bool fxLoadTemplateBundle(void* data, unsigned long size)
         return false;
     }
 
+#ifndef TARGET_PC
     pTemplateMap = new (nlMalloc(0x14, 8, false)) nlAVLTree<unsigned long, EffectsTemplate*, DefaultKeyCompare<unsigned long> >();
+#else
+    pTemplateMap = new (nlMalloc(sizeof(nlAVLTree<unsigned long, EffectsTemplate*, DefaultKeyCompare<unsigned long> >), 8, false)) nlAVLTree<unsigned long, EffectsTemplate*, DefaultKeyCompare<unsigned long> >();
+#endif
 
     SimpleParser parser;
     parser.StartParsing((char*)data, size, true);

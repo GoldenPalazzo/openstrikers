@@ -130,7 +130,11 @@ ChooseCupSceneV2::ChooseCupSceneV2(bool isSuperCup)
 
     mCupInProgressDirty = false;
 
+#ifndef TARGET_PC
     mCupImage = new ((AsyncImage*)nlMalloc(0x1C, 0x20, true)) AsyncImage(TROPHY_FILE_NAME, NULL);
+#else
+    mCupImage = new ((AsyncImage*)nlMalloc(sizeof(AsyncImage), 0x20, true)) AsyncImage(TROPHY_FILE_NAME, NULL);
+#endif
 
     if (mIsSuperCup)
     {

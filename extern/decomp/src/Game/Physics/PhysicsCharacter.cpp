@@ -63,7 +63,11 @@ PhysicsCharacter::PhysicsCharacter(float radius, float heightScale)
     m_gravity = 0.0f;
     SetMass(100.0f);
 
+#ifndef TARGET_PC
     PhysicsColumn* column = (PhysicsColumn*)nlMalloc(0x30, 8, false);
+#else
+    PhysicsColumn* column = (PhysicsColumn*)nlMalloc(sizeof(PhysicsColumn), 8, false);
+#endif
     column = new (column) PhysicsColumn(g_CollisionSpace, g_PhysicsWorld, radius);
     m_pPlayerPlayerColumn = column;
     m_pPlayerPlayerColumn->SetCategory(0x40);

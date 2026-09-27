@@ -328,6 +328,7 @@ void cCameraManager::UpdateGameCameraType()
 
         switch (g_eCurrentCameraType)
         {
+#ifndef TARGET_PC
         case eCameraType_Debug:
             pBaseCamera = (cBaseCamera*)new ((cDebugCamera*)nlMalloc(0x8C, 8, false)) cDebugCamera();
             break;
@@ -364,6 +365,44 @@ void cCameraManager::UpdateGameCameraType()
         case eCameraType_FaceCloseup:
             pBaseCamera = (cBaseCamera*)new ((FaceCam*)nlMalloc(0x80, 8, false)) FaceCam(2.0f);
             break;
+#else
+        case eCameraType_Debug:
+            pBaseCamera = (cBaseCamera*)new ((cDebugCamera*)nlMalloc(sizeof(cDebugCamera), 8, false)) cDebugCamera();
+            break;
+        case eCameraType_Replay:
+            pBaseCamera = (cBaseCamera*)new ((ReplayCamera*)nlMalloc(sizeof(ReplayCamera), 8, false)) ReplayCamera();
+            break;
+        case eCameraType_TopDown:
+            pBaseCamera = (cBaseCamera*)new ((TopDownCamera*)nlMalloc(sizeof(TopDownCamera), 8, false)) TopDownCamera();
+            break;
+        case eCameraType_FollowCharacter:
+            pBaseCamera = (cBaseCamera*)new ((cFollowCamera*)nlMalloc(sizeof(cFollowCamera), 8, false)) cFollowCamera(cFollowCamera::FOLLOW_CHARACTER);
+            break;
+        case eCameraType_FollowBall:
+            pBaseCamera = (cBaseCamera*)new ((cFollowCamera*)nlMalloc(sizeof(cFollowCamera), 8, false)) cFollowCamera(cFollowCamera::FOLLOW_BALL);
+            break;
+        case eCameraType_Animated:
+            pBaseCamera = (cBaseCamera*)new ((cAnimCamera*)nlMalloc(sizeof(cAnimCamera), 8, false)) cAnimCamera();
+            break;
+        case eCameraType_KickOff:
+            pBaseCamera = (cBaseCamera*)new ((cKickOffCamera*)nlMalloc(sizeof(cKickOffCamera), 8, false)) cKickOffCamera();
+            break;
+        case eCameraType_Gameplay:
+            pBaseCamera = (cBaseCamera*)new ((GameplayCamera*)nlMalloc(sizeof(GameplayCamera), 8, false)) GameplayCamera();
+            break;
+        case eCameraType_Goal:
+            pBaseCamera = (cBaseCamera*)new ((GoalCamera*)nlMalloc(sizeof(GoalCamera), 8, false)) GoalCamera();
+            break;
+        case eCameraType_ShootToScore:
+            pBaseCamera = (cBaseCamera*)new ((cShootToScoreCamera*)nlMalloc(sizeof(cShootToScoreCamera), 8, false)) cShootToScoreCamera();
+            break;
+        case eCameraType_AnimViewer:
+            pBaseCamera = (cBaseCamera*)new ((cAnimViewerCamera*)nlMalloc(sizeof(cAnimViewerCamera), 8, false)) cAnimViewerCamera();
+            break;
+        case eCameraType_FaceCloseup:
+            pBaseCamera = (cBaseCamera*)new ((FaceCam*)nlMalloc(sizeof(FaceCam), 8, false)) FaceCam(2.0f);
+            break;
+#endif
         default:
             break;
         }

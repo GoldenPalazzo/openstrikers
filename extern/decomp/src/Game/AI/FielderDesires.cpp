@@ -1304,7 +1304,11 @@ bool cFielder::InitDesireGetOpen()
     nlVector3 v3TargetPosition = *pTargetPosition;
     v3TargetPosition.z = 0.0f;
 
+#ifndef TARGET_PC
     SetSpaceSearch(new (nlMalloc(0x78, 8, false)) SSearchBestPass(m_DesireCommonVars.pSBC, this, false, false));
+#else
+    SetSpaceSearch(new (nlMalloc(sizeof(SSearchBestPass), 8, false)) SSearchBestPass(m_DesireCommonVars.pSBC, this, false, false));
+#endif
     m_pSpaceSearch->m_bDebugOn = false;
     m_pSpaceSearch->FindBestPosition(v3BestPosition, v3FormationPosition, DIR_TOWARD_TARGET, &v3TargetPosition, 4.0f, 0x8000);
 
@@ -2349,7 +2353,11 @@ bool cFielder::InitDesireRunToNet()
         return 0;
     }
 
+#ifndef TARGET_PC
     SpaceSearch* pSpaceSearch = new (nlMalloc(0x4C, 8, false)) SSearchRunToNet(this);
+#else
+    SpaceSearch* pSpaceSearch = new (nlMalloc(sizeof(SSearchRunToNet), 8, false)) SSearchRunToNet(this);
+#endif
     SetSpaceSearch(pSpaceSearch);
 
     m_pSpaceSearch->m_bDebugOn = false;
@@ -3064,7 +3072,11 @@ bool cFielder::InitDesireWindupPass(cPlayer* pTarget, bool bHighPass)
     SkillTweaks* pSkillTweaks = SkillTweaks::GetSkillTweaks(g_pCurrentlyUpdatingTeam->m_nSide);
     float fReactionTimeRange = 0.85f * (0.3f * (1.0f - pSkillTweaks->Off_Reaction));
     m_DesireCommonVars.fMisc = 0.85f + (nlRandomf(fReactionTimeRange, &nlDefaultSeed) - (0.5f * fReactionTimeRange));
+#ifndef TARGET_PC
     SetSpaceSearch(new (nlMalloc(0x28, 8, false)) SSearchOpenLane(this, pTarget));
+#else
+    SetSpaceSearch(new (nlMalloc(sizeof(SSearchOpenLane), 8, false)) SSearchOpenLane(this, pTarget));
+#endif
     m_pSpaceSearch->m_bDebugOn = false;
     m_pSpaceSearch->FindBestPosition(m_DesireCommonVars.v3DesiredPosition, m_v3Position, DIR_UPFIELD, &pTarget->m_v3Position, 4.5f, 0x8000);
     m_pAvoidance->SetThingsToAvoid(0x1F);
@@ -3244,7 +3256,11 @@ bool cFielder::InitDesireCutAndBreak()
         return false;
     }
 
+#ifndef TARGET_PC
     SetSpaceSearch(new (nlMalloc(0x14, 8, false)) SSearchCutAndBreak(this));
+#else
+    SetSpaceSearch(new (nlMalloc(sizeof(SSearchCutAndBreak), 8, false)) SSearchCutAndBreak(this));
+#endif
     m_pSpaceSearch->m_bDebugOn = false;
     m_pSpaceSearch->FindBestPosition(m_DesireCommonVars.v3DesiredPosition, m_v3Position, DIR_NONE, NULL, 4.0f, 0x8000);
     m_pAvoidance->SetThingsToAvoid(0x1F);

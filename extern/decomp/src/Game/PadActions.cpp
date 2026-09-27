@@ -37,7 +37,11 @@ void InitPads()
     {
         for (int i = 0; i < 4; i++)
         {
-            cPadManager::m_aPads[i] = new (nlMalloc(0xD8, 8, false)) PadMonkey(i);
+#ifndef TARGET_PC
+            cPadManager::m_aPads[i] = new (nlMalloc(0xD8), 8, false)) PadMonkey(i);
+#else
+            cPadManager::m_aPads[i] = new (nlMalloc(sizeof(PadMonkey), 8, false)) PadMonkey(i);
+#endif
         }
     }
 

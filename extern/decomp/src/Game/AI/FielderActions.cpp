@@ -3465,7 +3465,11 @@ void cFielder::ActionShootToScore(float fDeltaT)
                 }
                 else
                 {
+#ifndef TARGET_PC
                     MatrixEffectCam* pMatrixCam = new (nlMalloc(0x140, 8, false)) MatrixEffectCam();
+#else
+                    MatrixEffectCam* pMatrixCam = new (nlMalloc(sizeof(MatrixEffectCam), 8, false)) MatrixEffectCam();
+#endif
                     pMatrixCam->mbUseGameplayTransparencyFlags = true;
                     pMatrixCam->m_pFilter = &rumbleFilter;
                     pMatrixCam->mfSpinDuration = sfOtherMatrixCamDuration;
@@ -3589,7 +3593,11 @@ void cFielder::ActionShootToScore(float fDeltaT)
                     FixedUpdateTask::mTimeScale = sfMatrixCamTimeScale;
                     ParticleUpdateTask::SetTimeScale(sfMatrixCamParticleTimeScale);
 
+#ifndef TARGET_PC
                     MatrixEffectCam* pMatrixCam2 = new (nlMalloc(0x140, 8, false)) MatrixEffectCam();
+#else
+                    MatrixEffectCam* pMatrixCam2 = new (nlMalloc(sizeof(MatrixEffectCam), 8, false)) MatrixEffectCam();
+#endif
                     cCameraManager::PushCamera(pMatrixCam2);
                     pMatrixCam2->m_pFilter = &rumbleFilter;
 

@@ -474,7 +474,11 @@ cPlayer* CreateGoalie(eCharacterClass gcc, bool bForViewer)
         pAnimRetargetList = g_GoalieTemplate->pAnimRetargetListInventory->Find(0);
     }
 
+#ifndef TARGET_PC
     GoalieTweaks* pTweaks = new (nlMalloc(0xF4, 8, false)) GoalieTweaks(g_GoalieTemplateInfo.szTweaksFilename);
+#else
+    GoalieTweaks* pTweaks = new (nlMalloc(sizeof(GoalieTweaks), 8, false)) GoalieTweaks(g_GoalieTemplateInfo.szTweaksFilename);
+#endif
 
     cPlayer* pChar;
     if (!bForViewer)

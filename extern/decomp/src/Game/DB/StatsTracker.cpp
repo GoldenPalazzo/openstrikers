@@ -49,7 +49,11 @@ StatsTracker::StatsTracker()
     mIsUserCupWinner = false;
     mHasGameEnded = false;
 
+#ifndef TARGET_PC
     m_pSimulator = new (nlMalloc(0xB8, 8, false)) Simulator();
+#else
+    m_pSimulator = new (nlMalloc(sizeof(Simulator), 8, false)) Simulator();
+#endif
 }
 
 /**

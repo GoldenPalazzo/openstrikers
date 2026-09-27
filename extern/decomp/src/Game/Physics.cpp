@@ -121,7 +121,11 @@ bool PhysicsLoader::StartLoad(LoadingManager* manager)
     for (i = 0; i < 4; i++)
     {
         const sCornerSegment& corner = cField::GetCorner(i);
+#ifndef TARGET_PC
         PhysicsRoundedCorner* pCorner = new (nlMalloc(0x2C, 8, false)) PhysicsRoundedCorner(
+#else
+        PhysicsRoundedCorner* pCorner = new (nlMalloc(sizeof(PhysicsRoundedCorner), 8, false)) PhysicsRoundedCorner(
+#endif
             g_CollisionSpace,
             corner.vCenter,
             corner.fRadius,
@@ -172,7 +176,11 @@ void PhysicsLoader::ConstructStaticPhysicsPrimitives(CharacterPhysicsData* pPhys
         switch (physElement->uPrimitiveType)
         {
         case 1:
+#ifndef TARGET_PC
             obj = new (nlMalloc(0x2C, 8, false)) PhysicsSphere(NULL, NULL, physElement->fRadius);
+#else
+            obj = new (nlMalloc(sizeof(PhysicsSphere), 8, false)) PhysicsSphere(NULL, NULL, physElement->fRadius);
+#endif
             obj->SetWorldMatrix(physElement->matLocalToParent);
             {
                 void* p = nlMalloc(8, 8, false);
@@ -187,7 +195,11 @@ void PhysicsLoader::ConstructStaticPhysicsPrimitives(CharacterPhysicsData* pPhys
             break;
 
         case 2:
+#ifndef TARGET_PC
             obj = new (nlMalloc(0x2C, 8, false)) PhysicsCapsule(NULL, NULL, physElement->fRadius, physElement->fHeight);
+#else
+            obj = new (nlMalloc(sizeof(PhysicsCapsule), 8, false)) PhysicsCapsule(NULL, NULL, physElement->fRadius, physElement->fHeight);
+#endif
             obj->SetWorldMatrix(physElement->matLocalToParent);
             {
                 void* p = nlMalloc(8, 8, false);
@@ -222,7 +234,11 @@ void PhysicsLoader::ConstructStaticPhysicsPrimitives(CharacterPhysicsData* pPhys
             nlVec3Scale(v1, 0.5f * physElement->fWidth);
             nlVec3Scale(v2, 0.5f * physElement->fLength);
 
+#ifndef TARGET_PC
             obj = new (nlMalloc(0x44, 8, false)) PhysicsFinitePlane(NULL, centre, v1, v2, true, normalPointsAwayFromField ? sfStaticFinitePlaneThinDepth : sfStaticFinitePlaneThickDepth);
+#else
+            obj = new (nlMalloc(sizeof(PhysicsFinitePlane), 8, false)) PhysicsFinitePlane(NULL, centre, v1, v2, true, normalPointsAwayFromField ? sfStaticFinitePlaneThinDepth : sfStaticFinitePlaneThickDepth);
+#endif
             {
                 void* p = nlMalloc(8, 8, false);
                 ListEntry<PhysicsObject*>* entry = (ListEntry<PhysicsObject*>*)p;

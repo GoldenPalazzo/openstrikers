@@ -54,7 +54,11 @@ ReplayManager* ReplayManager::Instance()
 void ReplayManager::Initialize()
 {
     mMemory = (u8*)nlVirtualAlloc(0x1C0000, false);
+#ifndef TARGET_PC
     mReplay = new (nlMalloc(0x48, 8, false)) Replay((char*)mMemory, 0x1C0000, 0x8000);
+#else
+    mReplay = new (nlMalloc(sizeof(Replay), 8, false)) Replay((char*)mMemory, 0x1C0000, 0x8000);
+#endif
     mTime = 0.0f;
 }
 
@@ -126,7 +130,11 @@ void ReplayManager::SwapPreviousAndCurrent()
 void ReplayManager::Flush()
 {
     delete mReplay;
+#ifndef TARGET_PC
     mReplay = new (nlMalloc(0x48, 8, false)) Replay((char*)mMemory, 0x1C0000, 0x8000);
+#else
+    mReplay = new (nlMalloc(sizeof(Replay), 8, false)) Replay((char*)mMemory, 0x1C0000, 0x8000);
+#endif
 
     ResetSnapshots();
 }
