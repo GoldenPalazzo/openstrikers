@@ -352,14 +352,22 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                 }
                 case BMD_CHUNK_TEXTURE_ANIM:
                 {
+#ifndef TARGET_PC
                     unsigned long* p32 = (unsigned long*)chunkData;
+#else
+                    const port::be<u32>* p32 = (const port::be<u32>*)chunkData;
+#endif
                     unsigned long canonID = *p32++;
                     if (glInventory.GetTextureAnim(canonID) == NULL)
                     {
                         unsigned long num = *p32++;
                         unsigned long mode = *p32++;
                         float start;
+#ifndef TARGET_PC
                         memcpy(&start, p32, sizeof(float));
+#else
+                        start = *(const port::be<f32>*)p32;
+#endif
                         p32++;
                         GLTextureAnim* pAnim = new (nlMalloc(sizeof(GLTextureAnim), 8, false)) GLTextureAnim();
                         pAnim->m_unk_0x00 = (s32)canonID;
@@ -373,7 +381,11 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                             unsigned long hashID = *p32++;
                             animTex.textureHandle = hashID;
                             float fTime;
+#ifndef TARGET_PC
                             memcpy(&fTime, p32, sizeof(float));
+#else
+                            fTime = *(const port::be<f32>*)p32;
+#endif
                             p32++;
                             animTex.time = fTime;
                             pAnim->SetTexture(index, animTex);
@@ -388,7 +400,11 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                 }
                 case BMD_CHUNK_VERTEX_ANIM:
                 {
+#ifndef TARGET_PC
                     unsigned long* p32 = (unsigned long*)chunkData;
+#else
+                    const port::be<u32>* p32 = (const port::be<u32>*)chunkData;
+#endif
                     unsigned long hashID = *p32++;
                     unsigned long numFrames = *p32++;
                     unsigned long numVerts = *p32++;
@@ -401,6 +417,10 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                     unsigned long size = numFrames * 12 * numVerts;
                     nlVector3* pVertices = (nlVector3*)glResourceAlloc(size, GLM_VertexData);
                     memcpy(pVertices, p32, size);
+#ifdef TARGET_PC
+                    for (u32* q = (u32*)pVertices; q < (u32*)((u8*)pVertices + size); q++)
+                        *q = bswap(*q);
+#endif
                     DCFlushRange(pVertices, size);
                     pAnim->m_pVertices = pVertices;
                     pAnim->m_pModel = glInventory.GetModel(hashID);
@@ -410,12 +430,23 @@ static glModel* glxLoadModelFromMemory(char* data, int size, unsigned long* pNum
                 }
                 case BMD_CHUNK_MATERIAL_LIST:
                 {
+#ifndef TARGET_PC
                     unsigned long* p32 = (unsigned long*)chunkData;
+#else
+                    const port::be<u32>* p32 = (const port::be<u32>*)chunkData;
+#endif
                     unsigned long modelID = *p32++;
                     unsigned long numMats = *p32++;
                     GLMaterialList* pList = new (nlMalloc(sizeof(GLMaterialList), 8, false)) GLMaterialList();
                     pList->m_uHashID = modelID;
                     pList->SetMaterials(numMats, (const GLMaterialEntry*)p32);
+#ifdef TARGET_PC
+                    const port::disk::GLMaterialEntry* pDiskMats = (const port::disk::GLMaterialEntry*)p32;
+                    for (u32 m = 0; m < numMats; m++)
+                    {
+                        port::disk::convert(pList->m_pMaterials[m], pDiskMats[m]);
+                    }
+#endif
                     glInventory.AddMaterialList(modelID, pList);
                     break;
                 }

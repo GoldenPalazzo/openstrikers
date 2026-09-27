@@ -1,6 +1,7 @@
 #include "port/glDisk.h"
 #include "NL/gl/glUserData.h"
 #include "NL/gl/glModel.h"
+#include "Game/GL/GLMaterial.h"
 
 namespace port::disk {
 
@@ -45,6 +46,13 @@ void convert(::glModel& out, const glModel& in)
     out.id = static_cast<u32>(in.id);
     out.pad = 0;
     out.packets = reinterpret_cast<::glModelPacket*>(static_cast<uintptr_t>(static_cast<u32>(in.packets))); // offset grezzo
+}
+
+void convert(::GLMaterialEntry& out, const GLMaterialEntry& in)
+{
+    out.materialID = in.materialID;
+    out.packetIndex = in.packetIndex;
+    out.numPackets = in.numPackets;
 }
 
 } // namespace port::disk

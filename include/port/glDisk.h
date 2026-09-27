@@ -5,6 +5,7 @@ struct glModelStream;
 struct glStateBundle;
 struct glModelPacket;
 struct glModel;
+struct GLMaterialEntry;
 
 namespace port::disk {
 #pragma pack(push, 1)
@@ -49,14 +50,23 @@ struct glModel
 }; // total size: 0x10
 #pragma pack(pop)
 
+struct GLMaterialEntry // size = 0xC
+{
+    /* 0x00 */ port::be<u32> materialID;
+    /* 0x04 */ port::be<u32> packetIndex;
+    /* 0x08 */ port::be<u32> numPackets;
+}; // total size: 0xC
+
 static_assert(sizeof(glModelStream) == 0x6);
 static_assert(sizeof(glStateBundle) == 0x36);
 static_assert(sizeof(glModelPacket) == 0x4A);
 static_assert(sizeof(glModel) == 0x10);
+static_assert(sizeof(GLMaterialEntry) == 0xC);
 
 void convert(::glModelStream& out, const glModelStream& in);
 void convert(::glStateBundle& out, const glStateBundle& in);
 void convert(::glModelPacket& out, const glModelPacket& in);
 void convert(::glModel& out, const glModel& in);
+void convert(::GLMaterialEntry& out, const GLMaterialEntry& in);
 
 } // namespace port::disk
