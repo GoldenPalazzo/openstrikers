@@ -73,7 +73,11 @@ void ICaptainGridComponent::BuildMapMenu()
     int i;
 
     activeslide = mParentComponent->GetActiveSlide();
+#ifndef TARGET_PC
     mInstanceTable = (TLInstance**)nlMalloc(NUM_CAPTAIN_CELL_ITEMS * 4, 8, false);
+#else
+    mInstanceTable = (TLInstance**)nlMalloc(NUM_CAPTAIN_CELL_ITEMS * sizeof(TLInstance*), 8, false);
+#endif
 
     for (i = 0; i < (int)NUM_CAPTAIN_CELL_ITEMS; i++)
     {

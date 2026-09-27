@@ -138,7 +138,11 @@ void CrossFaderScene::SceneCreated()
             mNumImages++;
         } while (true);
 
+#ifndef TARGET_PC
         mImageInstances = (TLImageInstance**)nlMalloc(mNumImages * 4, 8, false);
+#else
+        mImageInstances = (TLImageInstance**)nlMalloc(mNumImages * sizeof(TLImageInstance*), 8, false);
+#endif
 
         for (int i = 0; i < mNumImages; i++)
         {

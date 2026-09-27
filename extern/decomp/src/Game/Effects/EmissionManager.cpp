@@ -192,7 +192,11 @@ void EmissionManager::Update(float dt)
         {
             unsigned int numEntries = tree->m_NumElements;
             LMEntry* node = tree->m_Root;
+#ifndef TARGET_PC
             iter->m_Stack = (LMEntry**)nlMalloc((numEntries + 1) * 4, 8, false);
+#else
+            iter->m_Stack = (LMEntry**)nlMalloc((numEntries + 1) * sizeof(LMEntry*), 8, false);
+#endif
             iter->m_NumStackEntries = 0;
 
             if (node != NULL)

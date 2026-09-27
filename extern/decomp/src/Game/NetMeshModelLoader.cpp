@@ -322,7 +322,11 @@ void NetMeshModelLoader::ProcessEdges(const glModelPacket& packet, int maxVertex
         unsigned int numEntries = edgeTree->m_NumElements;
         EdgeEntry* node = edgeTree->m_Root;
 
+#ifndef TARGET_PC
         iter->m_Stack = (EdgeEntry**)nlMalloc((numEntries + 1) * 4, 8, false);
+#else
+        iter->m_Stack = (EdgeEntry**)nlMalloc((numEntries + 1) * sizeof(EdgeEntry*), 8, false);
+#endif
         iter->m_NumStackEntries = 0;
 
         if (node != NULL)
@@ -426,7 +430,11 @@ void NetMeshModelLoader::CreateNetMeshFromVertexList()
         unsigned int numEntries = vertexTree->m_NumElements;
         node = vertexTree->m_Root;
 
+#ifndef TARGET_PC
         vertexIter->m_Stack = (VertexEntry**)nlMalloc((numEntries + 1) * 4, 8, false);
+#else
+        vertexIter->m_Stack = (VertexEntry**)nlMalloc((numEntries + 1) * sizeof(VertexEntry*), 8, false);
+#endif
         vertexIter->m_NumStackEntries = 0;
 
         if (node != NULL)
@@ -484,7 +492,11 @@ void NetMeshModelLoader::CreateNetMeshFromVertexList()
         unsigned int numEntries = edgeTree->m_NumElements;
         edgeNode = edgeTree->m_Root;
 
+#ifndef TARGET_PC
         edgeIter->m_Stack = (EdgeEntry**)nlMalloc((numEntries + 1) * 4, 8, false);
+#else
+        edgeIter->m_Stack = (EdgeEntry**)nlMalloc((numEntries + 1) * sizeof(EdgeEntry*), 8, false);
+#endif
         edgeIter->m_NumStackEntries = 0;
 
         if (edgeNode != NULL)
@@ -540,7 +552,11 @@ void NetMeshModelLoader::CreateNetMeshFromVertexList()
         unsigned int numEntries = vertexTree->m_NumElements;
         node = vertexTree->m_Root;
 
+#ifndef TARGET_PC
         vertexIter->m_Stack = (VertexEntry**)nlMalloc((numEntries + 1) * 4, 8, false);
+#else
+        vertexIter->m_Stack = (VertexEntry**)nlMalloc((numEntries + 1) * sizeof(VertexEntry*), 8, false);
+#endif
         vertexIter->m_NumStackEntries = 0;
 
         if (node != NULL)
@@ -632,7 +648,11 @@ void NetMeshModelLoader::CreateNetMeshFromVertexList()
         unsigned int numEntries = edgeTree->m_NumElements;
         edgeNode = edgeTree->m_Root;
 
+#ifndef TARGET_PC
         edgeIter->m_Stack = (EdgeEntry**)nlMalloc((numEntries + 1) * 4, 8, false);
+#else
+        edgeIter->m_Stack = (EdgeEntry**)nlMalloc((numEntries + 1) * sizeof(EdgeEntry*), 8, false);
+#endif
         edgeIter->m_NumStackEntries = 0;
 
         if (edgeNode != NULL)
