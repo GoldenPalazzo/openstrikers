@@ -120,7 +120,11 @@ EffectsGroup::~EffectsGroup()
     {
         if (m_specs != nullptr)
         {
+#ifndef TARGET_PC
             ::operator delete[]((char*)m_specs - 0x10);
+#else
+            ::operator delete[]((char*)m_specs);
+#endif
         }
     }
     if (m_userSpecs != 0)
