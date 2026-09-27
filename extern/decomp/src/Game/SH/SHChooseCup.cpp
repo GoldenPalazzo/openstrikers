@@ -791,7 +791,11 @@ void ChooseCupSceneV2::DisplayCup()
 
         BasicString<unsigned short, Detail::TempStringAllocator> descriptor = firstHalf.Append(secondHalf);
 
+#ifndef TARGET_PC
         memcpy(mDescriptorBuffer, descriptor.c_str(), sizeof(mDescriptorBuffer));
+#else
+        nlStrNCpy<unsigned short>(mDescriptorBuffer, descriptor.c_str(), sizeof(mDescriptorBuffer) / 2);
+#endif
         mDescriptorBuffer[0xFF] = 0;
 
         pText = FEFinder<TLTextInstance, 3>::Find<TLSlide>(
@@ -909,7 +913,11 @@ void ChooseCupSceneV2::SetCurrentChamp(eTeamID currentChamp, bool isCPUChamp, TL
                 BasicString<unsigned short, Detail::TempStringAllocator>(LookupLocString("CUPCHAMP")),
                 LookupLocHash(GetLOCCharacterName(currentChamp, false, false))));
 
+#ifndef TARGET_PC
         memcpy(mChampBuffer, formatted.c_str(), sizeof(mChampBuffer));
+#else
+        nlStrNCpy<unsigned short>(mChampBuffer, formatted.c_str(), sizeof(mChampBuffer) / 2);
+#endif
         pText->SetString(mChampBuffer);
     }
     else

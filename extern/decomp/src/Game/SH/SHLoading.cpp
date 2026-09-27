@@ -345,7 +345,11 @@ void SuperLoadingScene::DisplayCupInfo()
             formatted = Format(unformatted[i], statWideString);
         }
 
+#ifndef TARGET_PC
         memcpy(mStatsBuffers[i], formatted.c_str(), sizeof(mStatsBuffers[i]));
+#else
+        nlStrNCpy<unsigned short>(mStatsBuffers[i], formatted.c_str(), sizeof(mStatsBuffers[i]) / 2);
+#endif
         statsText[i]->SetString(mStatsBuffers[i]);
     }
 }
@@ -378,6 +382,10 @@ void SuperLoadingScene::BuildPlayerStrings(TLTextInstance* pTextInst, int side, 
         str = str.AppendInPlace((const unsigned short*)L"{clr:pop} ");
     }
 
+#ifndef TARGET_PC
     memcpy(side == 0 ? mPlayerStrings[0] : mPlayerStrings[1], str.c_str(), sizeof(narrowBuf));
+#else
+    nlStrNCpy<unsigned short>(side == 0 ? mPlayerStrings[0] : mPlayerStrings[1], str.c_str(), sizeof(narrowBuf) / 2);
+#endif
     pTextInst->SetString(side == 0 ? mPlayerStrings[0] : mPlayerStrings[1]);
 }

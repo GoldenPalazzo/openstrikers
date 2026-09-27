@@ -168,8 +168,13 @@ inline Config::IteratorBase::IteratorBase(Config& config, Type type)
     , mLastTvp(config.mTvpHash + 1024)
     , mType(type)
 {
+#ifndef TARGET_PC
     while ((mCurrentTvp->tag == NULL || mCurrentTvp->type != mType)
         && mCurrentTvp < mLastTvp)
+#else
+    while (mCurrentTvp < mLastTvp
+        && (mCurrentTvp->tag == NULL || mCurrentTvp->type != mType))
+#endif
     {
         ++mCurrentTvp;
     }
@@ -183,8 +188,13 @@ inline bool Config::IteratorBase::IsValid() const
 inline void Config::IteratorBase::Next()
 {
     ++mCurrentTvp;
+#ifndef TARGET_PC
     while ((mCurrentTvp->tag == NULL || mCurrentTvp->type != mType)
         && mCurrentTvp < mLastTvp)
+#else
+    while (mCurrentTvp < mLastTvp
+        && (mCurrentTvp->tag == NULL || mCurrentTvp->type != mType))
+#endif
     {
         ++mCurrentTvp;
     }

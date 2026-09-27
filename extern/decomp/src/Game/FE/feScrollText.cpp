@@ -224,7 +224,11 @@ void FEScrollText::SetDisplayMessage(const BasicString<unsigned short, Detail::T
     }
 
     const unsigned short* finalStr = m_message.c_str();
+#ifndef TARGET_PC
     memcpy(m_textBuffer, finalStr, sizeof(m_textBuffer));
+#else
+    nlStrNCpy<unsigned short>(m_textBuffer, finalStr, sizeof(m_textBuffer) / 2);
+#endif
     m_controlText->SetString(m_textBuffer);
 
     m_messageWidth = (int)(m_controlText->GetScale().f.x * (float)m_messageWidth);

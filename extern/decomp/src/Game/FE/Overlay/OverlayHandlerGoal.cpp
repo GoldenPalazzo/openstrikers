@@ -267,7 +267,11 @@ void GoalOverlay::UpdateGoalInfo(int homeAway, int playerIndex, bool isCaptainS2
     unformatted = BasicString<unsigned short, Detail::TempStringAllocator>(LookupLocHash(0x04E76F8B));
     formatted = Format(unformatted, minutesWideString, secondsWideString);
 
+#ifndef TARGET_PC
     memcpy(mClockBuffer, formatted.c_str(), sizeof(mClockBuffer));
+#else
+    nlStrNCpy<unsigned short>(mClockBuffer, formatted.c_str(), sizeof(mClockBuffer) / 2);
+#endif
 
     pText = FEFinder<TLTextInstance, 3>::Find<FEPresentation>(
         presentation,
@@ -371,7 +375,11 @@ void GoalOverlay::UpdateGoalInfo(int homeAway, int playerIndex, bool isCaptainS2
         }
     }
 
+#ifndef TARGET_PC
     memcpy(mDescriptionBuffer, formatted.c_str(), sizeof(mDescriptionBuffer));
+#else
+    nlStrNCpy<unsigned short>(mDescriptionBuffer, formatted.c_str(), sizeof(mDescriptionBuffer) / 2);
+#endif
 
     pText = FEFinder<TLTextInstance, 3>::Find<FEPresentation>(
         presentation,
@@ -414,7 +422,11 @@ void GoalOverlay::SetHighlightNumber(int highlight)
     BasicString<unsigned short, Detail::TempStringAllocator> formatted(
         Format(unformatted, highlightWideString));
 
+#ifndef TARGET_PC
     memcpy(mDescriptionBuffer, formatted.c_str(), sizeof(mDescriptionBuffer));
+#else
+    nlStrNCpy<unsigned short>(mDescriptionBuffer, formatted.c_str(), sizeof(mDescriptionBuffer) / 2);
+#endif
     pText->SetString(mDescriptionBuffer);
 }
 
@@ -517,7 +529,11 @@ void GoalOverlay::DoMatchEndOverlay()
 
     MakeTextBoxReallyWide(*pText);
 
+#ifndef TARGET_PC
     memcpy(mDescriptionBuffer, formatted.c_str(), sizeof(mDescriptionBuffer));
+#else
+    nlStrNCpy<unsigned short>(mDescriptionBuffer, formatted.c_str(), sizeof(mDescriptionBuffer) / 2);
+#endif
     mDescriptionBuffer[127] = 0;
     pText->SetString(mDescriptionBuffer);
 }
@@ -555,7 +571,11 @@ void GoalOverlay::SetWinnerTitle()
         formatted = Format(unformatted, LookupLocHash(GetLOCTeamName(winningTeam)), scoreRightWideString, scoreLeftWideString);
     }
 
+#ifndef TARGET_PC
     memcpy(mScoresBuffer, formatted.c_str(), sizeof(mScoresBuffer));
+#else
+    nlStrNCpy<unsigned short>(mScoresBuffer, formatted.c_str(), sizeof(mScoresBuffer) / 2);
+#endif
 
     TLTextInstance* pText;
 
@@ -587,7 +607,11 @@ void GoalOverlay::DoCupWinOverlay()
         Format(BasicString<unsigned short, Detail::TempStringAllocator>(LookupLocHash(0xB49CF8B5)),
             LookupLocHash(GetLOCCharacterName(winners, true, false))));
 
+#ifndef TARGET_PC
     memcpy(mScoresBuffer, formatted.c_str(), sizeof(mScoresBuffer));
+#else
+    nlStrNCpy<unsigned short>(mScoresBuffer, formatted.c_str(), sizeof(mScoresBuffer) / 2);
+#endif
 
     TLTextInstance* pText;
 
@@ -604,7 +628,11 @@ void GoalOverlay::DoCupWinOverlay()
     formatted = Format(BasicString<unsigned short, Detail::TempStringAllocator>(LookupLocHash(0x4E704897)),
         LookupLocHash(GetLOCTrophyName(cup)));
 
+#ifndef TARGET_PC
     memcpy(mDescriptionBuffer, formatted.c_str(), sizeof(mDescriptionBuffer));
+#else
+    nlStrNCpy<unsigned short>(mDescriptionBuffer, formatted.c_str(), sizeof(mDescriptionBuffer) / 2);
+#endif
 
     pText = FEFinder<TLTextInstance, 3>::Find<FEPresentation>(
         m_pFEPresentation,

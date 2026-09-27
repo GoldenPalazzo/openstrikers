@@ -99,7 +99,11 @@ void WinnerOverlay::SceneCreated()
         formatted = Format(unformatted, scoreRightWideString, scoreLeftWideString);
     }
 
+#ifndef TARGET_PC
     memcpy(mScoresBuffer, formatted.c_str(), sizeof(mScoresBuffer));
+#else
+    nlStrNCpy<unsigned short>(mScoresBuffer, formatted.c_str(), sizeof(mScoresBuffer) / 2);
+#endif
 
     FEPresentation* presentation = m_pFEScene->m_pFEPackage->GetPresentation();
     presentation->SetActiveSlide("MENU IN2");
@@ -113,7 +117,11 @@ void WinnerOverlay::SceneCreated()
     BasicString<unsigned short, Detail::TempStringAllocator> unformattedName(LookupWinnerLocHash(0x8610A152));
     BasicString<unsigned short, Detail::TempStringAllocator> formattedName(Format(unformattedName, winnerNameWideString.c_str()));
 
+#ifndef TARGET_PC
     memcpy(mWinnerBuffer, formattedName.c_str(), sizeof(mWinnerBuffer));
+#else
+    nlStrNCpy<unsigned short>(mWinnerBuffer, formattedName.c_str(), sizeof(mWinnerBuffer) / 2);
+#endif
 
     for (int i = 0; i < 2; i++)
     {

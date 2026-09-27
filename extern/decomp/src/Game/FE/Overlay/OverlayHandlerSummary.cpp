@@ -320,7 +320,11 @@ void SummaryOverlay::DisplayMatchSummary(eSummaryType matchSummaryType)
         unsigned short tempBuffer[32];
         nlStrToWcs(numGamesString.c_str(), tempBuffer, 0x40);
         WideBasicString formatted(Format(unformatted, tempBuffer));
+#ifndef TARGET_PC
         memcpy(mTitleBuffer, formatted.c_str(), sizeof(mTitleBuffer));
+#else
+        nlStrNCpy<unsigned short>(mTitleBuffer, formatted.c_str(), sizeof(mTitleBuffer) / 2);
+#endif
 
         TLTextInstance* pTitleText = FEFinder<TLTextInstance, 3>::Find<TLSlide>(
             pSlide,
@@ -427,7 +431,11 @@ void SummaryOverlay::DisplayUserSummary(eSummaryType matchSummaryType)
             unsigned short tempBuffer[32];
             nlStrToWcs(numGamesString.c_str(), tempBuffer, 0x40);
             WideBasicString formatted(Format(unformatted, tempBuffer));
+#ifndef TARGET_PC
             memcpy(mTitleBuffer, formatted.c_str(), sizeof(mTitleBuffer));
+#else
+            nlStrNCpy<unsigned short>(mTitleBuffer, formatted.c_str(), sizeof(mTitleBuffer) / 2);
+#endif
 
             pTitleText = FEFinder<TLTextInstance, 3>::Find<TLSlide>(
                 pSlide,

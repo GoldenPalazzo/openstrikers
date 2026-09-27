@@ -896,7 +896,11 @@ void CupHubScene::CreateLeague()
         const unsigned short* locString = LookupLocHash(GetLOCTeamName(mAllTeamStats[mStandingsIndices[row]].mTeamIndex));
 
         BasicString<unsigned short, Detail::TempStringAllocator> teamNameWideString(locString);
+#ifndef TARGET_PC
         memcpy(mColumnsByRowsBuffers[0][row], teamNameWideString.c_str(), sizeof(mColumnsByRowsBuffers[0][row]));
+#else
+        nlStrNCpy<unsigned short>(mColumnsByRowsBuffers[0][row], teamNameWideString.c_str(), sizeof(mColumnsByRowsBuffers[0][row]) / 2);
+#endif
         pTextInstance->SetString(mColumnsByRowsBuffers[0][row]);
 
         pTextInstance = FEFinder<TLTextInstance, 3>::Find<TLSlide>(pSlide, InlineHasher(nlStringLowerHash("wins")));
@@ -1109,7 +1113,11 @@ void CupHubScene::CreateBowserLeague()
 
         unsigned long locString = GetLOCTeamName((eTeamID)mAllTeamStats[standingsIndices[row]].mTeamIndex);
         BasicString<unsigned short, Detail::TempStringAllocator> teamNameWideString(LookupLocHash(locString));
+#ifndef TARGET_PC
         memcpy(mColumnsByRowsBuffers[0][row], teamNameWideString.c_str(), sizeof(mColumnsByRowsBuffers[0][row]));
+#else
+        nlStrNCpy<unsigned short>(mColumnsByRowsBuffers[0][row], teamNameWideString.c_str(), sizeof(mColumnsByRowsBuffers[0][row]) / 2);
+#endif
         pTextInstance->SetString(mColumnsByRowsBuffers[0][row]);
 
         pComp = FEFinder<TLComponentInstance, 4>::Find<FEPresentation>(
@@ -1973,7 +1981,11 @@ unsigned char CupHubScene::UpdateKnockout2(float fDeltaT)
                 LookupLocHash(nlStringLowerHash("STANDINGS_WINNER"), g_pLocalization)),
             LookupLocHash(GetLOCCharacterName(TEAM_MYSTERY, true, false)));
 
+#ifndef TARGET_PC
         memcpy(mColumnsByRowsBuffers[0][0], winnerString.c_str(), sizeof(mColumnsByRowsBuffers[0][0]));
+#else
+        nlStrNCpy<unsigned short>(mColumnsByRowsBuffers[0][0], winnerString.c_str(), sizeof(mColumnsByRowsBuffers[0][0]) / 2);
+#endif
     }
     else
     {
@@ -1982,7 +1994,11 @@ unsigned char CupHubScene::UpdateKnockout2(float fDeltaT)
                 LookupLocHash(nlStringLowerHash("STANDINGS_WINNER"), g_pLocalization)),
             LookupLocHash(GetLOCCharacterName(winnerTeam, false, false)));
 
+#ifndef TARGET_PC
         memcpy(mColumnsByRowsBuffers[0][0], winnerString.c_str(), sizeof(mColumnsByRowsBuffers[0][0]));
+#else
+        nlStrNCpy<unsigned short>(mColumnsByRowsBuffers[0][0], winnerString.c_str(), sizeof(mColumnsByRowsBuffers[0][0]) / 2);
+#endif
     }
 #else
     BasicString<unsigned short, Detail::TempStringAllocator> winnerString = Format(
@@ -1990,7 +2006,11 @@ unsigned char CupHubScene::UpdateKnockout2(float fDeltaT)
             LookupLocHash(nlStringLowerHash("STANDINGS_WINNER"), g_pLocalization)),
         LookupLocHash(GetLOCCharacterName(winnerTeam, false, false)));
 
+#ifndef TARGET_PC
     memcpy(mColumnsByRowsBuffers[0][0], winnerString.c_str(), sizeof(mColumnsByRowsBuffers[0][0]));
+#else
+    nlStrNCpy<unsigned short>(mColumnsByRowsBuffers[0][0], winnerString.c_str(), sizeof(mColumnsByRowsBuffers[0][0]) / 2);
+#endif
 #endif
     pText->SetString(mColumnsByRowsBuffers[0][0]);
 
@@ -2624,7 +2644,11 @@ void CupHubScene::UpdateRoundMessage(bool hideMessage)
 
     BasicString<unsigned short, Detail::TempStringAllocator> formatted = Format(unformatted, roundWideString, leftTeam, rightTeam);
 
+#ifndef TARGET_PC
     memcpy(mProgressBuffer, formatted.c_str(), sizeof(mProgressBuffer));
+#else
+    nlStrNCpy<unsigned short>(mProgressBuffer, formatted.c_str(), sizeof(mProgressBuffer) / 2);
+#endif
     mProgressBuffer[127] = 0;
     pText->SetString(mProgressBuffer);
 }
