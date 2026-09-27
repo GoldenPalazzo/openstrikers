@@ -106,7 +106,11 @@ static unsigned long TrophyTypeToStringName[13] = {
     0x99FCEA51,
 };
 
+#ifndef TARGET_PC
 static const long TeamID2CharacterClassTable[9][2] = {
+#else
+static const s32 TeamID2CharacterClassTable[9][2] = {
+#endif
     { 0x00000000, 0x00000001 },
     { 0x00000001, 0x00000002 },
     { 0x00000002, 0x00000005 },
