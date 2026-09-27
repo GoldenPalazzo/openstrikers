@@ -29,6 +29,7 @@ int main(int argc, char* argv[])   // <-- diventa aurora_main via macro
         .vsync = false,
         .startFullscreen = false,
         .allowTextureDumps = false,
+        .allowCpuAdapter = true,
         .mem1Size = 512 * 1024 * 1024,
         .mem2Size = ARAM_DEFAULT_SIZE,
     };
