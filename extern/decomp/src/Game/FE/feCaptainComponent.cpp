@@ -24,6 +24,7 @@ IChooseCaptain::~IChooseCaptain()
 {
     int j;
     int i;
+#ifndef TARGET_PC
     IChooseCaptain* col;
     IChooseCaptain* row;
 
@@ -34,6 +35,15 @@ IChooseCaptain::~IChooseCaptain()
             delete col->mAsyncImage[0][0];
         }
     }
+#else
+    for (i = 0; i < 2; i++)
+    {
+        for (j = 0; j < 3; j++)
+        {
+            delete mAsyncImage[i][j];
+        }
+    }
+#endif
 
     delete mCaptainGridComponents[0];
     delete mCaptainGridComponents[1];
