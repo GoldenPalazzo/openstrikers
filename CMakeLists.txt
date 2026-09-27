@@ -56,6 +56,7 @@ add_executable(openstrikers
     ${SRC_DIR}/compat_shims.cpp
     ${SRC_DIR}/vi_shim.cpp
     ${SRC_DIR}/glDisk.cpp
+    ${SRC_DIR}/worldDisk.cpp
     ${SRC_DIR}/main.cpp
 )
 

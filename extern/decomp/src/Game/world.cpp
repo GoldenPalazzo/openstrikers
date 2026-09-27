@@ -5,6 +5,8 @@
 #include "Game/Camera/CameraMan.h"
 #include "Game/Camera/MatrixEffectCam.h"
 
+#include "port/endian.hpp"
+#include "port/worldDisk.hpp"
 #include "string.h"
 #ifdef TARGET_PC
 #include <cctype>
@@ -500,16 +502,29 @@ bool World::LoadPhysicsPrimitives(nlChunk* pChunk)
         {
         case 0x1D001:
             m_pPhysicsData = new (nlMalloc(sizeof(CharacterPhysicsData), 8, false)) CharacterPhysicsData();
+#ifndef TARGET_PC
             m_pPhysicsData->physicsElementCount = *(unsigned long*)pChunk->GetData();
+#else
+            m_pPhysicsData->physicsElementCount = *(const port::be<u32>*)pChunk->GetData();
+#endif
             m_pPhysicsData->pPhysicsElements = (CharacterPhysicsElement*)nlMalloc(
                 m_pPhysicsData->physicsElementCount * sizeof(CharacterPhysicsElement), 8, false);
             break;
         case 0x1D002:
         {
+#ifndef TARGET_PC
             CharacterPhysicsElement* pPhysicsElements = (CharacterPhysicsElement*)pChunk->GetData();
+#else
+            const port::disk::CharacterPhysicsElement* pPhysicsElements = (const port::disk::CharacterPhysicsElement*)pChunk->GetData();
+#endif
             for (i = 0; i < m_pPhysicsData->physicsElementCount; i++)
             {
+#ifndef TARGET_PC
                 m_pPhysicsData->pPhysicsElements[i] = pPhysicsElements[i];
+#else
+                port::disk::convert(m_pPhysicsData->pPhysicsElements[i],
+                        pPhysicsElements[i]);
+#endif
             }
             break;
         }
