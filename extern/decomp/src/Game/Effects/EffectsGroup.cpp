@@ -567,7 +567,11 @@ static EffectsGroup* parse_group(SimpleParser* parser)
             }
 
             spec.m_pTerrainSpec = pTerrainSpec;
+#ifndef TARGET_PC
             specs[specOffset >> 6] = *(EffectsSpec*)&spec;
+#else
+            specs[specCount] = *(EffectsSpec*)&spec;
+#endif
             specCount++;
             specOffset += sizeof(EffectsSpec);
             continue;
@@ -611,7 +615,11 @@ static EffectsGroup* parse_group(SimpleParser* parser)
     else
     {
         pSpecs = new (nlMalloc(specCount * sizeof(EffectsSpec) + 0x10, 8, false)) EffectsSpec[specCount];
+#ifndef TARGET_PC
         memcpy(pSpecs, specs, specCount << 6);
+#else
+        memcpy(pSpecs, specs, specCount * sizeof(EffectsSpec));
+#endif
     }
 
     pGroup = new (nlMalloc(sizeof(EffectsGroup), 8, false)) EffectsGroup;
