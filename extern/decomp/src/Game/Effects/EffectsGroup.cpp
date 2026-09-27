@@ -592,7 +592,11 @@ static EffectsGroup* parse_group(SimpleParser* parser)
             if (nlStrCmp<char>(gUserEffectTypes[i]->GetName(), token) == 0)
             {
                 UserEffectSpec* pUserSpec = gUserEffectTypes[i]->ParseSpec(parser);
+#ifndef TARGET_PC
                 void* mem = nlMalloc(0xC, 8, false);
+#else
+                void* mem = nlMalloc(sizeof(DLListEntry<UserEffectSpec*>), 8, false);
+#endif
                 DLListEntry<UserEffectSpec*>* pSpecEntry = (DLListEntry<UserEffectSpec*>*)mem;
                 if (mem != nullptr)
                 {
