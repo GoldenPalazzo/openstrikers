@@ -8,7 +8,11 @@ struct DisplayList
     /* 0x00 */ u32 magic;
     /* 0x04 */ void* list;
     /* 0x08 */ u32 size;
+#ifndef TARGET_PC
     /* 0x0C */ unsigned short* indices;
+#else
+    /* 0x0C */ u32 indices; // in reality, the only used struct is DisplayListEx
+#endif
 }; // total size: 0x10
 
 DisplayList* dlMakeDisplayList(const glModelPacket* packet, bool permanent);
